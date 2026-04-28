@@ -1,0 +1,29 @@
+:root {
+  --color-bg: #fcfbf8;
+  --color-bg-alt: #f4f1eb;
+  --color-dark: #1a1a2e;
+  --color-accent: #c0392b;
+  --color-border: #e8e4dc;
+  --color-text: #444;
+  --color-muted: #888;
+  --color-white: #fff;
+
+  --font-serif: 'DM Serif Display', serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-korean: 'Noto Serif KR', serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
