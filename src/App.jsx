@@ -5,7 +5,7 @@ import Stats from "./components/Stats";
 import About from "./components/About";
 import Experience from "./components/Experience";
 import Skills from "./components/Skills";
-import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 
 export default function App() {
   const [activeNav, setActiveNav] = useState("");
@@ -15,7 +15,7 @@ export default function App() {
       entries => { entries.forEach(e => { if (e.isIntersecting) setActiveNav(e.target.id); }); },
       { threshold: 0.4 }
     );
-    ["about", "experience", "skills", "contact"].forEach(id => {
+    ["about", "experience", "skills"].forEach(id => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
@@ -30,7 +30,7 @@ export default function App() {
       <About />
       <Experience />
       <Skills />
-      <Contact />
+      <Footer />
     </div>
   );
 }

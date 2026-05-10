@@ -2,108 +2,240 @@ import { useState } from "react";
 import FadeIn from "./common/FadeIn";
 import resume from "../data/resume";
 
-function ProjectItem({ item }) {
+function ImplementationItem({ item }) {
   const [open, setOpen] = useState(false);
   const hasDetail = item.problem || item.solution;
 
   return (
-    <div style={{ borderTop: "1px solid var(--color-border)", paddingTop: "1.2rem", marginTop: "1.2rem" }}>
+    <div style={{
+      borderTop: "1px solid var(--color-border)",
+      paddingTop: "18px",
+      marginTop: "18px",
+    }}>
       <div
         onClick={() => hasDetail && setOpen(o => !o)}
-        style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", cursor: hasDetail ? "pointer" : "default" }}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          gap: "12px",
+          cursor: hasDetail ? "pointer" : "default",
+        }}
       >
-        <h5 style={{ fontFamily: "var(--font-mono)", fontSize: "0.82rem", color: "var(--color-dark)", margin: 0, letterSpacing: "0.03em" }}>
+        <h4 style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: "0.98rem",
+          fontWeight: 600,
+          color: "var(--color-text-strong)",
+          margin: 0,
+          letterSpacing: "-0.005em",
+          lineHeight: 1.45,
+        }}>
           {item.title}
-        </h5>
+        </h4>
         {hasDetail && (
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.7rem", color: "var(--color-accent)", marginLeft: "1rem", flexShrink: 0 }}>
-            {open ? "▲ 닫기" : "▼ 상세"}
-          </span>
+          <button
+            onClick={(e) => { e.stopPropagation(); setOpen(o => !o); }}
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.7rem",
+              fontWeight: 500,
+              color: "var(--color-accent)",
+              background: "var(--color-accent-soft)",
+              border: "1px solid var(--color-accent-border)",
+              padding: "4px 9px",
+              borderRadius: "6px",
+              cursor: "pointer",
+              flexShrink: 0,
+              letterSpacing: "0.02em",
+              transition: "background 0.15s var(--ease)",
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = "#DBEAFE"}
+            onMouseLeave={e => e.currentTarget.style.background = "var(--color-accent-soft)"}
+          >
+            {open ? "− 닫기" : "+ 상세"}
+          </button>
         )}
       </div>
 
+      <ul style={{
+        margin: "12px 0 0", padding: 0, listStyle: "none",
+        display: "flex", flexDirection: "column", gap: "6px",
+      }}>
+        {item.results.map((r, i) => (
+          <li key={i} style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "0.88rem",
+            fontWeight: 400,
+            color: "var(--color-text-soft)",
+            display: "flex", alignItems: "flex-start", gap: "10px",
+            lineHeight: 1.65,
+          }}>
+            <span style={{
+              width: "5px", height: "5px",
+              borderRadius: "50%",
+              background: "var(--color-accent)",
+              flexShrink: 0,
+              marginTop: "9px",
+            }} />
+            {r}
+          </li>
+        ))}
+      </ul>
+
       {open && hasDetail && (
-        <div style={{ marginTop: "1rem", display: "grid", gap: "0.8rem" }}>
+        <div style={{
+          marginTop: "16px",
+          display: "grid", gap: "10px",
+        }}>
           {item.problem && (
-            <div style={{ background: "#fff5f5", border: "1px solid #ffd6d6", padding: "0.8rem 1rem" }}>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "var(--color-accent)", letterSpacing: "0.08em" }}>PROBLEM</span>
-              <p style={{ fontFamily: "var(--font-korean)", fontSize: "0.85rem", color: "var(--color-text)", margin: "0.3rem 0 0", lineHeight: 1.7 }}>{item.problem}</p>
+            <div style={{
+              background: "#FEF2F2",
+              borderLeft: "3px solid var(--color-danger)",
+              padding: "12px 14px",
+              borderRadius: "0 6px 6px 0",
+            }}>
+              <span style={{
+                fontFamily: "var(--font-mono)", fontSize: "0.66rem", fontWeight: 500,
+                color: "var(--color-danger)", letterSpacing: "0.14em", textTransform: "uppercase",
+              }}>Problem</span>
+              <p style={{
+                fontFamily: "var(--font-sans)", fontSize: "0.88rem", fontWeight: 400,
+                color: "var(--color-text)", margin: "6px 0 0", lineHeight: 1.7,
+              }}>{item.problem}</p>
             </div>
           )}
           {item.solution && (
-            <div style={{ background: "#f0f4ff", border: "1px solid #c8d8ff", padding: "0.8rem 1rem" }}>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "#2563eb", letterSpacing: "0.08em" }}>SOLUTION</span>
-              <p style={{ fontFamily: "var(--font-korean)", fontSize: "0.85rem", color: "var(--color-text)", margin: "0.3rem 0 0", lineHeight: 1.7 }}>{item.solution}</p>
+            <div style={{
+              background: "var(--color-accent-soft)",
+              borderLeft: "3px solid var(--color-accent)",
+              padding: "12px 14px",
+              borderRadius: "0 6px 6px 0",
+            }}>
+              <span style={{
+                fontFamily: "var(--font-mono)", fontSize: "0.66rem", fontWeight: 500,
+                color: "var(--color-accent)", letterSpacing: "0.14em", textTransform: "uppercase",
+              }}>Solution</span>
+              <p style={{
+                fontFamily: "var(--font-sans)", fontSize: "0.88rem", fontWeight: 400,
+                color: "var(--color-text)", margin: "6px 0 0", lineHeight: 1.7,
+              }}>{item.solution}</p>
             </div>
           )}
         </div>
       )}
-
-      <ul style={{ margin: "0.9rem 0 0", padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-        {item.results.map((r, i) => (
-          <li key={i} style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--color-text)", display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
-            <span style={{ color: "var(--color-accent)", flexShrink: 0 }}>→</span>{r}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
 
-function ExperienceCard({ exp, index }) {
-  const [open, setOpen] = useState(index === 0);
-
+function ProjectCard({ proj }) {
   return (
-    <FadeIn delay={index * 0.15}>
-      <div style={{ borderLeft: "3px solid var(--color-border)", paddingLeft: "1.8rem", marginBottom: "3rem", position: "relative" }}>
-        <div style={{ position: "absolute", left: "-7px", top: "4px", width: "11px", height: "11px", borderRadius: "50%", background: "var(--color-accent)" }} />
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "0.5rem" }}>
+    <article className="card" style={{ padding: "24px" }}>
+      <div style={{
+        display: "flex", justifyContent: "space-between",
+        alignItems: "flex-start", flexWrap: "wrap",
+        gap: "8px", marginBottom: "12px",
+      }}>
+        <h3 style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: "1.15rem",
+          fontWeight: 600,
+          color: "var(--color-text-strong)",
+          margin: 0,
+          letterSpacing: "-0.01em",
+          lineHeight: 1.35,
+        }}>{proj.name}</h3>
+        <span style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: "0.74rem",
+          color: "var(--color-muted)",
+          paddingTop: "3px",
+          letterSpacing: "0",
+        }}>{proj.period}</span>
+      </div>
+
+      <div style={{
+        display: "flex", gap: "6px", flexWrap: "wrap",
+        marginBottom: proj.clients ? "8px" : "0",
+      }}>
+        {proj.stack.map((s, si) => (
+          <span key={si} className="tag">{s}</span>
+        ))}
+      </div>
+
+      {proj.clients && (
+        <p style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: "0.82rem",
+          fontWeight: 400,
+          color: "var(--color-muted)",
+          margin: "8px 0 0",
+        }}>
+          <span style={{ color: "var(--color-muted-2)" }}>적용 기관 · </span>
+          {proj.clients.join(" · ")}
+        </p>
+      )}
+
+      <div>
+        {proj.items.map((item, ii) => <ImplementationItem key={ii} item={item} />)}
+      </div>
+    </article>
+  );
+}
+
+function CompanyBlock({ exp, index }) {
+  return (
+    <FadeIn delay={index * 0.05}>
+      <div style={{ marginBottom: "48px" }}>
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+          gap: "12px",
+          marginBottom: "8px",
+        }}>
           <div>
-            <h3 style={{ fontFamily: "var(--font-serif)", fontSize: "1.5rem", color: "var(--color-dark)", margin: 0 }}>{exp.company}</h3>
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--color-muted)", margin: "0.3rem 0 0", letterSpacing: "0.05em" }}>{exp.role}</p>
-            {exp.growth && (
-              <span style={{
-                display: "inline-block", marginTop: "0.5rem",
-                fontFamily: "var(--font-mono)", fontSize: "0.68rem",
-                background: "var(--color-dark)", color: "var(--color-white)", padding: "0.2rem 0.7rem", letterSpacing: "0.05em",
-              }}>🚀 {exp.growth}</span>
-            )}
+            <h3 style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "clamp(1.2rem, 3vw, 1.4rem)",
+              fontWeight: 600,
+              color: "var(--color-text-strong)",
+              margin: 0,
+              letterSpacing: "-0.015em",
+              lineHeight: 1.35,
+            }}>
+              {exp.company}
+              {exp.position && (
+                <span style={{
+                  color: "var(--color-text-soft)",
+                  fontWeight: 500,
+                }}> · {exp.position}</span>
+              )}
+            </h3>
+            <p style={{
+              fontFamily: "var(--font-sans)",
+              fontSize: "0.92rem",
+              fontWeight: 400,
+              color: "var(--color-text-soft)",
+              margin: "6px 0 0",
+              lineHeight: 1.6,
+            }}>{exp.role}</p>
           </div>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--color-muted)", letterSpacing: "0.05em", flexShrink: 0 }}>{exp.period}</span>
+          <span style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "0.78rem",
+            color: "var(--color-muted)",
+            paddingTop: "4px",
+          }}>{exp.period}</span>
         </div>
 
-        <button
-          onClick={() => setOpen(o => !o)}
-          style={{
-            marginTop: "1rem", fontFamily: "var(--font-mono)", fontSize: "0.72rem",
-            color: "var(--color-accent)", background: "none", border: "1px solid var(--color-accent)",
-            padding: "0.3rem 0.8rem", cursor: "pointer", letterSpacing: "0.05em",
-          }}
-        >{open ? "▲ 접기" : "▼ 프로젝트 보기"}</button>
-
-        {open && (
-          <div style={{ marginTop: "1.5rem", display: "flex", flexDirection: "column", gap: "2rem" }}>
-            {exp.projects.map((proj, pi) => (
-              <div key={pi} style={{ background: "var(--color-white)", border: "1px solid var(--color-border)", padding: "1.5rem" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "0.5rem", marginBottom: "0.8rem" }}>
-                  <h4 style={{ fontFamily: "var(--font-serif)", fontSize: "1.15rem", color: "var(--color-dark)", margin: 0 }}>{proj.name}</h4>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.68rem", color: "var(--color-muted)" }}>{proj.period}</span>
-                </div>
-                <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "0.5rem" }}>
-                  {proj.stack.map((s, si) => (
-                    <span key={si} style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", padding: "0.2rem 0.6rem", background: "var(--color-bg-alt)", color: "#555", letterSpacing: "0.03em" }}>{s}</span>
-                  ))}
-                </div>
-                {proj.clients && (
-                  <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.68rem", color: "var(--color-muted)", margin: "0.5rem 0" }}>
-                    적용 기관: {proj.clients.join(" · ")}
-                  </p>
-                )}
-                {proj.items.map((item, ii) => <ProjectItem key={ii} item={item} />)}
-              </div>
-            ))}
-          </div>
-        )}
+        <div style={{
+          display: "flex", flexDirection: "column", gap: "14px",
+          marginTop: "20px",
+        }}>
+          {exp.projects.map((proj, pi) => <ProjectCard key={pi} proj={proj} />)}
+        </div>
       </div>
     </FadeIn>
   );
@@ -111,15 +243,19 @@ function ExperienceCard({ exp, index }) {
 
 export default function Experience() {
   return (
-    <section id="experience" style={{ padding: "6rem clamp(1.5rem,5vw,4rem)", background: "var(--color-bg)" }}>
-      <div style={{ maxWidth: "860px", margin: "0 auto" }}>
+    <section id="experience" className="section" style={{ background: "var(--color-bg-alt)" }}>
+      <div className="container">
         <FadeIn>
-          <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--color-accent)", letterSpacing: "0.12em", marginBottom: "0.8rem" }}>EXPERIENCE</p>
-          <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.8rem,4vw,2.8rem)", color: "var(--color-dark)", margin: "0 0 3rem" }}>
-            경력<span style={{ color: "var(--color-accent)" }}>.</span>
-          </h2>
+          <p className="eyebrow">Experience</p>
+          <h2 className="section-title">경력 & 프로젝트</h2>
+          <p className="section-sub">
+            엔터프라이즈 솔루션 풀스택 개발 · 성능 최적화 · 운영 안정화 중심으로 정리했습니다.
+          </p>
         </FadeIn>
-        {resume.experience.map((exp, i) => <ExperienceCard key={i} exp={exp} index={i} />)}
+
+        <div style={{ marginTop: "40px" }}>
+          {resume.experience.map((exp, i) => <CompanyBlock key={i} exp={exp} index={i} />)}
+        </div>
       </div>
     </section>
   );

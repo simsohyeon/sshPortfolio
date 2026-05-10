@@ -3,24 +3,48 @@ import resume from "../data/resume";
 
 export default function Stats() {
   return (
-    <section style={{ background: "var(--color-dark)", padding: "4rem clamp(1.5rem,5vw,4rem)" }}>
-      <div style={{
-        display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-        gap: "2rem", maxWidth: "900px", margin: "0 auto",
-      }}>
-        {resume.stats.map((s, i) => (
-          <FadeIn key={i} delay={i * 0.1}>
-            <div style={{ textAlign: "center" }}>
-              <div style={{
-                fontFamily: "var(--font-serif)",
-                fontSize: "clamp(2.2rem, 5vw, 3.2rem)",
-                color: "var(--color-accent)", lineHeight: 1,
-              }}>{s.value}</div>
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--color-white)", marginTop: "0.5rem", letterSpacing: "0.08em" }}>{s.label}</div>
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "var(--color-muted)", marginTop: "0.3rem" }}>{s.sub}</div>
-            </div>
-          </FadeIn>
-        ))}
+    <section style={{
+      paddingBottom: "40px",
+      background: "var(--color-bg)",
+    }}>
+      <div className="container">
+        <FadeIn>
+          <div style={{
+            background: "var(--color-bg-alt)",
+            border: "1px solid var(--color-border)",
+            borderRadius: "var(--radius-md)",
+            padding: "20px 24px",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: "20px",
+          }}>
+            {resume.stats.map((s, i) => (
+              <div key={i}>
+                <div style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "1.7rem",
+                  fontWeight: 600,
+                  color: "var(--color-accent)",
+                  lineHeight: 1.1,
+                  letterSpacing: "-0.02em",
+                }}>{s.value}</div>
+                <div style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.86rem",
+                  fontWeight: 500,
+                  color: "var(--color-text-strong)",
+                  marginTop: "8px",
+                }}>{s.label}</div>
+                <div style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "0.7rem",
+                  color: "var(--color-muted)",
+                  marginTop: "4px",
+                }}>{s.sub}</div>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
       </div>
     </section>
   );

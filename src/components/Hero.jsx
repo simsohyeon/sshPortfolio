@@ -1,87 +1,107 @@
-import { useState, useEffect } from "react";
 import resume from "../data/resume";
 
-export default function Hero() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setTimeout(() => setMounted(true), 100); }, []);
+const SUMMARY_BULLETS = [
+  "Java/Spring · React 기반 풀스택 개발 4년차",
+  "ITSM·EMR 등 엔터프라이즈 솔루션 설계·개발·운영 경험",
+  "성능 최적화 / SQL 튜닝 / 운영 안정화 다수 수행",
+  "결함 적은 구조 설계 및 데이터 기반 개선",
+];
 
-  const emailUrl = `https://mail.google.com/mail/?view=cm&to=${resume.contact.email}&subject=${encodeURIComponent("채용 문의드립니다")}`;
+const PRIMARY_STACK = ["React", "TypeScript", "Java", "Spring Boot", "MongoDB", "Oracle"];
+
+const BulletDot = () => (
+  <span style={{
+    width: "5px",
+    height: "5px",
+    borderRadius: "50%",
+    background: "var(--color-accent)",
+    flexShrink: 0,
+    marginTop: "9px",
+  }} />
+);
+
+export default function Hero() {
+  const emailUrl = `mailto:${resume.contact.email}?subject=${encodeURIComponent("채용 문의")}`;
 
   return (
     <section id="hero" style={{
-      minHeight: "100vh", display: "flex", flexDirection: "column",
-      justifyContent: "center", padding: "clamp(2rem,8vw,6rem)",
-      paddingTop: "100px", position: "relative", overflow: "hidden",
+      paddingTop: "calc(var(--nav-height) + 48px)",
+      paddingBottom: "44px",
+      background: "var(--color-bg)",
     }}>
-      {/* background grid */}
-      <div style={{
-        position: "absolute", inset: 0, zIndex: 0,
-        backgroundImage: "linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px)",
-        backgroundSize: "48px 48px", opacity: 0.5,
-      }} />
+      <div className="container">
+        <div style={{ maxWidth: "680px" }}>
+          <p className="eyebrow">Available for hire · 2026</p>
 
-      <div style={{ position: "relative", zIndex: 1, maxWidth: "860px" }}>
-        <p style={{
-          fontFamily: "var(--font-mono)", fontSize: "0.8rem",
-          color: "var(--color-accent)", letterSpacing: "0.12em", marginBottom: "1.2rem",
-          opacity: mounted ? 1 : 0, transition: "opacity 0.5s 0.1s",
-        }}>FULL STACK DEVELOPER · 4 YEARS</p>
+          <h1 style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "clamp(1.9rem, 5vw, 2.8rem)",
+            fontWeight: 600,
+            color: "var(--color-text-strong)",
+            lineHeight: 1.2,
+            letterSpacing: "-0.02em",
+            margin: "12px 0 0",
+          }}>
+            {resume.name},{" "}
+            <span style={{ color: "var(--color-accent)" }}>{resume.title}</span>
+          </h1>
 
-        <h1 style={{
-          fontFamily: "var(--font-serif)",
-          fontSize: "clamp(3rem, 8vw, 6rem)",
-          lineHeight: 1.05, color: "var(--color-dark)", margin: 0,
-          opacity: mounted ? 1 : 0,
-          transform: mounted ? "translateY(0)" : "translateY(20px)",
-          transition: "opacity 0.6s 0.2s, transform 0.6s 0.2s",
-        }}>
-          {resume.name}<span style={{ color: "var(--color-accent)" }}>.</span>
-        </h1>
+          <p style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "clamp(0.95rem, 1.4vw, 1.02rem)",
+            fontWeight: 400,
+            color: "var(--color-text-soft)",
+            marginTop: "14px",
+            lineHeight: 1.7,
+          }}>
+            엔터프라이즈 솔루션을 설계·개발·운영하며 수치로 증명한 개선 성과를
+            만들어온 풀스택 개발자입니다. 결함 적은 구조 설계와 성능 최적화에
+            강점을 가지고 있습니다.
+          </p>
 
-        <p style={{
-          fontFamily: "var(--font-korean)",
-          fontSize: "clamp(1rem, 2.5vw, 1.35rem)",
-          color: "var(--color-text)", marginTop: "1.4rem", lineHeight: 1.7, maxWidth: "600px",
-          opacity: mounted ? 1 : 0,
-          transform: mounted ? "translateY(0)" : "translateY(16px)",
-          transition: "opacity 0.6s 0.4s, transform 0.6s 0.4s",
-        }}>{resume.tagline}</p>
+          <ul style={{
+            listStyle: "none",
+            padding: 0,
+            marginTop: "18px",
+            display: "grid",
+            gap: "8px",
+          }}>
+            {SUMMARY_BULLETS.map((b, i) => (
+              <li key={i} style={{
+                display: "flex",
+                gap: "10px",
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.92rem",
+                fontWeight: 400,
+                color: "var(--color-text-soft)",
+                lineHeight: 1.65,
+              }}>
+                <BulletDot />
+                {b}
+              </li>
+            ))}
+          </ul>
 
-        <div style={{
-          display: "flex", gap: "0.8rem", flexWrap: "wrap", marginTop: "2rem",
-          opacity: mounted ? 1 : 0, transition: "opacity 0.6s 0.6s",
-        }}>
-          {resume.keywords.map((k, i) => (
-            <span key={i} style={{
-              fontFamily: "var(--font-mono)", fontSize: "0.75rem",
-              padding: "0.4rem 0.9rem", border: "1.5px solid var(--color-dark)",
-              color: "var(--color-dark)", letterSpacing: "0.05em",
-            }}>{k}</span>
-          ))}
-        </div>
+          <div style={{
+            display: "flex", gap: "6px", flexWrap: "wrap",
+            marginTop: "22px",
+          }}>
+            {PRIMARY_STACK.map((s, i) => (
+              <span key={i} className="tag">{s}</span>
+            ))}
+          </div>
 
-        <div style={{
-          display: "flex", gap: "1.2rem", marginTop: "2.5rem", flexWrap: "wrap",
-          opacity: mounted ? 1 : 0, transition: "opacity 0.6s 0.8s",
-        }}>
-          <a
-            href={emailUrl}
-            target="_blank"
-            rel="noreferrer"
-            style={{
-              fontFamily: "var(--font-mono)", fontSize: "0.8rem",
-              padding: "0.7rem 1.8rem", background: "var(--color-dark)", color: "var(--color-white)",
-              textDecoration: "none", letterSpacing: "0.05em",
-            }}>Contact Me</a>
-          <a
-            href={resume.contact.github}
-            target="_blank"
-            rel="noreferrer"
-            style={{
-              fontFamily: "var(--font-mono)", fontSize: "0.8rem",
-              padding: "0.7rem 1.8rem", border: "1.5px solid var(--color-dark)", color: "var(--color-dark)",
-              textDecoration: "none", letterSpacing: "0.05em",
-            }}>GitHub →</a>
+          <div className="cta-group" style={{ marginTop: "26px" }}>
+            <a href={emailUrl} className="btn btn-primary">
+              이메일로 연락하기
+            </a>
+            <a href={resume.contact.github} target="_blank" rel="noreferrer" className="btn btn-secondary">
+              GitHub ↗
+            </a>
+            <a href="#experience" className="btn btn-ghost">
+              프로젝트 보기 ↓
+            </a>
+          </div>
         </div>
       </div>
     </section>

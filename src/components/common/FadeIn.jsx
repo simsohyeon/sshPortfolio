@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-function useInView(threshold = 0.15) {
+function useInView(threshold = 0.12) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
@@ -22,8 +22,8 @@ export default function FadeIn({ children, delay = 0, className = "" }) {
       className={className}
       style={{
         opacity: inView ? 1 : 0,
-        transform: inView ? "translateY(0)" : "translateY(28px)",
-        transition: `opacity 0.65s ease ${delay}s, transform 0.65s ease ${delay}s`,
+        transform: inView ? "translateY(0)" : "translateY(12px)",
+        transition: `opacity 0.4s ease ${delay}s, transform 0.4s ease ${delay}s`,
       }}
     >
       {children}

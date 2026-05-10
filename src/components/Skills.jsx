@@ -1,25 +1,54 @@
 import FadeIn from "./common/FadeIn";
 import resume from "../data/resume";
 
+const SKILL_LEVEL = {
+  Frontend: "실무 운영 가능 수준",
+  Backend: "주력 · 설계부터 배포까지",
+  Database: "쿼리 튜닝 / 인덱스 설계 경험",
+  "Infra / DevOps": "기본 운영 가능 수준",
+  Tools: "협업 환경 능숙",
+};
+
 export default function Skills() {
   return (
-    <section id="skills" style={{ padding: "6rem clamp(1.5rem,5vw,4rem)", background: "var(--color-bg-alt)" }}>
-      <div style={{ maxWidth: "860px", margin: "0 auto" }}>
+    <section id="skills" className="section" style={{ background: "var(--color-bg)" }}>
+      <div className="container">
         <FadeIn>
-          <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--color-accent)", letterSpacing: "0.12em", marginBottom: "0.8rem" }}>SKILLS</p>
-          <h2 style={{ fontFamily: "var(--font-serif)", fontSize: "clamp(1.8rem,4vw,2.8rem)", color: "var(--color-dark)", margin: "0 0 2.5rem" }}>
-            기술 스택<span style={{ color: "var(--color-accent)" }}>.</span>
-          </h2>
+          <p className="eyebrow">Skills</p>
+          <h2 className="section-title">기술 스택</h2>
+          <p className="section-sub">
+            카테고리별 활용 수준입니다. 모든 항목은 실제 프로젝트에서 사용한 기술입니다.
+          </p>
         </FadeIn>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1.5rem" }}>
+        <div style={{
+          marginTop: "32px",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+          gap: "12px",
+        }}>
           {Object.entries(resume.skills).map(([cat, items], i) => (
-            <FadeIn key={cat} delay={i * 0.1}>
-              <div style={{ background: "var(--color-white)", border: "1px solid var(--color-border)", padding: "1.5rem" }}>
-                <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.68rem", color: "var(--color-accent)", letterSpacing: "0.1em", margin: "0 0 1rem" }}>{cat.toUpperCase()}</p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+            <FadeIn key={cat} delay={i * 0.05}>
+              <div className="card" style={{ height: "100%", padding: "20px" }}>
+                <h3 style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.95rem",
+                  fontWeight: 600,
+                  color: "var(--color-text-strong)",
+                  margin: 0,
+                }}>{cat}</h3>
+                <p style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "0.7rem",
+                  fontWeight: 500,
+                  color: "var(--color-accent)",
+                  marginTop: "4px",
+                  marginBottom: "14px",
+                  letterSpacing: "0",
+                }}>{SKILL_LEVEL[cat] || ""}</p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                   {items.map((item, j) => (
-                    <span key={j} style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", padding: "0.3rem 0.7rem", background: "var(--color-bg-alt)", color: "var(--color-text)", letterSpacing: "0.02em" }}>{item}</span>
+                    <span key={j} className="tag">{item}</span>
                   ))}
                 </div>
               </div>
@@ -27,22 +56,62 @@ export default function Skills() {
           ))}
         </div>
 
-        <FadeIn delay={0.3}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.5rem", marginTop: "1.5rem" }}>
-            <div style={{ background: "var(--color-white)", border: "1px solid var(--color-border)", padding: "1.5rem" }}>
-              <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.68rem", color: "var(--color-accent)", letterSpacing: "0.1em", margin: "0 0 1rem" }}>CERTIFICATIONS</p>
+        <FadeIn delay={0.15}>
+          <div style={{
+            marginTop: "12px",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: "12px",
+          }}>
+            <div className="card" style={{ padding: "20px" }}>
+              <h3 style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.95rem",
+                fontWeight: 600,
+                color: "var(--color-text-strong)",
+                margin: "0 0 14px",
+              }}>Certifications</h3>
               {resume.certifications.map((c, i) => (
-                <div key={i} style={{ marginBottom: "0.6rem" }}>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.75rem", color: "var(--color-dark)" }}>{c.name}</div>
-                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "var(--color-muted)" }}>{c.org} · {c.date}</div>
+                <div key={i} style={{
+                  marginBottom: i === resume.certifications.length - 1 ? 0 : "10px",
+                  paddingBottom: i === resume.certifications.length - 1 ? 0 : "10px",
+                  borderBottom: i === resume.certifications.length - 1 ? "none" : "1px solid var(--color-border)",
+                }}>
+                  <div style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "0.92rem",
+                    fontWeight: 500,
+                    color: "var(--color-text)",
+                  }}>{c.name}</div>
+                  <div style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "0.72rem",
+                    color: "var(--color-muted)",
+                    marginTop: "3px",
+                  }}>{c.org} · {c.date}</div>
                 </div>
               ))}
             </div>
-            <div style={{ background: "var(--color-white)", border: "1px solid var(--color-border)", padding: "1.5rem" }}>
-              <p style={{ fontFamily: "var(--font-mono)", fontSize: "0.68rem", color: "var(--color-accent)", letterSpacing: "0.1em", margin: "0 0 1rem" }}>AWARDS</p>
+            <div className="card" style={{ padding: "20px" }}>
+              <h3 style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.95rem",
+                fontWeight: 600,
+                color: "var(--color-text-strong)",
+                margin: "0 0 14px",
+              }}>Awards</h3>
               {resume.awards.map((a, i) => (
-                <div key={i} style={{ fontFamily: "var(--font-mono)", fontSize: "0.72rem", color: "var(--color-text)", marginBottom: "0.5rem", display: "flex", gap: "0.4rem" }}>
-                  <span style={{ color: "var(--color-accent)" }}>·</span>{a}
+                <div key={i} style={{
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.86rem",
+                  fontWeight: 400,
+                  color: "var(--color-text-soft)",
+                  marginBottom: i === resume.awards.length - 1 ? 0 : "8px",
+                  display: "flex", gap: "8px", alignItems: "flex-start",
+                  lineHeight: 1.6,
+                }}>
+                  <span style={{ color: "var(--color-accent)", flexShrink: 0 }}>·</span>
+                  {a}
                 </div>
               ))}
             </div>

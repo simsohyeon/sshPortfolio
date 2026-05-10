@@ -28,8 +28,8 @@ const resume = {
   experience: [
     {
       company: "엔키아 (NKIA)",
+      position: "대리",
       period: "2024.01 ~ 현재",
-      growth: "사원 입사 → 2년 만에 대리 승진",
       role: "ITSM 솔루션 개발 / 차세대 통합신제품 풀스택 개발",
       projects: [
         {
@@ -86,8 +86,8 @@ const resume = {
     },
     {
       company: "엠투아이티 (M2IT)",
+      position: "사원",
       period: "2022.01 ~ 2023.03",
-      growth: "",
       role: "강릉아산병원 차세대 의료정보시스템 공통 프레임워크 백엔드 개발",
       projects: [
         {
