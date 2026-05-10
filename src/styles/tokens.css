@@ -133,9 +133,11 @@ img, svg {
 .eyebrow::before {
   content: "";
   display: inline-block;
-  width: 14px;
-  height: 1px;
-  background: var(--color-accent);
+  width: 16px;
+  height: 0;
+  /* background 대신 border를 사용 — 인쇄 시 Background graphics 옵션과 무관하게 표시됨 */
+  border-top: 1.5px solid var(--color-accent);
+  vertical-align: middle;
 }
 
 .section-title {
@@ -277,5 +279,148 @@ img, svg {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Print-only utility ---------- */
+.print-only {
+  display: none;
+}
+
+.print-contact {
+  margin-top: 16px;
+  font-family: var(--font-sans);
+  font-size: 11pt;
+  line-height: 1.7;
+  color: #334155;
+}
+
+.print-contact strong {
+  display: inline-block;
+  min-width: 56px;
+  font-weight: 600;
+  color: #0F172A;
+}
+
+/* ---------- Print stylesheet ---------- */
+@page {
+  size: A4 portrait;
+  margin: 14mm;
+}
+
+@media print {
+  /* 모든 애니메이션/페이드 강제 해제 + 컬러/배경 강제 인쇄 */
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    box-shadow: none !important;
+    /* Chrome/Safari/Firefox 모두 background·color를 그대로 인쇄하도록 강제 */
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  html, body {
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+    font-size: 10pt;
+    line-height: 1.55;
+  }
+
+  /* UI 영역 숨김 */
+  nav,
+  .cta-group,
+  .no-print {
+    display: none !important;
+  }
+
+  /* 인쇄용 콘텐츠 노출 */
+  .print-only {
+    display: block !important;
+  }
+
+  /* Hero — nav 제거됐으니 상단 패딩 리셋 */
+  #hero {
+    padding-top: 0 !important;
+    padding-bottom: 12pt !important;
+  }
+
+  /* 섹션 — break-inside avoid 절대 사용 금지 (긴 섹션이 통째로 밀려서 빈 페이지 생김) */
+  section {
+    padding: 10pt 0 !important;
+    background: #FFFFFF !important;
+    border: none !important;
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  /* 헤딩 고립 방지 — 페이지 하단에 헤딩만 남는 상황 차단 */
+  h1, h2, h3, h4 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* 카드 — 작은 단위라 break-inside avoid 유지 */
+  .card {
+    border: 1px solid #E2E8F0 !important;
+    background: #FFFFFF !important;
+    padding: 10pt 12pt !important;
+    border-radius: 6px !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* 프로젝트 카드 간 간격 최소화 */
+  article.card {
+    margin-bottom: 8pt !important;
+  }
+
+  /* Stats — 인쇄 시 무조건 4컬럼 */
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 14pt !important;
+    padding: 12pt 14pt !important;
+    border-radius: 6px !important;
+  }
+
+  /* Experience 회사 블록 간격 압축 */
+  .experience-company {
+    margin-bottom: 18pt !important;
+  }
+
+  /* 섹션 콘텐츠 상단 여백 압축 */
+  .section-content {
+    margin-top: 14pt !important;
+  }
+
+  /* Info 그리드 — 인쇄에서 3컬럼 유지 */
+  .info-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 16pt !important;
+  }
+
+  /* 링크: 텍스트로 보이게 */
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+
+  /* 컨테이너 폭 인쇄에 맞게 */
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  /* 태그 압축 */
+  .tag {
+    padding: 2px 6px !important;
+    font-size: 8.5pt !important;
+  }
+
+  /* Eyebrow 라벨 살짝 작게 */
+  .eyebrow {
+    font-size: 8.5pt !important;
   }
 }

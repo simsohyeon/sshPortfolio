@@ -169,7 +169,7 @@ function ProjectCard({ proj }) {
 function CompanyBlock({ exp, index }) {
   return (
     <FadeIn delay={index * 0.05}>
-      <div style={{ marginBottom: "44px" }}>
+      <div className="experience-company" style={{ marginBottom: "44px" }}>
         <div style={{
           display: "flex",
           justifyContent: "space-between",

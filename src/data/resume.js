@@ -9,6 +9,7 @@ const resume = {
     email: "tlathgus3466@gmail.com",
     phone: "010-4415-3460",
     github: "https://github.com/simsohyeon",
+    portfolio: "https://simsohyeon.github.io/sshPortfolio/",
   },
   keywords: ["성능 최적화", "결함 없는 설계", "운영 오너십"],
   about: `사용성과 유지보수성을 모두 고려한 시스템을 설계하며, 수치로 검증 가능한 개선 성과를 만들어내는 4년 차 풀스택 개발자입니다. 프론트엔드와 백엔드 모두에 강점을 가지고 있으며, 코드를 잘 짜는 것을 넘어 QA 결함이 덜 발생하는 구조를 설계하고, 운영 단계까지 오너십을 가지고 기여합니다.`,

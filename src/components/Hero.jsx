@@ -94,12 +94,28 @@ export default function Hero() {
             <a href={emailUrl} className="btn btn-primary">
               이메일로 연락하기
             </a>
-            <a href={resume.contact.github} target="_blank" rel="noreferrer" className="btn btn-secondary">
+            <a
+              href={resume.contact.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-secondary"
+            >
               GitHub ↗
             </a>
-            <a href="#experience" className="btn btn-ghost">
-              프로젝트 보기 ↓
+            <a
+              href={`${import.meta.env.BASE_URL}resume.pdf`}
+              download="SimSohyeon_Resume.pdf"
+              className="btn btn-secondary"
+            >
+              Resume PDF ↓
             </a>
+          </div>
+
+          {/* 인쇄/PDF 저장 시에만 노출되는 연락처 영역 */}
+          <div className="print-only print-contact">
+            <div><strong>Email</strong> &nbsp; {resume.contact.email}</div>
+            <div><strong>Phone</strong> &nbsp; {resume.contact.phone}</div>
+            <div><strong>GitHub</strong> &nbsp; {resume.contact.github}</div>
           </div>
         </div>
       </div>

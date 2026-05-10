@@ -10,7 +10,7 @@ export default function Stats() {
     }}>
       <div className="container">
         <FadeIn>
-          <div style={{
+          <div className="stats-grid" style={{
             background: "var(--color-bg-alt)",
             border: "1px solid var(--color-border)",
             borderRadius: "var(--radius-lg)",
