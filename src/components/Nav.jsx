@@ -2,6 +2,7 @@ const links = [
   { id: "about", label: "About" },
   { id: "experience", label: "Experience" },
   { id: "skills", label: "Skills" },
+  { id: "info", label: "Info" },
 ];
 
 export default function Nav({ active }) {

@@ -4,7 +4,8 @@ import resume from "../data/resume";
 export default function Stats() {
   return (
     <section style={{
-      paddingBottom: "40px",
+      paddingTop: "8px",
+      paddingBottom: "32px",
       background: "var(--color-bg)",
     }}>
       <div className="container">
@@ -12,7 +13,7 @@ export default function Stats() {
           <div style={{
             background: "var(--color-bg-alt)",
             border: "1px solid var(--color-border)",
-            borderRadius: "var(--radius-md)",
+            borderRadius: "var(--radius-lg)",
             padding: "20px 24px",
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
@@ -30,14 +31,14 @@ export default function Stats() {
                 }}>{s.value}</div>
                 <div style={{
                   fontFamily: "var(--font-sans)",
-                  fontSize: "0.86rem",
+                  fontSize: "0.875rem",
                   fontWeight: 500,
                   color: "var(--color-text-strong)",
                   marginTop: "8px",
                 }}>{s.label}</div>
                 <div style={{
                   fontFamily: "var(--font-mono)",
-                  fontSize: "0.7rem",
+                  fontSize: "0.72rem",
                   color: "var(--color-muted)",
                   marginTop: "4px",
                 }}>{s.sub}</div>

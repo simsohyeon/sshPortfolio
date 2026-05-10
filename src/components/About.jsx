@@ -1,7 +1,7 @@
 import FadeIn from "./common/FadeIn";
 import resume from "../data/resume";
 
-const ABOUT_SHORT = `사용자 경험과 유지보수성을 중요하게 생각하는 풀스택 개발자입니다. React 기반 프론트엔드와 Java/Spring 백엔드를 모두 다루며, 엔터프라이즈 솔루션의 설계·개발·운영 전 단계에 참여한 경험이 있습니다. 결함이 적은 구조 설계와 데이터 기반 성능 개선에 강점을 가지고 있습니다.`;
+const ABOUT_SHORT = `엔터프라이즈 솔루션의 설계·개발·운영 전 단계에 참여한 풀스택 개발자입니다. React 프론트엔드와 Java/Spring 백엔드를 모두 다루며, 결함 적은 구조 설계와 데이터 기반 성능 개선에 강점을 가지고 있습니다.`;
 
 export default function About() {
   const items = [
@@ -26,14 +26,13 @@ export default function About() {
             maxWidth: "780px",
           }}>{ABOUT_SHORT}</p>
 
-          <div style={{
-            marginTop: "32px",
+          <div className="section-content" style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
             gap: "12px",
           }}>
             {items.map((item, i) => (
-              <div key={i} className="card" style={{ padding: "18px 20px" }}>
+              <div key={i} className="card">
                 <div style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: "0.66rem",
@@ -44,11 +43,12 @@ export default function About() {
                 }}>{item.label}</div>
                 <div style={{
                   fontFamily: "var(--font-sans)",
-                  fontSize: "0.95rem",
+                  fontSize: "1rem",
                   fontWeight: 600,
                   color: "var(--color-text-strong)",
-                  marginTop: "8px",
+                  marginTop: "10px",
                   lineHeight: 1.4,
+                  letterSpacing: "-0.005em",
                 }}>{item.value}</div>
                 <div style={{
                   fontFamily: "var(--font-sans)",

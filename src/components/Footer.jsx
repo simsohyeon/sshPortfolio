@@ -5,7 +5,7 @@ export default function Footer() {
     <footer style={{
       borderTop: "1px solid var(--color-border)",
       background: "var(--color-bg)",
-      padding: "28px 0",
+      padding: "32px 0",
     }}>
       <div className="container" style={{
         display: "flex",
@@ -16,7 +16,7 @@ export default function Footer() {
       }}>
         <p style={{
           fontFamily: "var(--font-sans)",
-          fontSize: "0.85rem",
+          fontSize: "0.875rem",
           fontWeight: 500,
           color: "var(--color-text-soft)",
         }}>

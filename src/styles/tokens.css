@@ -8,8 +8,8 @@
   --color-surface-2: #F1F5F9;
 
   /* Border */
-  --color-border: #E2E8F0;
-  --color-border-strong: #CBD5E1;
+  --color-border: #EAECEF;
+  --color-border-strong: #D5D9DF;
 
   /* Text */
   --color-text: #0F172A;
@@ -104,17 +104,17 @@ img, svg {
 }
 
 .section {
-  padding: 80px 0;
+  padding: 64px 0;
 }
 
 @media (max-width: 768px) {
   .container { padding: 0 20px; }
-  .section { padding: 56px 0; }
+  .section { padding: 48px 0; }
 }
 
 @media (max-width: 480px) {
   .container { padding: 0 16px; }
-  .section { padding: 48px 0; }
+  .section { padding: 40px 0; }
 }
 
 /* ---------- Typography utilities ---------- */
@@ -205,10 +205,10 @@ img, svg {
   display: inline-flex;
   align-items: center;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0;
-  padding: 4px 9px;
+  padding: 3px 8px;
   background: var(--color-bg-alt);
   color: var(--color-text-soft);
   border: 1px solid var(--color-border);
@@ -224,17 +224,21 @@ img, svg {
 .card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: 24px;
-  transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+  transition: border-color 0.18s var(--ease);
 }
 .card:hover {
   border-color: var(--color-border-strong);
-  box-shadow: var(--shadow-sm);
 }
 
 @media (max-width: 480px) {
-  .card { padding: 18px; }
+  .card { padding: 20px; }
+}
+
+/* Spacing utility — 섹션 헤더(eyebrow + title + sub) 아래 콘텐츠 시작 위치 */
+.section-content {
+  margin-top: 32px;
 }
 
 /* ---------- CTA group with mobile-stack ---------- */
@@ -251,6 +255,19 @@ img, svg {
   .cta-group .btn {
     width: 100%;
     padding: 12px 18px;
+  }
+}
+
+/* ---------- Additional Info grid ---------- */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+}
+@media (max-width: 768px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 }
 

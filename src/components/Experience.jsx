@@ -1,75 +1,59 @@
-import { useState } from "react";
 import FadeIn from "./common/FadeIn";
 import resume from "../data/resume";
 
+// 숫자 + 단위 (%, 건, 초, 분, s, ms 등) 또는 ↓/↑ 변화량을 강조 표시
+const METRIC_SPLIT_RE = /(↓\d+(?:\.\d+)?%?|↑\d+(?:\.\d+)?%?|\d+(?:\.\d+)?(?:%|건|초|분|시간|일|s|ms|x|배|점)?)/g;
+const METRIC_TEST_RE = /^(↓|↑)?\d/;
+
+function HighlightMetrics({ text }) {
+  const parts = text.split(METRIC_SPLIT_RE);
+  return (
+    <>
+      {parts.map((p, i) =>
+        METRIC_TEST_RE.test(p)
+          ? <span key={i} style={{
+              color: "var(--color-text-strong)",
+              fontWeight: 600,
+            }}>{p}</span>
+          : p
+      )}
+    </>
+  );
+}
+
 function ImplementationItem({ item }) {
-  const [open, setOpen] = useState(false);
   const hasDetail = item.problem || item.solution;
 
   return (
     <div style={{
       borderTop: "1px solid var(--color-border)",
-      paddingTop: "18px",
-      marginTop: "18px",
+      paddingTop: "16px",
+      marginTop: "16px",
     }}>
-      <div
-        onClick={() => hasDetail && setOpen(o => !o)}
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          gap: "12px",
-          cursor: hasDetail ? "pointer" : "default",
-        }}
-      >
-        <h4 style={{
-          fontFamily: "var(--font-sans)",
-          fontSize: "0.98rem",
-          fontWeight: 600,
-          color: "var(--color-text-strong)",
-          margin: 0,
-          letterSpacing: "-0.005em",
-          lineHeight: 1.45,
-        }}>
-          {item.title}
-        </h4>
-        {hasDetail && (
-          <button
-            onClick={(e) => { e.stopPropagation(); setOpen(o => !o); }}
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.7rem",
-              fontWeight: 500,
-              color: "var(--color-accent)",
-              background: "var(--color-accent-soft)",
-              border: "1px solid var(--color-accent-border)",
-              padding: "4px 9px",
-              borderRadius: "6px",
-              cursor: "pointer",
-              flexShrink: 0,
-              letterSpacing: "0.02em",
-              transition: "background 0.15s var(--ease)",
-            }}
-            onMouseEnter={e => e.currentTarget.style.background = "#DBEAFE"}
-            onMouseLeave={e => e.currentTarget.style.background = "var(--color-accent-soft)"}
-          >
-            {open ? "− 닫기" : "+ 상세"}
-          </button>
-        )}
-      </div>
+      <h4 style={{
+        fontFamily: "var(--font-sans)",
+        fontSize: "0.95rem",
+        fontWeight: 600,
+        color: "var(--color-text-strong)",
+        margin: 0,
+        letterSpacing: "-0.005em",
+        lineHeight: 1.45,
+      }}>
+        {item.title}
+      </h4>
 
       <ul style={{
-        margin: "12px 0 0", padding: 0, listStyle: "none",
+        margin: "10px 0 0", padding: 0, listStyle: "none",
         display: "flex", flexDirection: "column", gap: "6px",
       }}>
         {item.results.map((r, i) => (
           <li key={i} style={{
             fontFamily: "var(--font-sans)",
-            fontSize: "0.88rem",
+            fontSize: "0.875rem",
             fontWeight: 400,
             color: "var(--color-text-soft)",
             display: "flex", alignItems: "flex-start", gap: "10px",
-            lineHeight: 1.65,
+            lineHeight: 1.7,
           }}>
             <span style={{
               width: "5px", height: "5px",
@@ -78,46 +62,46 @@ function ImplementationItem({ item }) {
               flexShrink: 0,
               marginTop: "9px",
             }} />
-            {r}
+            <span><HighlightMetrics text={r} /></span>
           </li>
         ))}
       </ul>
 
-      {open && hasDetail && (
+      {hasDetail && (
         <div style={{
-          marginTop: "16px",
-          display: "grid", gap: "10px",
+          marginTop: "12px",
+          display: "grid", gap: "8px",
         }}>
           {item.problem && (
             <div style={{
-              background: "#FEF2F2",
-              borderLeft: "3px solid var(--color-danger)",
               padding: "12px 14px",
-              borderRadius: "0 6px 6px 0",
+              background: "var(--color-bg-alt)",
+              borderRadius: "var(--radius-md)",
+              borderLeft: "2px solid var(--color-border-strong)",
             }}>
               <span style={{
                 fontFamily: "var(--font-mono)", fontSize: "0.66rem", fontWeight: 500,
-                color: "var(--color-danger)", letterSpacing: "0.14em", textTransform: "uppercase",
+                color: "var(--color-muted)", letterSpacing: "0.14em", textTransform: "uppercase",
               }}>Problem</span>
               <p style={{
-                fontFamily: "var(--font-sans)", fontSize: "0.88rem", fontWeight: 400,
-                color: "var(--color-text)", margin: "6px 0 0", lineHeight: 1.7,
+                fontFamily: "var(--font-sans)", fontSize: "0.875rem", fontWeight: 400,
+                color: "var(--color-text-soft)", margin: "6px 0 0", lineHeight: 1.7,
               }}>{item.problem}</p>
             </div>
           )}
           {item.solution && (
             <div style={{
-              background: "var(--color-accent-soft)",
-              borderLeft: "3px solid var(--color-accent)",
               padding: "12px 14px",
-              borderRadius: "0 6px 6px 0",
+              background: "var(--color-accent-soft)",
+              borderRadius: "var(--radius-md)",
+              borderLeft: "2px solid var(--color-accent)",
             }}>
               <span style={{
                 fontFamily: "var(--font-mono)", fontSize: "0.66rem", fontWeight: 500,
                 color: "var(--color-accent)", letterSpacing: "0.14em", textTransform: "uppercase",
               }}>Solution</span>
               <p style={{
-                fontFamily: "var(--font-sans)", fontSize: "0.88rem", fontWeight: 400,
+                fontFamily: "var(--font-sans)", fontSize: "0.875rem", fontWeight: 400,
                 color: "var(--color-text)", margin: "6px 0 0", lineHeight: 1.7,
               }}>{item.solution}</p>
             </div>
@@ -130,7 +114,7 @@ function ImplementationItem({ item }) {
 
 function ProjectCard({ proj }) {
   return (
-    <article className="card" style={{ padding: "24px" }}>
+    <article className="card">
       <div style={{
         display: "flex", justifyContent: "space-between",
         alignItems: "flex-start", flexWrap: "wrap",
@@ -138,25 +122,24 @@ function ProjectCard({ proj }) {
       }}>
         <h3 style={{
           fontFamily: "var(--font-sans)",
-          fontSize: "1.15rem",
+          fontSize: "1.05rem",
           fontWeight: 600,
           color: "var(--color-text-strong)",
           margin: 0,
           letterSpacing: "-0.01em",
-          lineHeight: 1.35,
+          lineHeight: 1.4,
         }}>{proj.name}</h3>
         <span style={{
           fontFamily: "var(--font-mono)",
-          fontSize: "0.74rem",
+          fontSize: "0.72rem",
           color: "var(--color-muted)",
-          paddingTop: "3px",
-          letterSpacing: "0",
+          paddingTop: "4px",
+          whiteSpace: "nowrap",
         }}>{proj.period}</span>
       </div>
 
       <div style={{
-        display: "flex", gap: "6px", flexWrap: "wrap",
-        marginBottom: proj.clients ? "8px" : "0",
+        display: "flex", gap: "5px", flexWrap: "wrap",
       }}>
         {proj.stack.map((s, si) => (
           <span key={si} className="tag">{s}</span>
@@ -169,7 +152,7 @@ function ProjectCard({ proj }) {
           fontSize: "0.82rem",
           fontWeight: 400,
           color: "var(--color-muted)",
-          margin: "8px 0 0",
+          margin: "10px 0 0",
         }}>
           <span style={{ color: "var(--color-muted-2)" }}>적용 기관 · </span>
           {proj.clients.join(" · ")}
@@ -186,24 +169,24 @@ function ProjectCard({ proj }) {
 function CompanyBlock({ exp, index }) {
   return (
     <FadeIn delay={index * 0.05}>
-      <div style={{ marginBottom: "48px" }}>
+      <div style={{ marginBottom: "44px" }}>
         <div style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "flex-start",
           flexWrap: "wrap",
-          gap: "12px",
+          gap: "10px",
           marginBottom: "8px",
         }}>
           <div>
             <h3 style={{
               fontFamily: "var(--font-sans)",
-              fontSize: "clamp(1.2rem, 3vw, 1.4rem)",
-              fontWeight: 600,
+              fontSize: "clamp(1.3rem, 3.2vw, 1.55rem)",
+              fontWeight: 700,
               color: "var(--color-text-strong)",
               margin: 0,
-              letterSpacing: "-0.015em",
-              lineHeight: 1.35,
+              letterSpacing: "-0.02em",
+              lineHeight: 1.3,
             }}>
               {exp.company}
               {exp.position && (
@@ -217,7 +200,7 @@ function CompanyBlock({ exp, index }) {
               fontFamily: "var(--font-sans)",
               fontSize: "0.92rem",
               fontWeight: 400,
-              color: "var(--color-text-soft)",
+              color: "var(--color-muted)",
               margin: "6px 0 0",
               lineHeight: 1.6,
             }}>{exp.role}</p>
@@ -227,12 +210,13 @@ function CompanyBlock({ exp, index }) {
             fontSize: "0.78rem",
             color: "var(--color-muted)",
             paddingTop: "4px",
+            whiteSpace: "nowrap",
           }}>{exp.period}</span>
         </div>
 
         <div style={{
-          display: "flex", flexDirection: "column", gap: "14px",
-          marginTop: "20px",
+          display: "flex", flexDirection: "column", gap: "12px",
+          marginTop: "18px",
         }}>
           {exp.projects.map((proj, pi) => <ProjectCard key={pi} proj={proj} />)}
         </div>
@@ -247,13 +231,13 @@ export default function Experience() {
       <div className="container">
         <FadeIn>
           <p className="eyebrow">Experience</p>
-          <h2 className="section-title">경력 & 프로젝트</h2>
+          <h2 className="section-title">경력 &amp; 프로젝트</h2>
           <p className="section-sub">
             엔터프라이즈 솔루션 풀스택 개발 · 성능 최적화 · 운영 안정화 중심으로 정리했습니다.
           </p>
         </FadeIn>
 
-        <div style={{ marginTop: "40px" }}>
+        <div className="section-content">
           {resume.experience.map((exp, i) => <CompanyBlock key={i} exp={exp} index={i} />)}
         </div>
       </div>

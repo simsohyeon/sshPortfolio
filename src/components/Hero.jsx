@@ -1,13 +1,12 @@
 import resume from "../data/resume";
 
 const SUMMARY_BULLETS = [
-  "Java/Spring · React 기반 풀스택 개발 4년차",
-  "ITSM·EMR 등 엔터프라이즈 솔루션 설계·개발·운영 경험",
+  "ITSM·EMR 등 엔터프라이즈 솔루션 풀스택 4년차",
   "성능 최적화 / SQL 튜닝 / 운영 안정화 다수 수행",
-  "결함 적은 구조 설계 및 데이터 기반 개선",
+  "결함 적은 구조 설계 · 데이터 기반 개선",
 ];
 
-const PRIMARY_STACK = ["React", "TypeScript", "Java", "Spring Boot", "MongoDB", "Oracle"];
+const PRIMARY_STACK = ["React", "TypeScript", "Java", "Spring Boot", "Oracle", "MongoDB"];
 
 const BulletDot = () => (
   <span style={{
@@ -25,8 +24,8 @@ export default function Hero() {
 
   return (
     <section id="hero" style={{
-      paddingTop: "calc(var(--nav-height) + 48px)",
-      paddingBottom: "44px",
+      paddingTop: "calc(var(--nav-height) + 32px)",
+      paddingBottom: "32px",
       background: "var(--color-bg)",
     }}>
       <div className="container">
@@ -35,12 +34,12 @@ export default function Hero() {
 
           <h1 style={{
             fontFamily: "var(--font-sans)",
-            fontSize: "clamp(1.9rem, 5vw, 2.8rem)",
+            fontSize: "clamp(1.85rem, 4.6vw, 2.6rem)",
             fontWeight: 600,
             color: "var(--color-text-strong)",
             lineHeight: 1.2,
             letterSpacing: "-0.02em",
-            margin: "12px 0 0",
+            margin: "10px 0 0",
           }}>
             {resume.name},{" "}
             <span style={{ color: "var(--color-accent)" }}>{resume.title}</span>
@@ -51,20 +50,20 @@ export default function Hero() {
             fontSize: "clamp(0.95rem, 1.4vw, 1.02rem)",
             fontWeight: 400,
             color: "var(--color-text-soft)",
-            marginTop: "14px",
+            marginTop: "12px",
             lineHeight: 1.7,
           }}>
-            엔터프라이즈 솔루션을 설계·개발·운영하며 수치로 증명한 개선 성과를
-            만들어온 풀스택 개발자입니다. 결함 적은 구조 설계와 성능 최적화에
-            강점을 가지고 있습니다.
+            Java/Spring · React 기반 엔터프라이즈 풀스택 개발자.
+            <br />
+            운영 안정화 및 성능 최적화 경험 중심.
           </p>
 
           <ul style={{
             listStyle: "none",
             padding: 0,
-            marginTop: "18px",
+            marginTop: "16px",
             display: "grid",
-            gap: "8px",
+            gap: "6px",
           }}>
             {SUMMARY_BULLETS.map((b, i) => (
               <li key={i} style={{
@@ -74,7 +73,7 @@ export default function Hero() {
                 fontSize: "0.92rem",
                 fontWeight: 400,
                 color: "var(--color-text-soft)",
-                lineHeight: 1.65,
+                lineHeight: 1.7,
               }}>
                 <BulletDot />
                 {b}
@@ -84,14 +83,14 @@ export default function Hero() {
 
           <div style={{
             display: "flex", gap: "6px", flexWrap: "wrap",
-            marginTop: "22px",
+            marginTop: "18px",
           }}>
             {PRIMARY_STACK.map((s, i) => (
               <span key={i} className="tag">{s}</span>
             ))}
           </div>
 
-          <div className="cta-group" style={{ marginTop: "26px" }}>
+          <div className="cta-group" style={{ marginTop: "22px" }}>
             <a href={emailUrl} className="btn btn-primary">
               이메일로 연락하기
             </a>
