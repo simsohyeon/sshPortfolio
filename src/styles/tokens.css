@@ -306,6 +306,14 @@ img, svg {
 @page {
   size: A4 portrait;
   margin: 14mm;
+
+  /* 브라우저가 자동 삽입하는 URL·날짜·페이지번호 영역 비우기 (지원하는 브라우저에서만 동작) */
+  @top-left { content: ""; }
+  @top-center { content: ""; }
+  @top-right { content: ""; }
+  @bottom-left { content: ""; }
+  @bottom-center { content: ""; }
+  @bottom-right { content: ""; }
 }
 
 @media print {
