@@ -22,6 +22,17 @@ const BulletDot = () => (
 export default function Hero() {
   const emailUrl = `mailto:${resume.contact.email}?subject=${encodeURIComponent("채용 문의")}`;
 
+  const handlePrintResume = () => {
+    const originalTitle = document.title;
+    document.title = "SimSohyeon_Resume";
+    const restore = () => {
+      document.title = originalTitle;
+      window.removeEventListener("afterprint", restore);
+    };
+    window.addEventListener("afterprint", restore);
+    window.print();
+  };
+
   return (
     <section id="hero" style={{
       paddingTop: "calc(var(--nav-height) + 32px)",
@@ -102,13 +113,13 @@ export default function Hero() {
             >
               GitHub ↗
             </a>
-            <a
-              href={`${import.meta.env.BASE_URL}resume.pdf`}
-              download="SimSohyeon_Resume.pdf"
+            <button
+              type="button"
+              onClick={handlePrintResume}
               className="btn btn-secondary"
             >
               Resume PDF ↓
-            </a>
+            </button>
           </div>
 
           {/* 인쇄/PDF 저장 시에만 노출되는 연락처 영역 */}
