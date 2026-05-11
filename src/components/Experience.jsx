@@ -146,6 +146,19 @@ function ProjectCard({ proj }) {
         ))}
       </div>
 
+      {proj.summary && (
+        <p style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: "0.875rem",
+          fontWeight: 400,
+          color: "var(--color-text-soft)",
+          margin: "12px 0 0",
+          lineHeight: 1.7,
+        }}>
+          {proj.summary}
+        </p>
+      )}
+
       {proj.clients && (
         <p style={{
           fontFamily: "var(--font-sans)",
