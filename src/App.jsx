@@ -4,6 +4,7 @@ import Hero from "./components/Hero";
 import Stats from "./components/Stats";
 import About from "./components/About";
 import Experience from "./components/Experience";
+import SideProjects from "./components/SideProjects";
 import Skills from "./components/Skills";
 import AdditionalInfo from "./components/AdditionalInfo";
 import Footer from "./components/Footer";
@@ -34,6 +35,7 @@ export default function App() {
       <Stats />
       <About />
       <Experience />
+      <SideProjects />
       <Skills />
       <AdditionalInfo />
       <Footer />

@@ -20,7 +20,7 @@ const resume = {
     { value: "64%", label: "온보딩 기간 단축", sub: "2주 → 5일" },
   ],
   skills: {
-    Frontend: ["React.js", "TypeScript", "HTML/CSS (SCSS)", "C# / .NET WinForm"],
+    Frontend: ["React.js", "TypeScript", "HTML / CSS / SCSS", "C# / .NET WinForm"],
     Backend: ["Java", "Spring Boot", "Spring Framework", "MyBatis", "Spring Batch"],
     Database: ["Oracle DB", "MySQL", "Tibero", "MongoDB"],
     "Infra / DevOps": ["Docker", "Kubernetes", "Jenkins"],
@@ -28,7 +28,7 @@ const resume = {
   },
   experience: [
     {
-      company: "엔키아 (NKIA)",
+      company: "엔키아 NKIA",
       position: "대리",
       period: "2024.01 ~ 현재",
       role: "ITSM 솔루션 개발 / 차세대 통합신제품 풀스택 개발",
@@ -42,7 +42,7 @@ const resume = {
             {
               title: "ITIL 4 도메인 모델 · 라이프사이클 상태머신 · Validation/RBAC 통합 설계",
               problem: "ITSM/ITAM/CMDB/KEDB 4개 모듈의 라이프사이클과 권한 체계가 모듈별로 상이해 비즈니스 규칙 변경 시 영향 범위 추적이 어려웠고, 상태 전이 로직이 컴포넌트 전반에 산재해 QA 결함 평균 500건/프로젝트 반복 발생",
-              solution: "ITIL 4를 기준으로 Portfolio→Catalog→Service→Request 4계층 도메인 구조를 정리하고, 5단계 라이프사이클과 상태별 전이 규칙을 명시화(예: 도입 상태이면서 연결 카탈로그가 없을 때만 삭제 가능). 서비스도메인 단일 화면에서 ITAM 자산·CMDB 구성·요청 이력을 권한별로 함께 조회하도록 다모듈 조회 구조를 설계했고, 탭·액션·행 단위 RBAC와 Validation 로직을 프론트·백엔드로 분리해 책임 경계를 명확히 함.",
+              solution: "ITIL 4를 기준으로 Portfolio→Catalog→Service→Request 4계층 도메인 구조를 정리하고, 5단계 라이프사이클과 상태별 전이 규칙을 명시화. 서비스도메인 단일 화면에서 ITAM 자산·CMDB 구성·요청 이력을 권한별로 함께 조회하도록 다모듈 조회 구조를 설계했고, 탭·액션·행 단위 RBAC와 Validation 로직을 프론트·백엔드로 분리해 책임 경계를 명확히 함.",
               results: [
                 "QA 결함 500건 → 92건 (↓80%)",
                 "입력 검증 오류 60% → 15%",
@@ -55,13 +55,13 @@ const resume = {
             {
               title: "MongoDB Aggregation 성능 최적화",
               problem: "$lookup 과다 사용으로 p95 응답시간 1.8초, timeout 발생률 3%, 피크 CPU 70% (100만 건↑ 컬렉션, 일 평균 조회 5만 건)",
-              solution: "실행계획 분석으로 병목 구간 식별 → 복합 인덱스 재설계 + 파이프라인 재구성 (불필요한 $lookup 제거 및 순서 최적화)",
+              solution: "실행계획 분석으로 병목 구간 식별 → 복합 인덱스 재설계 및 파이프라인 재구성으로 불필요한 $lookup 제거 및 순서 최적화 적용",
               results: ["p95 응답시간 1.8s → 0.7s (↓61%)", "timeout 발생률 3% → 0%", "피크 CPU 70% → 45%"],
             },
             {
               title: "ITSM 통합검색 — 6 카테고리 + 결과 내 재검색 + 추천 검색어",
               problem: "요청·서비스카탈로그·KEDB·공지·댓글·첨부파일에 흩어진 정보가 단일 검색으로 조회 불가, LIKE 기반 부분 검색은 응답 느리고 정확도 낮음",
-              solution: "6개 카테고리를 단일 인덱스로 통합하고, 첨부파일은 메타와 본문 텍스트까지 추출해 함께 인덱싱. 결과 내 재검색은 포함/제외 태그(최대 2개)와 기간 필터, 자주 쓰는 키워드 추천으로 구성. 권한 필터를 검색 단계에서 적용해 사용자가 볼 수 없는 데이터는 결과에 노출되지 않도록 처리.",
+              solution: "6개 카테고리를 단일 인덱스로 통합하고, 첨부파일은 메타와 본문 텍스트까지 추출해 함께 인덱싱. 결과 내 재검색은 포함/제외 태그와 기간 필터, 자주 쓰는 키워드 추천으로 구성. 권한 필터를 검색 단계에서 적용해 사용자가 볼 수 없는 데이터는 결과에 노출되지 않도록 처리.",
               results: [
                 "평균 검색 응답 2.4s → 0.6s (↓75%)",
                 "‘검색해도 안 나옴’ 운영 문의 월 8건 → 0건",
@@ -89,11 +89,11 @@ const resume = {
             {
               title: "SQL 튜닝 및 조회 성능 개선",
               problem: "Oracle·Tibero 환경에서 복잡 조회 쿼리 응답시간 2.5초 → 대량 데이터 환경에서 SLA 위협",
-              solution: "실행계획(Explain Plan) 분석으로 풀스캔 구간 식별 → 인덱스 재설계 및 쿼리 구조 개선",
+              solution: "실행계획 분석으로 풀스캔 구간 식별 → 인덱스 재설계 및 쿼리 구조 개선",
               results: ["응답시간 2.5s → 1.1s (↓56%)", "SLA 준수율 90% → 98%", "장애·핫픽스 월 12건 → 4건 이하"],
             },
             {
-              title: "UI 성능 개선 (Webix 기반)",
+              title: "UI 성능 개선 — Webix 기반",
               problem: "화면 로딩 3.2초로 사용자 불만 및 SLA 위협",
               solution: "렌더링 병목 구간 분석 후 데이터 바인딩 구조 개선 및 불필요한 재렌더링 제거",
               results: ["로딩속도 3.2s → 1.4s (↓56%)", "릴리즈 준수율 100% 달성"],
@@ -103,20 +103,20 @@ const resume = {
       ],
     },
     {
-      company: "엠투아이티 (M2IT)",
+      company: "엠투아이티 M2IT",
       position: "사원",
       period: "2022.01 ~ 2023.03",
       role: "강릉아산병원 차세대 의료정보시스템 공통 프레임워크 백엔드 개발",
       projects: [
         {
           name: "강릉아산병원 차세대 의료정보시스템",
-          period: "2022.01 ~ 2023.04",
-          stack: ["Java", "Spring", "Spring Batch", "JSch (SFTP)"],
+          period: "2022.01 ~ 2023.03",
+          stack: ["Java", "Spring", "Spring Batch", "JSch"],
           items: [
             {
               title: "외부 API 연동 배치 시스템 설계 및 구현",
               problem: "실시간 연동 방식에서 데이터 동기화 지연 평균 30분, 연동 실패율 2.5% 발생",
-              solution: "Spring Batch + JSch(SFTP) 기반 배치 아키텍처 설계 → 변경 데이터만 선별하여 파일 시스템 저장 후, 지정 시간에 외부 API가 읽어가는 구조로 전환",
+              solution: "Spring Batch + JSch 기반 SFTP 배치 아키텍처 설계 → 변경 데이터만 선별하여 파일 시스템에 저장 후, 지정 시간에 외부 API가 읽어가는 구조로 전환",
               results: ["동기화 지연 30분 → 5분 이내 (↓83%)", "연동 실패율 2.5% → 0.3% (↓88%)"],
             },
             {
@@ -133,8 +133,27 @@ const resume = {
       ],
     },
   ],
+  sideProjects: [
+    {
+      name: "실시간 위치 기록 안드로이드 앱",
+      period: "2021.03 ~ 2021.12",
+      context: "가톨릭관동대 캡스톤디자인 졸업작품 — 2021 LINC+ 캡스톤디자인 경진대회 우수상",
+      stack: ["Android", "Java", "SQLite", "Google Maps API"],
+      summary: "사용자의 이동 경로를 자동으로 기록하고, 주변 약국·병원·접종센터를 지도에서 함께 확인할 수 있는 안드로이드 앱.",
+      contributions: [
+        "실시간 위치 데이터를 주기적으로 수집·저장하는 로직 설계 및 구현",
+        "위치 권한 요청과 권한 상태별 예외 처리 로직 개발",
+        "SQLite 기반 로컬 DB 구조 설계 — 이동 경로 데이터 저장·조회 처리",
+        "Google Maps에 약국·병원·접종센터 위치를 오버레이로 표시하는 기능 구현",
+      ],
+      takeaways: [
+        "모바일 환경에서의 데이터 처리·권한 관리·백그라운드 서비스 구성 경험",
+        "Google Maps API · SQLite를 활용한 로컬 저장소와 UI 연동 기초 역량",
+      ],
+    },
+  ],
   certifications: [
-    { name: "SQLD (SQL 개발자)", org: "한국데이터산업진흥원", date: "2024.04" },
+    { name: "SQLD — SQL 개발자", org: "한국데이터산업진흥원", date: "2024.04" },
     { name: "정보처리기사", org: "한국산업인력공단", date: "2023.09" },
   ],
   awards: [
