@@ -37,8 +37,8 @@ export default function Stats() {
                   marginTop: "8px",
                 }}>{s.label}</div>
                 <div style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.72rem",
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.78rem",
                   color: "var(--color-muted)",
                   marginTop: "4px",
                 }}>{s.sub}</div>

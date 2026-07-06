@@ -1,9 +1,9 @@
 import resume from "../data/resume";
 
 const SUMMARY_BULLETS = [
-  "ITSM·EMR 등 엔터프라이즈 솔루션 풀스택 4년차",
-  "성능 최적화 / SQL 튜닝 / 운영 안정화 다수 수행",
-  "결함 적은 구조 설계 · 데이터 기반 개선",
+  "ITSM·EMR 엔터프라이즈 솔루션 설계·개발·운영 4년차",
+  "팀 AI 워크플로우 구축 — 산출물 자동화·온보딩 표준화 주도",
+  "성능 최적화 · 결함 적은 구조 설계 · 수치 기반 개선",
 ];
 
 const PRIMARY_STACK = ["React", "TypeScript", "Java", "Spring Boot", "Oracle", "MongoDB"];
@@ -41,7 +41,7 @@ export default function Hero() {
     }}>
       <div className="container">
         <div style={{ maxWidth: "680px" }}>
-          <p className="eyebrow">Available for hire · 2026</p>
+          <p className="eyebrow">Full Stack Developer · 4 Years</p>
 
           <h1 style={{
             fontFamily: "var(--font-sans)",
@@ -64,9 +64,9 @@ export default function Hero() {
             marginTop: "12px",
             lineHeight: 1.7,
           }}>
-            Java/Spring · React 기반 엔터프라이즈 풀스택 개발자.
+            React · Java/Spring 기반 엔터프라이즈 풀스택 개발자입니다.
             <br />
-            운영 안정화 및 성능 최적화 경험 중심.
+            반복되는 문제를 문서화·자동화·표준화로 풀고, 개선 결과를 수치로 확인합니다.
           </p>
 
           <ul style={{

@@ -47,13 +47,32 @@ function SideProjectCard({ proj }) {
           letterSpacing: "-0.01em",
           lineHeight: 1.4,
         }}>{proj.name}</h3>
-        <span style={{
-          fontFamily: "var(--font-mono)",
-          fontSize: "0.72rem",
-          color: "var(--color-muted)",
-          paddingTop: "4px",
-          whiteSpace: "nowrap",
-        }}>{proj.period}</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          {proj.link && (
+            <a
+              href={proj.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="no-print"
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.8rem",
+                fontWeight: 500,
+                color: "var(--color-accent)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Live ↗
+            </a>
+          )}
+          <span style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "0.72rem",
+            color: "var(--color-muted)",
+            paddingTop: "4px",
+            whiteSpace: "nowrap",
+          }}>{proj.period}</span>
+        </div>
       </div>
 
       <div style={{

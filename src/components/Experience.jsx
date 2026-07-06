@@ -21,6 +21,32 @@ function HighlightMetrics({ text }) {
   );
 }
 
+function DetailRow({ label, text, accent }) {
+  return (
+    <div style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
+      <span style={{
+        fontFamily: "var(--font-mono)",
+        fontSize: "0.66rem",
+        fontWeight: 500,
+        color: accent ? "var(--color-accent)" : "var(--color-muted)",
+        letterSpacing: "0.1em",
+        textTransform: "uppercase",
+        flexShrink: 0,
+        width: "56px",
+        paddingTop: "5px",
+      }}>{label}</span>
+      <p style={{
+        fontFamily: "var(--font-sans)",
+        fontSize: "0.875rem",
+        fontWeight: 400,
+        color: accent ? "var(--color-text)" : "var(--color-text-soft)",
+        margin: 0,
+        lineHeight: 1.7,
+      }}>{text}</p>
+    </div>
+  );
+}
+
 function ImplementationItem({ item }) {
   const hasDetail = item.problem || item.solution;
 
@@ -42,8 +68,18 @@ function ImplementationItem({ item }) {
         {item.title}
       </h4>
 
+      {hasDetail && (
+        <div style={{ marginTop: "10px", display: "grid", gap: "6px" }}>
+          {item.problem && <DetailRow label="Problem" text={item.problem} />}
+          {item.solution && <DetailRow label="Solution" text={item.solution} accent />}
+        </div>
+      )}
+
       <ul style={{
-        margin: "10px 0 0", padding: 0, listStyle: "none",
+        margin: hasDetail ? "12px 0 0" : "10px 0 0",
+        padding: hasDetail ? "10px 0 0" : 0,
+        borderTop: hasDetail ? "1px dashed var(--color-border)" : "none",
+        listStyle: "none",
         display: "flex", flexDirection: "column", gap: "6px",
       }}>
         {item.results.map((r, i) => (
@@ -66,48 +102,6 @@ function ImplementationItem({ item }) {
           </li>
         ))}
       </ul>
-
-      {hasDetail && (
-        <div style={{
-          marginTop: "12px",
-          display: "grid", gap: "8px",
-        }}>
-          {item.problem && (
-            <div style={{
-              padding: "12px 14px",
-              background: "var(--color-bg-alt)",
-              borderRadius: "var(--radius-md)",
-              borderLeft: "2px solid var(--color-border-strong)",
-            }}>
-              <span style={{
-                fontFamily: "var(--font-mono)", fontSize: "0.66rem", fontWeight: 500,
-                color: "var(--color-muted)", letterSpacing: "0.14em", textTransform: "uppercase",
-              }}>Problem</span>
-              <p style={{
-                fontFamily: "var(--font-sans)", fontSize: "0.875rem", fontWeight: 400,
-                color: "var(--color-text-soft)", margin: "6px 0 0", lineHeight: 1.7,
-              }}>{item.problem}</p>
-            </div>
-          )}
-          {item.solution && (
-            <div style={{
-              padding: "12px 14px",
-              background: "var(--color-accent-soft)",
-              borderRadius: "var(--radius-md)",
-              borderLeft: "2px solid var(--color-accent)",
-            }}>
-              <span style={{
-                fontFamily: "var(--font-mono)", fontSize: "0.66rem", fontWeight: 500,
-                color: "var(--color-accent)", letterSpacing: "0.14em", textTransform: "uppercase",
-              }}>Solution</span>
-              <p style={{
-                fontFamily: "var(--font-sans)", fontSize: "0.875rem", fontWeight: 400,
-                color: "var(--color-text)", margin: "6px 0 0", lineHeight: 1.7,
-              }}>{item.solution}</p>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }
@@ -246,7 +240,7 @@ export default function Experience() {
           <p className="eyebrow">Experience</p>
           <h2 className="section-title">경력 &amp; 프로젝트</h2>
           <p className="section-sub">
-            엔터프라이즈 솔루션 풀스택 개발 · 성능 최적화 · 운영 안정화 중심으로 정리했습니다.
+            팀 AI 워크플로우 구축부터 도메인 설계·성능 최적화·운영 안정화까지, 문제 → 해결 → 결과 순으로 정리했습니다.
           </p>
         </FadeIn>
 

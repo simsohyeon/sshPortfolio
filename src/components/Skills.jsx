@@ -5,7 +5,7 @@ const SKILL_LEVEL = {
   Frontend: "실무 운영 가능 수준",
   Backend: "주력 · 설계부터 배포까지",
   Database: "쿼리 튜닝 / 인덱스 설계 경험",
-  "Infra / DevOps": "기본 운영 가능 수준",
+  "Infra / DevOps": "배포 환경 활용 경험",
   Tools: "협업 환경 능숙",
 };
 
@@ -39,8 +39,8 @@ export default function Skills() {
                   lineHeight: 1.4,
                 }}>{cat}</h3>
                 <p style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.7rem",
+                  fontFamily: "var(--font-sans)",
+                  fontSize: "0.78rem",
                   fontWeight: 500,
                   color: "var(--color-accent)",
                   marginTop: "6px",
