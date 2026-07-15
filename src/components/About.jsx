@@ -22,6 +22,7 @@ export default function About() {
             lineHeight: 1.85,
             marginTop: "20px",
             maxWidth: "780px",
+            whiteSpace: "pre-line",
           }}>{resume.about}</p>
 
           <div className="section-content" style={{

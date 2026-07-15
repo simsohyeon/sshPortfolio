@@ -42,6 +42,7 @@ function DetailRow({ label, text, accent }) {
         color: accent ? "var(--color-text)" : "var(--color-text-soft)",
         margin: 0,
         lineHeight: 1.7,
+        whiteSpace: "pre-line",
       }}>{text}</p>
     </div>
   );
@@ -148,6 +149,7 @@ function ProjectCard({ proj }) {
           color: "var(--color-text-soft)",
           margin: "12px 0 0",
           lineHeight: 1.7,
+          whiteSpace: "pre-line",
         }}>
           {proj.summary}
         </p>
