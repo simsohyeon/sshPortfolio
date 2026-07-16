@@ -4,7 +4,7 @@ import resume from "../data/resume";
 export default function About() {
   const items = [
     { label: "Education", value: resume.education.school, sub: `학점 ${resume.education.gpa} · ${resume.education.period}` },
-    { label: "Career", value: "4년차 (2022~)", sub: "엔키아 · 엠투아이티" },
+    { label: "Career", value: "5년차 (2022.01~)", sub: "엔키아 · 엠투아이티" },
     { label: "Certificate", value: "SQLD · 정보처리기사", sub: "한국데이터산업진흥원 외" },
   ];
 
@@ -21,7 +21,6 @@ export default function About() {
             color: "var(--color-text-soft)",
             lineHeight: 1.85,
             marginTop: "20px",
-            maxWidth: "780px",
             whiteSpace: "pre-line",
           }}>{resume.about}</p>
 

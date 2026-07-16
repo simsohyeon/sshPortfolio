@@ -1,0 +1,293 @@
+/* 경력기술서 전용 문서 스타일 — 화면·인쇄 겸용 */
+
+:root {
+  --rs-ink: #0f172a;
+  --rs-soft: #334155;
+  --rs-muted: #64748b;
+  --rs-line: #cbd5e1;
+  --rs-accent: #1d4ed8;
+  --rs-sans: "Pretendard", "Pretendard Variable", -apple-system, "Segoe UI",
+    "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+  --rs-mono: "IBM Plex Mono", Consolas, monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #e2e8f0;
+  font-family: var(--rs-sans);
+  color: var(--rs-ink);
+  font-size: 9.5pt;
+  line-height: 1.55;
+}
+
+.rs-page {
+  max-width: 210mm;
+  margin: 0 auto;
+  background: #fff;
+  padding: 14mm 16mm;
+  min-height: 297mm;
+}
+
+.rs-mono {
+  font-family: var(--rs-mono);
+  font-size: 8pt;
+  color: var(--rs-muted);
+}
+
+/* 화면 전용 툴바 */
+.rs-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 20px;
+  padding: 10px 14px;
+  background: #f1f5f9;
+  border: 1px solid var(--rs-line);
+  border-radius: 8px;
+  font-size: 9pt;
+  color: var(--rs-soft);
+}
+
+.rs-toolbar button {
+  font-family: var(--rs-sans);
+  font-size: 9.5pt;
+  font-weight: 600;
+  color: #fff;
+  background: var(--rs-accent);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* 헤더 */
+.rs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 12pt;
+  border-bottom: 2px solid var(--rs-ink);
+}
+
+.rs-name {
+  font-size: 20pt;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.rs-title {
+  font-size: 12pt;
+  font-weight: 500;
+  color: var(--rs-accent);
+}
+
+.rs-tagline {
+  margin-top: 4pt;
+  font-size: 10pt;
+  color: var(--rs-soft);
+}
+
+.rs-contact {
+  text-align: right;
+  line-height: 1.7;
+  flex-shrink: 0;
+}
+
+/* 섹션 */
+.rs-section {
+  margin-top: 14pt;
+}
+
+.rs-section-title {
+  font-size: 11pt;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding-bottom: 3pt;
+  margin-bottom: 8pt;
+  border-bottom: 1px solid var(--rs-line);
+  break-after: avoid;
+}
+
+.rs-about {
+  white-space: pre-line;
+  color: var(--rs-soft);
+}
+
+.rs-stats {
+  margin-top: 6pt;
+  padding-left: 14pt;
+  color: var(--rs-soft);
+}
+
+.rs-stats strong {
+  color: var(--rs-ink);
+}
+
+/* 기술 스택 표 */
+.rs-skills {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rs-skills th {
+  width: 96pt;
+  text-align: left;
+  vertical-align: top;
+  font-size: 9pt;
+  font-weight: 600;
+  padding: 2pt 8pt 2pt 0;
+}
+
+.rs-skills td {
+  padding: 2pt 0;
+  color: var(--rs-soft);
+}
+
+.rs-level {
+  color: var(--rs-muted);
+  font-size: 8.5pt;
+}
+
+/* 경력 */
+.rs-company {
+  margin-bottom: 12pt;
+}
+
+.rs-company-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  break-after: avoid;
+}
+
+.rs-company-head h3 {
+  font-size: 12pt;
+  font-weight: 700;
+}
+
+.rs-position {
+  font-size: 9.5pt;
+  font-weight: 500;
+  color: var(--rs-muted);
+}
+
+.rs-role {
+  color: var(--rs-muted);
+  font-size: 9pt;
+  margin-bottom: 6pt;
+}
+
+.rs-project {
+  margin: 8pt 0 0;
+  padding: 8pt 0 0;
+  border-top: 1px dashed var(--rs-line);
+}
+
+.rs-project-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  break-after: avoid;
+}
+
+.rs-project-name {
+  font-size: 10.5pt;
+  font-weight: 600;
+}
+
+.rs-stack {
+  font-size: 8.5pt;
+  color: var(--rs-accent);
+  margin-top: 1pt;
+}
+
+.rs-summary {
+  color: var(--rs-soft);
+  margin-top: 3pt;
+}
+
+.rs-item {
+  margin-top: 6pt;
+  break-inside: avoid;
+}
+
+.rs-item-title {
+  font-size: 9.5pt;
+  font-weight: 600;
+  break-after: avoid;
+}
+
+.rs-detail {
+  color: var(--rs-soft);
+  margin-top: 2pt;
+}
+
+.rs-label {
+  display: inline-block;
+  min-width: 26pt;
+  font-size: 8pt;
+  font-weight: 600;
+  color: var(--rs-muted);
+}
+
+.rs-results {
+  margin-top: 3pt;
+  padding-left: 14pt;
+  color: var(--rs-soft);
+}
+
+.rs-results li {
+  margin-top: 1pt;
+}
+
+.rs-plain {
+  padding-left: 14pt;
+  color: var(--rs-soft);
+}
+
+.rs-muted {
+  color: var(--rs-muted);
+}
+
+/* 인쇄 */
+@page {
+  size: A4 portrait;
+  margin: 12mm;
+  @top-left { content: ""; }
+  @top-center { content: ""; }
+  @top-right { content: ""; }
+  @bottom-left { content: ""; }
+  @bottom-center { content: ""; }
+  @bottom-right { content: ""; }
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .rs-page {
+    max-width: none;
+    padding: 0;
+    min-height: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

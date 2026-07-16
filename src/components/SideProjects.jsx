@@ -48,6 +48,23 @@ function SideProjectCard({ proj }) {
           lineHeight: 1.4,
         }}>{proj.name}</h3>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          {proj.repo && (
+            <a
+              href={proj.repo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="no-print"
+              style={{
+                fontFamily: "var(--font-sans)",
+                fontSize: "0.8rem",
+                fontWeight: 500,
+                color: "var(--color-accent)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              GitHub ↗
+            </a>
+          )}
           {proj.link && (
             <a
               href={proj.link}

@@ -1,12 +1,12 @@
 import resume from "../data/resume";
 
 const SUMMARY_BULLETS = [
-  "ITSM·EMR 엔터프라이즈 솔루션 설계·개발·운영 4년차",
-  "팀 AI 워크플로우 구축 — 산출물 자동화·온보딩 표준화 주도",
-  "성능 최적화 · 결함 적은 구조 설계 · 수치 기반 개선",
+  "Java/Spring 엔터프라이즈 백엔드 5년차 — 도메인 설계 · 쿼리/인덱스 튜닝 · 배치/메시징",
+  "React·Vue로 담당 모듈 화면까지 직접 개발하는 풀스택 커버리지",
+  "Claude 스킬 3종을 팀 표준으로 정착 — AI 워크플로우 구축 주도",
 ];
 
-const PRIMARY_STACK = ["React", "TypeScript", "Java", "Spring Boot", "Oracle", "MongoDB"];
+const PRIMARY_STACK = ["Java", "Spring Boot", "Oracle", "MongoDB", "React", "TypeScript"];
 
 const BulletDot = () => (
   <span style={{
@@ -22,17 +22,6 @@ const BulletDot = () => (
 export default function Hero() {
   const emailUrl = `mailto:${resume.contact.email}?subject=${encodeURIComponent("채용 문의")}`;
 
-  const handlePrintResume = () => {
-    const originalTitle = document.title;
-    document.title = "SimSohyeon_Resume";
-    const restore = () => {
-      document.title = originalTitle;
-      window.removeEventListener("afterprint", restore);
-    };
-    window.addEventListener("afterprint", restore);
-    window.print();
-  };
-
   return (
     <section id="hero" style={{
       paddingTop: "calc(var(--nav-height) + 32px)",
@@ -40,8 +29,8 @@ export default function Hero() {
       background: "var(--color-bg)",
     }}>
       <div className="container">
-        <div style={{ maxWidth: "680px" }}>
-          <p className="eyebrow">Full Stack Developer · 4 Years</p>
+        <div>
+          <p className="eyebrow">Backend Developer · 5년차</p>
 
           <h1 style={{
             fontFamily: "var(--font-sans)",
@@ -64,9 +53,9 @@ export default function Hero() {
             marginTop: "12px",
             lineHeight: 1.7,
           }}>
-            React · Java/Spring 기반 엔터프라이즈 풀스택 개발자입니다.
+            Java/Spring 백엔드를 주력으로, React·Vue 화면까지 커버하는 엔터프라이즈 개발자입니다.
             <br />
-            반복되는 문제를 문서화·자동화·표준화로 풀고, 개선 결과를 수치로 확인합니다.
+            반복되는 문제를 자동화·표준화로 풀고, 개선 결과를 수치로 확인합니다.
           </p>
 
           <ul style={{
@@ -113,13 +102,14 @@ export default function Hero() {
             >
               GitHub ↗
             </a>
-            <button
-              type="button"
-              onClick={handlePrintResume}
+            <a
+              href={`${import.meta.env.BASE_URL}resume.html`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn btn-secondary"
             >
-              Resume PDF ↓
-            </button>
+              경력기술서 PDF ↗
+            </a>
           </div>
 
           {/* 인쇄/PDF 저장 시에만 노출되는 연락처 영역 */}
