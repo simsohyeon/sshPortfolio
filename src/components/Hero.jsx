@@ -1,12 +1,12 @@
 import resume from "../data/resume";
 
 const SUMMARY_BULLETS = [
-  "Java/Spring 엔터프라이즈 백엔드 5년차 — 도메인 설계 · 쿼리/인덱스 튜닝 · 배치/메시징",
-  "React·Vue로 담당 모듈 화면까지 직접 개발하는 풀스택 커버리지",
-  "Claude 스킬 3종을 팀 표준으로 정착 — AI 워크플로우 구축 주도",
+  "웹 시스템(IT 운영관리·병원 정보시스템) 풀스택 개발 5년차",
+  "성능 최적화 / SQL 튜닝 / 운영 안정화 다수 수행",
+  "AI 하네스 엔지니어링으로 기획 → 개발 → 테스트 자동화",
 ];
 
-const PRIMARY_STACK = ["Java", "Spring Boot", "Oracle", "MongoDB", "React", "TypeScript"];
+const PRIMARY_STACK = ["React", "Vue", "TypeScript", "Java", "Spring Boot", "PostgreSQL", "MongoDB", "AI 코딩 에이전트"];
 
 const BulletDot = () => (
   <span style={{
@@ -30,7 +30,7 @@ export default function Hero() {
     }}>
       <div className="container">
         <div>
-          <p className="eyebrow">Backend Developer · 5년차</p>
+          <p className="eyebrow">Available for hire · 2026</p>
 
           <h1 style={{
             fontFamily: "var(--font-sans)",
@@ -53,9 +53,9 @@ export default function Hero() {
             marginTop: "12px",
             lineHeight: 1.7,
           }}>
-            Java/Spring 백엔드를 주력으로, React·Vue 화면까지 커버하는 엔터프라이즈 개발자입니다.
+            Java/Spring · React/Vue 기반 웹 풀스택 개발자.
             <br />
-            반복되는 문제를 자동화·표준화로 풀고, 개선 결과를 수치로 확인합니다.
+            운영 안정화·성능 최적화 경험 위에, AI를 개발 프로세스에 녹인 워크플로로 일합니다.
           </p>
 
           <ul style={{
@@ -108,7 +108,7 @@ export default function Hero() {
               rel="noopener noreferrer"
               className="btn btn-secondary"
             >
-              경력기술서 PDF ↗
+              경력기술서 (PDF) ↗
             </a>
           </div>
 

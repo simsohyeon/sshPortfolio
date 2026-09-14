@@ -1,4 +1,5 @@
-/* 경력기술서 전용 문서 스타일 — 화면·인쇄 겸용 */
+/* 경력기술서 전용 문서 스타일 - 화면·인쇄 겸용 */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
 :root {
   --rs-ink: #0f172a;
@@ -8,7 +9,7 @@
   --rs-accent: #1d4ed8;
   --rs-sans: "Pretendard", "Pretendard Variable", -apple-system, "Segoe UI",
     "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
-  --rs-mono: "IBM Plex Mono", Consolas, monospace;
+  --rs-mono: var(--rs-sans);
 }
 
 * {
@@ -172,6 +173,12 @@ body {
 .rs-company-head h3 {
   font-size: 12pt;
   font-weight: 700;
+}
+
+.rs-role-inline {
+  font-weight: 400;
+  color: var(--rs-soft);
+  font-size: 9pt;
 }
 
 .rs-position {

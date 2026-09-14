@@ -32,15 +32,14 @@
   /* Fonts — Mac/Windows 동일 렌더링 */
   --font-sans: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI",
     "Apple SD Gothic Neo", "Helvetica Neue", Arial, sans-serif;
-  /* 한글 글리프는 mono 폰트에 없으므로 Pretendard로 폴백 — 날짜의 "현재" 등이 시스템 폰트로 깨지는 것 방지 */
-  --font-mono: "JetBrains Mono", "IBM Plex Mono", "Menlo", "Consolas",
-    "Pretendard", monospace;
+  /* 모노스페이스 계열도 본문과 같은 서체로 통일 (섹션별 서체 차이 제거) */
+  --font-mono: var(--font-sans);
   --font-korean: var(--font-sans);
   --font-serif: var(--font-sans);
 
   /* Layout */
-  --max-width: 1200px;
-  --max-width-narrow: 920px;
+  --max-width: 1040px;
+  --max-width-narrow: 1040px;
   --nav-height: 60px;
 
   /* Effects */
@@ -158,7 +157,6 @@ img, svg {
   color: var(--color-text-soft);
   margin-top: 12px;
   line-height: 1.7;
-  max-width: 720px;
 }
 
 /* ---------- Buttons ---------- */
@@ -271,6 +269,28 @@ img, svg {
   .info-grid {
     grid-template-columns: 1fr;
     gap: 24px;
+  }
+}
+
+/* ---------- Nav — 좁은 화면 압축 (링크 6개) ---------- */
+@media (max-width: 520px) {
+  .nav-links a {
+    padding: 8px 5px !important;
+    font-size: 0.78rem !important;
+  }
+}
+@media (max-width: 400px) {
+  .nav-logo-suffix { display: none; }
+  .nav-links a {
+    padding: 8px 4px !important;
+    font-size: 0.74rem !important;
+  }
+}
+@media (max-width: 340px) {
+  .nav-links { gap: 0 !important; }
+  .nav-links a {
+    padding: 8px 3px !important;
+    font-size: 0.7rem !important;
   }
 }
 
@@ -388,7 +408,7 @@ img, svg {
 
   /* Stats — 인쇄 시 무조건 4컬럼 */
   .stats-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-columns: repeat(3, 1fr) !important;
     gap: 14pt !important;
     padding: 12pt 14pt !important;
     border-radius: 6px !important;

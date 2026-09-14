@@ -3,8 +3,7 @@ import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import Stats from "./components/Stats";
 import About from "./components/About";
-import Experience from "./components/Experience";
-import SideProjects from "./components/SideProjects";
+import Projects from "./components/Projects";
 import Skills from "./components/Skills";
 import AdditionalInfo from "./components/AdditionalInfo";
 import Footer from "./components/Footer";
@@ -21,7 +20,7 @@ export default function App() {
       // 그 라인을 가로지르는 섹션을 active로 표시 → 섹션 길이와 무관하게 동작
       { rootMargin: "-30% 0px -65% 0px", threshold: 0 }
     );
-    ["about", "experience", "skills", "info"].forEach(id => {
+    ["about", "work", "skills", "info"].forEach(id => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
@@ -34,8 +33,7 @@ export default function App() {
       <Hero />
       <Stats />
       <About />
-      <Experience />
-      <SideProjects />
+      <Projects />
       <Skills />
       <AdditionalInfo />
       <Footer />

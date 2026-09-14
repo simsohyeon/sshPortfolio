@@ -1,6 +1,6 @@
 const links = [
   { id: "about", label: "About" },
-  { id: "experience", label: "Experience" },
+  { id: "work", label: "Work" },
   { id: "skills", label: "Skills" },
   { id: "info", label: "Info" },
 ];
@@ -41,12 +41,13 @@ export default function Nav({ active }) {
             color: "var(--color-text-strong)",
           }}
         >
-          simsohyeon<span style={{ color: "var(--color-accent)" }}>.dev</span>
+          simsohyeon<span className="nav-logo-suffix" style={{ color: "var(--color-accent)" }}>.dev</span>
         </a>
 
-        <div style={{
+        <div className="nav-links" style={{
           display: "flex", alignItems: "center",
           gap: "clamp(2px, 1.5vw, 16px)",
+          minWidth: 0,
         }}>
           {links.map(l => {
             const isActive = active === l.id;
