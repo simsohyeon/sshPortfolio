@@ -8,7 +8,7 @@ const SKILL_LEVEL = {
   Backend: "주력 - 설계부터 배포까지",
   Database: "쿼리 튜닝 / 인덱스 설계 경험",
   "AI / LLM": "주력 개발 방식 · 매일 사용",
-  "Infra / DevOps": "기본 운영 가능 수준",
+  "Infra / DevOps": "Docker·K8s·Jenkins 배포 환경 개발·운영",
   Tools: "협업 환경 능숙",
 };
 
@@ -21,22 +21,28 @@ function Section({ title, children }) {
   );
 }
 
+function DetailRow({ label, children }) {
+  return (
+    <div className="rs-detail">
+      <span className="rs-label">{label}</span>
+      <div className="rs-detail-body">{children}</div>
+    </div>
+  );
+}
+
 function CaseBlock({ item }) {
   return (
     <div className="rs-item">
       <h4 className="rs-item-title">{item.title}</h4>
-      {item.problem && (
-        <p className="rs-detail"><span className="rs-label">문제</span>{item.problem}</p>
-      )}
-      {item.solution && (
-        <p className="rs-detail"><span className="rs-label">접근</span>{item.solution}</p>
-      )}
-      {item.decision && (
-        <p className="rs-detail"><span className="rs-label">판단 근거</span>{item.decision}</p>
-      )}
-      <ul className="rs-results">
-        {item.results.map((r, i) => <li key={i}>{r}</li>)}
-      </ul>
+      {item.problem && <DetailRow label="문제">{item.problem}</DetailRow>}
+      {item.solution && <DetailRow label="접근">{item.solution}</DetailRow>}
+      {item.decision && <DetailRow label="판단 근거">{item.decision}</DetailRow>}
+      <DetailRow label="성과">
+        <ul className="rs-results">
+          {item.results.map((r, i) => <li key={i}>{r}</li>)}
+        </ul>
+      </DetailRow>
+      {item.retrospective && <DetailRow label="회고">{item.retrospective}</DetailRow>}
     </div>
   );
 }

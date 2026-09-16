@@ -334,7 +334,7 @@ const resume = {
       company: "엔키아 NKIA",
       position: "대리",
       period: "2024.01 ~ 현재",
-      role: "IT 운영관리 솔루션 개발 / Polestar 10 풀스택 개발 / 2026.04~ 신제품 풀스택 개발 (AI 기반 개발 하네스 구축)",
+      role: "IT 운영관리 솔루션 개발 · Polestar 10 풀스택 · 2026.04~ AI 신제품 풀스택",
     },
     {
       company: "엠투아이티 M2IT",

@@ -242,21 +242,37 @@ body {
 }
 
 .rs-detail {
+  display: grid;
+  grid-template-columns: 46pt 1fr;
+  column-gap: 8pt;
+  align-items: start;
   color: var(--rs-soft);
-  margin-top: 2pt;
+  margin-top: 3pt;
+  padding-top: 3pt;
+  border-top: 1px solid #eef2f7;
+}
+
+.rs-detail:first-of-type {
+  border-top: none;
+  padding-top: 0;
 }
 
 .rs-label {
-  display: inline-block;
-  min-width: 26pt;
+  display: block;
   font-size: 8pt;
   font-weight: 600;
+  letter-spacing: 0.02em;
   color: var(--rs-muted);
+  padding-top: 1pt;
+}
+
+.rs-detail-body {
+  margin: 0;
 }
 
 .rs-results {
-  margin-top: 3pt;
-  padding-left: 14pt;
+  margin: 0;
+  padding-left: 12pt;
   color: var(--rs-soft);
 }
 
