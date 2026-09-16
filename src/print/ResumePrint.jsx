@@ -1,7 +1,7 @@
 import resume from "../data/resume";
 
 // 경력기술서(문서형). 웹 포트폴리오와 같은 resume.js 를 사용하며,
-// 접힘 없이 문제·접근·판단 근거까지 모두 펼쳐 A4 문서로 출력한다.
+// 웹과 같은 구조(문제·접근·성과)로 A4 문서 출력. 판단 근거·회고는 데이터에만 남겨 면접 준비용으로 사용.
 
 const SKILL_LEVEL = {
   Frontend: "실무 운영 가능 수준",
@@ -36,13 +36,11 @@ function CaseBlock({ item }) {
       <h4 className="rs-item-title">{item.title}</h4>
       {item.problem && <DetailRow label="문제">{item.problem}</DetailRow>}
       {item.solution && <DetailRow label="접근">{item.solution}</DetailRow>}
-      {item.decision && <DetailRow label="판단 근거">{item.decision}</DetailRow>}
       <DetailRow label="성과">
         <ul className="rs-results">
           {item.results.map((r, i) => <li key={i}>{r}</li>)}
         </ul>
       </DetailRow>
-      {item.retrospective && <DetailRow label="회고">{item.retrospective}</DetailRow>}
     </div>
   );
 }
