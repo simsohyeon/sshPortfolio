@@ -49,6 +49,7 @@ function ProjectBlock({ proj }) {
         <span className="rs-mono">{proj.period}</span>
       </div>
       <p className="rs-stack">{proj.org} · {proj.stack.join(" · ")}</p>
+      {proj.clients && <p className="rs-stack">고객사 · {proj.clients.join(" · ")}</p>}
       {proj.oneLiner && <p className="rs-summary">{proj.oneLiner}</p>}
       {proj.cases.map((item, i) => <CaseBlock key={i} item={item} />)}
     </div>

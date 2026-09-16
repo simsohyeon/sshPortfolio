@@ -47,7 +47,7 @@ function DetailBlock({ label, accent, body }) {
 }
 
 function CaseStudy({ item, showDetail }) {
-  const hasDetail = showDetail && (item.problem || item.solution || item.decision || item.retrospective);
+  const hasDetail = showDetail && (item.problem || item.solution);
 
   return (
     <div style={{
@@ -99,8 +99,6 @@ function CaseStudy({ item, showDetail }) {
         }}>
           <DetailBlock label="문제" body={item.problem} />
           <DetailBlock label="접근" body={item.solution} />
-          <DetailBlock label="판단 근거" body={item.decision} />
-          <DetailBlock label="회고" body={item.retrospective} />
         </div>
       )}
     </div>
@@ -190,27 +188,55 @@ function ProjectCard({ proj }) {
         </div>
       )}
 
-      <div>
+      {/* 기본 노출: 한 줄 불릿 */}
+      {proj.highlights && proj.highlights.length > 0 && (
+        <ul style={{
+          margin: "14px 0 0", padding: 0, listStyle: "none",
+          display: "flex", flexDirection: "column", gap: "6px",
+        }}>
+          {proj.highlights.map((h, hi) => (
+            <li key={hi} style={{
+              fontFamily: "var(--font-sans)", fontSize: "0.9rem", fontWeight: 400,
+              color: "var(--color-text-soft)", display: "flex", alignItems: "flex-start",
+              gap: "10px", lineHeight: 1.65,
+            }}>
+              <span style={{
+                width: "5px", height: "5px", borderRadius: "50%",
+                background: "var(--color-accent)", flexShrink: 0, marginTop: "9px",
+              }} />
+              <span>{h}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* 인쇄 시에는 케이스 전문을 그대로 노출 */}
+      <div className="print-only">
         {proj.cases.map((item, ii) => <CaseStudy key={ii} item={item} showDetail={false} />)}
       </div>
 
-      {proj.cases.some(c => c.problem || c.decision || c.retrospective) && (
-        <Expandable label="문제 · 접근 · 판단 근거 · 회고 보기" closeLabel="접기" style={{ marginTop: "14px" }}>
-          <div style={{ display: "grid", gap: "14px" }}>
-            {proj.cases.filter(c => c.problem || c.solution || c.decision || c.retrospective).map((c, ci) => (
-              <div key={ci}>
-                <p style={{
-                  fontFamily: "var(--font-sans)", fontSize: "0.85rem", fontWeight: 600,
-                  color: "var(--color-text-strong)", margin: "0 0 8px",
-                }}>{c.title}</p>
-                <div style={{ display: "grid", gap: "8px" }}>
-                  <DetailBlock label="문제" body={c.problem} />
-                  <DetailBlock label="접근" body={c.solution} />
-                  <DetailBlock label="판단 근거" body={c.decision} />
-                  <DetailBlock label="회고" body={c.retrospective} />
-                </div>
-              </div>
-            ))}
+      {/* 웹: 케이스 전문은 접기, 경력기술서 링크는 버튼 옆 */}
+      {proj.cases.length > 0 && (
+        <Expandable
+          label="상세 보기"
+          closeLabel="접기"
+          style={{ marginTop: "10px" }}
+          aside={
+            <a
+              href={`${import.meta.env.BASE_URL}resume.html`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                fontFamily: "var(--font-sans)", fontSize: "0.82rem", fontWeight: 500,
+                color: "var(--color-muted)", padding: "6px 0",
+              }}
+            >
+              경력기술서에서 전체 보기 ↗
+            </a>
+          }
+        >
+          <div>
+            {proj.cases.map((item, ii) => <CaseStudy key={ii} item={item} showDetail />)}
           </div>
         </Expandable>
       )}

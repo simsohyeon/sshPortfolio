@@ -1,10 +1,11 @@
 import { useState } from "react";
 
 // 기본 접힘 상세 영역. 인쇄 시에는 버튼/내용 모두 숨김(.no-print).
-export default function Expandable({ label = "상세 보기", closeLabel = "접기", children, style }) {
+export default function Expandable({ label = "상세 보기", closeLabel = "접기", aside, children, style }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="no-print" style={style}>
+      <div style={{ display: "flex", alignItems: "center", gap: "14px", flexWrap: "wrap" }}>
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
@@ -26,6 +27,8 @@ export default function Expandable({ label = "상세 보기", closeLabel = "접�
           fontSize: "0.7rem",
         }}>▾</span>
       </button>
+      {aside}
+      </div>
       {open && <div style={{ marginTop: "8px" }}>{children}</div>}
     </div>
   );

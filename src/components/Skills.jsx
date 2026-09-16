@@ -6,7 +6,7 @@ const SKILL_LEVEL = {
   Backend: "주력 · 설계부터 배포까지",
   Database: "쿼리 튜닝 / 인덱스 설계 경험",
   "AI / LLM": "주력 개발 방식 · 매일 사용",
-  "Infra / DevOps": "기본 운영 가능 수준",
+  "Infra / DevOps": "Docker·K8s·Jenkins 배포 환경 개발·운영",
   Tools: "협업 환경 능숙",
 };
 
