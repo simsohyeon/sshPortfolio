@@ -162,6 +162,13 @@ body {
   margin-bottom: 12pt;
 }
 
+.rs-company-head .rs-mono,
+.rs-project-head .rs-mono {
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
 .rs-company-head {
   display: flex;
   justify-content: space-between;
