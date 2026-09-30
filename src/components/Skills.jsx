@@ -2,10 +2,10 @@ import FadeIn from "./common/FadeIn";
 import resume from "../data/resume";
 
 const SKILL_LEVEL = {
-  Frontend: "실무 운영 가능 수준",
-  Backend: "주력 · 설계부터 배포까지",
+  Backend: "주력 · 도메인/API/DB 설계 및 운영",
   Database: "쿼리 튜닝 / 인덱스 설계 경험",
-  "AI / LLM": "주력 개발 방식 · 매일 사용",
+  Frontend: "서비스 구현·운영 경험",
+  "AI-assisted Development": "실무 개발 워크플로에 활용",
   "Infra / DevOps": "Docker·K8s·Jenkins 배포 환경 개발·운영",
   Tools: "협업 환경 능숙",
 };
