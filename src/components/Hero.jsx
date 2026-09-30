@@ -1,12 +1,12 @@
 import resume from "../data/resume";
 
 const SUMMARY_BULLETS = [
-  "웹 시스템(IT 운영관리·병원 정보시스템) 풀스택 개발 5년차",
-  "금융·공공·민간 고객사 8곳에 공급된 솔루션의 성능 최적화 · SQL 튜닝 · 운영 안정화 수행",
-  "AI 하네스 엔지니어링으로 기획 → 개발 → 테스트 자동화",
+  "Java/Spring 기반 도메인 · REST API · DB 설계 및 성능 최적화",
+  "금융·공공·의료 시스템의 개발부터 구축·운영까지 End-to-End 경험",
+  "AI 코딩 에이전트 + Skills·Hooks·검증 자동화로 개발 워크플로 개선",
 ];
 
-const PRIMARY_STACK = ["React", "Vue", "TypeScript", "Java", "Spring Boot", "PostgreSQL", "MongoDB", "AI 코딩 에이전트"];
+const PRIMARY_STACK = ["Java", "Spring Boot", "PostgreSQL", "MongoDB", "React", "Vue", "TypeScript", "AI 코딩 에이전트"];
 
 const BulletDot = () => (
   <span style={{
@@ -53,9 +53,11 @@ export default function Hero() {
             marginTop: "12px",
             lineHeight: 1.7,
           }}>
-            Java/Spring · React/Vue 기반 웹 풀스택 개발자.
+            Java/Spring 기반 백엔드 개발자.
             <br />
-            운영 안정화·성능 최적화 경험 위에, AI를 개발 프로세스에 녹인 워크플로로 일합니다.
+            도메인 설계·API·DB·성능 최적화를 중심으로, React/Vue 프론트엔드부터 운영까지 서비스 전체를 경험했습니다.
+            <br />
+            AI 코딩 에이전트를 개발·테스트·문서화 과정에 활용해 반복 작업을 줄이고 품질을 높입니다.
           </p>
 
           <ul style={{
