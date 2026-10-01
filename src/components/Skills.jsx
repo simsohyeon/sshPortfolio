@@ -1,14 +1,31 @@
 import FadeIn from "./common/FadeIn";
-import resume from "../data/resume";
 
-const SKILL_LEVEL = {
-  Backend: "주력 · 도메인/API/DB 설계 및 운영",
-  Database: "쿼리 튜닝 / 인덱스 설계 경험",
-  Frontend: "서비스 구현·운영 경험",
-  "AI-assisted Development": "실무 개발 워크플로에 활용",
-  "Infra / DevOps": "Docker·K8s·Jenkins 배포 환경 개발·운영",
-  Tools: "협업 환경 능숙",
-};
+const GROUPS = [
+  {
+    title: "Core Backend",
+    level: "주력",
+    description: "실무에서 설계·개발·성능 개선까지 직접 다룬 기술",
+    items: ["Java", "Spring Boot", "REST API", "PostgreSQL", "MongoDB"],
+  },
+  {
+    title: "Application / Web",
+    level: "실사용",
+    description: "제품과 프로젝트에서 실제 기능 구현에 사용",
+    items: ["JPA / QueryDSL", "MyBatis", "Spring Batch", "React", "Vue", "TypeScript"],
+  },
+  {
+    title: "Project Environment",
+    level: "프로젝트 환경",
+    description: "서비스 개발·배포 환경에서 사용하거나 연동 경험이 있는 기술",
+    items: ["Spring Cloud", "Kafka", "Redis", "Docker", "Kubernetes", "Jenkins"],
+  },
+  {
+    title: "AI-assisted Engineering",
+    level: "개발 워크플로",
+    description: "규칙·검증 절차를 포함한 개발 생산성 도구로 활용",
+    items: ["AI Coding Agents", "Rules / Skills / Hooks", "Test Automation", "Documentation Automation"],
+  },
+];
 
 export default function Skills() {
   return (
@@ -18,7 +35,7 @@ export default function Skills() {
           <p className="eyebrow">Skills</p>
           <h2 className="section-title">기술 스택</h2>
           <p className="section-sub">
-            카테고리별 활용 수준입니다. 모든 항목은 실제 프로젝트에서 사용한 기술입니다.
+            단순 나열보다 실제 활용 범위가 보이도록 주력 기술과 프로젝트 환경을 구분했습니다.
           </p>
         </FadeIn>
 
@@ -27,36 +44,41 @@ export default function Skills() {
           gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
           gap: "12px",
         }}>
-          {Object.entries(resume.skills).map(([cat, items], i) => (
-            <FadeIn key={cat} delay={i * 0.05}>
+          {GROUPS.map((group, i) => (
+            <FadeIn key={group.title} delay={i * 0.05}>
               <div className="card" style={{ height: "100%" }}>
-                <h3 style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "1rem",
-                  fontWeight: 600,
-                  color: "var(--color-text-strong)",
-                  margin: 0,
-                  letterSpacing: "-0.005em",
-                  lineHeight: 1.4,
-                }}>{cat}</h3>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                  <h3 style={{
+                    fontFamily: "var(--font-sans)",
+                    fontSize: "1rem",
+                    fontWeight: 600,
+                    color: "var(--color-text-strong)",
+                    margin: 0,
+                  }}>
+                    {group.title}
+                  </h3>
+                  <span className="tag tag-accent">{group.level}</span>
+                </div>
+
                 <p style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.7rem",
-                  fontWeight: 500,
-                  color: "var(--color-accent)",
-                  marginTop: "6px",
-                  marginBottom: "16px",
-                }}>{SKILL_LEVEL[cat] || ""}</p>
+                  fontSize: "0.8rem",
+                  color: "var(--color-muted)",
+                  marginTop: "8px",
+                  marginBottom: "14px",
+                  lineHeight: 1.6,
+                }}>
+                  {group.description}
+                </p>
+
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                  {items.map((item, j) => (
-                    <span key={j} className="tag">{item}</span>
+                  {group.items.map(item => (
+                    <span key={item} className="tag">{item}</span>
                   ))}
                 </div>
               </div>
             </FadeIn>
           ))}
         </div>
-
       </div>
     </section>
   );

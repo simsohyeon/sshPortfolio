@@ -4,7 +4,9 @@ import Hero from "./components/Hero";
 import Stats from "./components/Stats";
 import About from "./components/About";
 import Projects from "./components/Projects";
+import FeaturedEngineeringProject from "./components/FeaturedEngineeringProject";
 import Skills from "./components/Skills";
+import AIEngineering from "./components/AIEngineering";
 import AdditionalInfo from "./components/AdditionalInfo";
 import Footer from "./components/Footer";
 
@@ -16,14 +18,14 @@ export default function App() {
       entries => {
         entries.forEach(e => { if (e.isIntersecting) setActiveNav(e.target.id); });
       },
-      // viewport 상단 ~30% 지점에 가상의 트리거 라인을 두고,
-      // 그 라인을 가로지르는 섹션을 active로 표시 → 섹션 길이와 무관하게 동작
       { rootMargin: "-30% 0px -65% 0px", threshold: 0 }
     );
-    ["about", "work", "skills", "info"].forEach(id => {
+
+    ["about", "work", "engineering-project", "skills", "info"].forEach(id => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
+
     return () => observer.disconnect();
   }, []);
 
@@ -34,7 +36,9 @@ export default function App() {
       <Stats />
       <About />
       <Projects />
+      <FeaturedEngineeringProject />
       <Skills />
+      <AIEngineering />
       <AdditionalInfo />
       <Footer />
     </div>

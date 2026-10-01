@@ -1,7 +1,7 @@
 import FadeIn from "./common/FadeIn";
 import resume from "../data/resume";
 
-const ABOUT_SHORT = `Java/Spring 기반 백엔드 개발을 주력으로 웹 시스템의 설계·개발·운영 전 단계에 참여해 왔습니다. 도메인 모델링, API·DB 설계, 성능 개선을 수행했으며 React·Vue 프론트엔드 경험을 바탕으로 서비스 전체 흐름을 이해하고 구현합니다. 고객사 구축에서는 설치와 현장 이슈 대응까지 맡아 운영 단계도 경험했습니다. 2026년부터는 AI 코딩 에이전트에 규칙 문서·Skills·Hooks와 검증 절차를 적용해 설계 문서, API, 화면, 테스트, 반복 산출물 작성까지 개발 프로세스에 활용하고 있습니다.`;
+const ABOUT_SHORT = `Java/Spring 기반 백엔드 개발을 주력으로 웹 시스템의 설계·개발·운영 전 단계에 참여해 왔습니다. 도메인 모델링, API·DB 설계, 성능 개선을 수행했으며 React·Vue 프론트엔드 경험을 바탕으로 서비스 전체 흐름을 이해하고 구현합니다. 기능 구현 이후의 성능·품질·운영 문제까지 직접 확인하고 개선하는 것을 중요하게 생각합니다.`;
 
 export default function About() {
   const items = [

@@ -2,6 +2,7 @@ import FadeIn from "./common/FadeIn";
 import resume from "../data/resume";
 
 export default function AdditionalInfo() {
+  const sideProjects = (resume.sideProjects || []).filter(sp => !sp.name.includes("쉼마루"));
   const blocks = [
     { title: "Certifications", items: resume.certifications.map(c => c.name) },
     { title: "Awards", items: resume.awards },
@@ -10,12 +11,12 @@ export default function AdditionalInfo() {
 
   return (
     <section id="info" className="section" style={{
-      background: "var(--color-bg-alt)",
+      background: "var(--color-bg)",
     }}>
       <div className="container">
         <FadeIn>
           <p className="eyebrow">Career & Information</p>
-          <h2 className="section-title">경력 · 사이드 프로젝트 · 기타</h2>
+          <h2 className="section-title">경력 · 기타</h2>
         </FadeIn>
 
         {/* 경력 연표 - 상세 성과는 Projects 섹션 참고 */}
@@ -80,7 +81,7 @@ export default function AdditionalInfo() {
         </FadeIn>
 
         {/* 사이드 프로젝트 - 요약만 */}
-        {resume.sideProjects && resume.sideProjects.length > 0 && (
+        {sideProjects.length > 0 && (
           <FadeIn delay={0.04}>
             <div className="card" style={{ marginBottom: "12px" }}>
               <h3 style={{
@@ -89,7 +90,7 @@ export default function AdditionalInfo() {
                 letterSpacing: "-0.005em",
               }}>사이드 프로젝트</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                {resume.sideProjects.map((sp, i) => (
+                {sideProjects.map((sp, i) => (
                   <div key={i}>
                     <div style={{
                       display: "flex", justifyContent: "space-between",

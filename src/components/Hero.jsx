@@ -1,125 +1,86 @@
 import resume from "../data/resume";
 
-const SUMMARY_BULLETS = [
-  "Java/Spring 기반 도메인 · REST API · DB 설계 및 성능 최적화",
-  "금융·공공·의료 시스템의 개발부터 구축·운영까지 End-to-End 경험",
-  "AI 코딩 에이전트 + Skills·Hooks·검증 자동화로 개발 워크플로 개선",
-];
-
-const PRIMARY_STACK = ["Java", "Spring Boot", "PostgreSQL", "MongoDB", "React", "Vue", "TypeScript", "AI 코딩 에이전트"];
-
-const BulletDot = () => (
-  <span style={{
-    width: "5px",
-    height: "5px",
-    borderRadius: "50%",
-    background: "var(--color-accent)",
-    flexShrink: 0,
-    marginTop: "9px",
-  }} />
-);
+const PRIMARY_STACK = ["Java", "Spring Boot", "PostgreSQL", "MongoDB", "React"];
 
 export default function Hero() {
-  const emailUrl = `mailto:${resume.contact.email}?subject=${encodeURIComponent("채용 문의")}`;
+  const scrollToProjects = (e) => {
+    e.preventDefault();
+    document.getElementById("work")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <section id="hero" style={{
-      paddingTop: "calc(var(--nav-height) + 32px)",
-      paddingBottom: "32px",
+      paddingTop: "calc(var(--nav-height) + 48px)",
+      paddingBottom: "40px",
       background: "var(--color-bg)",
     }}>
       <div className="container">
-        <div>
-          <p className="eyebrow">Available for hire · 2026</p>
+        <p className="eyebrow">Backend Engineer · 2026</p>
 
-          <h1 style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "clamp(1.85rem, 4.6vw, 2.6rem)",
-            fontWeight: 600,
-            color: "var(--color-text-strong)",
-            lineHeight: 1.2,
-            letterSpacing: "-0.02em",
-            margin: "10px 0 0",
-          }}>
-            {resume.name},{" "}
-            <span style={{ color: "var(--color-accent)" }}>{resume.title}</span>
-          </h1>
+        <h1 style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: "clamp(2rem, 5vw, 3rem)",
+          fontWeight: 650,
+          color: "var(--color-text-strong)",
+          lineHeight: 1.15,
+          letterSpacing: "-0.03em",
+          margin: "12px 0 0",
+        }}>
+          {resume.name},{" "}
+          <span style={{ color: "var(--color-accent)" }}>{resume.title}</span>
+        </h1>
 
-          <p style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "clamp(0.95rem, 1.4vw, 1.02rem)",
-            fontWeight: 400,
-            color: "var(--color-text-soft)",
-            marginTop: "12px",
-            lineHeight: 1.7,
-          }}>
-            Java/Spring 기반 백엔드 개발자.
-            <br />
-            도메인 설계·API·DB·성능 최적화를 중심으로, React/Vue 프론트엔드부터 운영까지 서비스 전체를 경험했습니다.
-            <br />
-            AI 코딩 에이전트를 개발·테스트·문서화 과정에 활용해 반복 작업을 줄이고 품질을 높입니다.
-          </p>
+        <p style={{
+          fontFamily: "var(--font-sans)",
+          fontSize: "clamp(1rem, 1.5vw, 1.08rem)",
+          color: "var(--color-text-soft)",
+          marginTop: "16px",
+          maxWidth: "760px",
+          lineHeight: 1.8,
+        }}>
+          Java/Spring을 중심으로 도메인·API·데이터베이스를 설계하고,
+          실제 운영 환경에서 발생하는 성능과 품질 문제까지 해결합니다.
+          <br />
+          React/Vue 기반 프론트엔드와 배포 환경을 함께 경험해 서비스 전체 흐름을 이해하며 개발합니다.
+        </p>
 
-          <ul style={{
-            listStyle: "none",
-            padding: 0,
-            marginTop: "16px",
-            display: "grid",
-            gap: "6px",
-          }}>
-            {SUMMARY_BULLETS.map((b, i) => (
-              <li key={i} style={{
-                display: "flex",
-                gap: "10px",
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.92rem",
-                fontWeight: 400,
-                color: "var(--color-text-soft)",
-                lineHeight: 1.7,
-              }}>
-                <BulletDot />
-                {b}
-              </li>
-            ))}
-          </ul>
+        <div style={{
+          display: "flex",
+          gap: "6px",
+          flexWrap: "wrap",
+          marginTop: "20px",
+        }}>
+          {PRIMARY_STACK.map(s => (
+            <span key={s} className="tag">{s}</span>
+          ))}
+        </div>
 
-          <div style={{
-            display: "flex", gap: "6px", flexWrap: "wrap",
-            marginTop: "18px",
-          }}>
-            {PRIMARY_STACK.map((s, i) => (
-              <span key={i} className="tag">{s}</span>
-            ))}
-          </div>
+        <div className="cta-group" style={{ marginTop: "24px" }}>
+          <a href="#work" onClick={scrollToProjects} className="btn btn-primary">
+            프로젝트 보기
+          </a>
+          <a
+            href={resume.contact.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-secondary"
+          >
+            GitHub ↗
+          </a>
+          <a
+            href={`${import.meta.env.BASE_URL}resume.html`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-secondary"
+          >
+            경력기술서 ↗
+          </a>
+        </div>
 
-          <div className="cta-group" style={{ marginTop: "22px" }}>
-            <a href={emailUrl} className="btn btn-primary">
-              이메일로 연락하기
-            </a>
-            <a
-              href={resume.contact.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-secondary"
-            >
-              GitHub ↗
-            </a>
-            <a
-              href={`${import.meta.env.BASE_URL}resume.html`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-secondary"
-            >
-              경력기술서 (PDF) ↗
-            </a>
-          </div>
-
-          {/* 인쇄/PDF 저장 시에만 노출되는 연락처 영역 */}
-          <div className="print-only print-contact">
-            <div><strong>Email</strong> &nbsp; {resume.contact.email}</div>
-            <div><strong>Phone</strong> &nbsp; {resume.contact.phone}</div>
-            <div><strong>GitHub</strong> &nbsp; {resume.contact.github}</div>
-          </div>
+        <div className="print-only print-contact">
+          <div><strong>Email</strong> &nbsp; {resume.contact.email}</div>
+          <div><strong>Phone</strong> &nbsp; {resume.contact.phone}</div>
+          <div><strong>GitHub</strong> &nbsp; {resume.contact.github}</div>
         </div>
       </div>
     </section>
