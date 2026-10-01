@@ -3,14 +3,7 @@ import resume from "../data/resume";
 // 경력기술서(문서형). 웹 포트폴리오와 같은 resume.js 를 사용하며,
 // 웹과 같은 구조(문제·접근·성과)로 A4 문서 출력. 판단 근거·회고는 데이터에만 남겨 면접 준비용으로 사용.
 
-const SKILL_LEVEL = {
-  Frontend: "실무 운영 가능 수준",
-  Backend: "주력 - 설계부터 배포까지",
-  Database: "쿼리 튜닝 / 인덱스 설계 경험",
-  "AI / LLM": "주력 개발 방식 · 매일 사용",
-  "Infra / DevOps": "Docker·K8s·Jenkins 배포 환경 개발·운영",
-  Tools: "협업 환경 능숙",
-};
+const SKILL_LEVEL = resume.skillLevels;
 
 function Section({ title, children }) {
   return (
@@ -47,7 +40,7 @@ function CaseBlock({ item }) {
 
 function ProjectBlock({ proj }) {
   return (
-    <div className="rs-project">
+    <div className="rs-project" id={proj.id}>
       <div className="rs-project-head">
         <h3 className="rs-project-name">{proj.name}</h3>
         <span className="rs-mono">{proj.period}</span>

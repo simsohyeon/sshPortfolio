@@ -1,8 +1,9 @@
 const links = [
   { id: "about", label: "About" },
-  { id: "work", label: "Work" },
+  { id: "experience", label: "Experience" },
+  { id: "projects", label: "Projects" },
   { id: "skills", label: "Skills" },
-  { id: "info", label: "Info" },
+  { id: "resume", label: "Resume" },
 ];
 
 export default function Nav({ active }) {
@@ -34,11 +35,13 @@ export default function Nav({ active }) {
         <a
           href="#hero"
           onClick={goTop}
+          className="nav-logo"
           style={{
             fontFamily: "var(--font-mono)",
             fontSize: "0.9rem",
             fontWeight: 500,
             color: "var(--color-text-strong)",
+            flexShrink: 0,
           }}
         >
           simsohyeon<span className="nav-logo-suffix" style={{ color: "var(--color-accent)" }}>.dev</span>
@@ -46,7 +49,7 @@ export default function Nav({ active }) {
 
         <div className="nav-links" style={{
           display: "flex", alignItems: "center",
-          gap: "clamp(2px, 1.5vw, 16px)",
+          gap: "clamp(2px, 1.2vw, 12px)",
           minWidth: 0,
         }}>
           {links.map(l => {
@@ -58,7 +61,7 @@ export default function Nav({ active }) {
                 onClick={(e) => handleClick(e, l.id)}
                 style={{
                   fontFamily: "var(--font-sans)",
-                  fontSize: "clamp(0.82rem, 1.6vw, 0.88rem)",
+                  fontSize: "0.88rem",
                   fontWeight: 500,
                   color: isActive ? "var(--color-accent)" : "var(--color-text-soft)",
                   padding: "8px 10px",

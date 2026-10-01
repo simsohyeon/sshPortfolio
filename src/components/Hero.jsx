@@ -1,36 +1,19 @@
 import resume from "../data/resume";
 
-const SUMMARY_BULLETS = [
-  "웹 시스템(IT 운영관리·병원 정보시스템) 풀스택 개발 5년차",
-  "금융·공공·민간 고객사 8곳에 공급된 솔루션의 성능 최적화 · SQL 튜닝 · 운영 안정화 수행",
-  "AI 하네스 엔지니어링으로 기획 → 개발 → 테스트 자동화",
-];
-
-const PRIMARY_STACK = ["React", "Vue", "TypeScript", "Java", "Spring Boot", "PostgreSQL", "MongoDB", "AI 코딩 에이전트"];
-
-const BulletDot = () => (
-  <span style={{
-    width: "5px",
-    height: "5px",
-    borderRadius: "50%",
-    background: "var(--color-accent)",
-    flexShrink: 0,
-    marginTop: "9px",
-  }} />
-);
-
 export default function Hero() {
   const emailUrl = `mailto:${resume.contact.email}?subject=${encodeURIComponent("채용 문의")}`;
+  const current = resume.career[0];
+  const currentLine = [current.company, current.position, current.period].filter(Boolean).join(" · ");
 
   return (
     <section id="hero" style={{
-      paddingTop: "calc(var(--nav-height) + 32px)",
-      paddingBottom: "32px",
+      paddingTop: "calc(var(--nav-height) + 40px)",
+      paddingBottom: "48px",
       background: "var(--color-bg)",
     }}>
-      <div className="container">
+      <div className="container hero-grid">
         <div>
-          <p className="eyebrow">Available for hire · 2026</p>
+          <p className="eyebrow">{resume.heroEyebrow}</p>
 
           <h1 style={{
             fontFamily: "var(--font-sans)",
@@ -47,68 +30,30 @@ export default function Hero() {
 
           <p style={{
             fontFamily: "var(--font-sans)",
-            fontSize: "clamp(0.95rem, 1.4vw, 1.02rem)",
+            fontSize: "clamp(0.98rem, 1.4vw, 1.08rem)",
             fontWeight: 400,
             color: "var(--color-text-soft)",
-            marginTop: "12px",
+            marginTop: "16px",
             lineHeight: 1.7,
           }}>
-            Java/Spring · React/Vue 기반 웹 풀스택 개발자.
-            <br />
-            운영 안정화·성능 최적화 경험 위에, AI를 개발 프로세스에 녹인 워크플로로 일합니다.
+            {resume.tagline}
           </p>
 
-          <ul style={{
-            listStyle: "none",
-            padding: 0,
-            marginTop: "16px",
-            display: "grid",
-            gap: "6px",
+          <p style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "0.88rem",
+            fontWeight: 500,
+            color: "var(--color-muted)",
+            marginTop: "10px",
+            lineHeight: 1.6,
           }}>
-            {SUMMARY_BULLETS.map((b, i) => (
-              <li key={i} style={{
-                display: "flex",
-                gap: "10px",
-                fontFamily: "var(--font-sans)",
-                fontSize: "0.92rem",
-                fontWeight: 400,
-                color: "var(--color-text-soft)",
-                lineHeight: 1.7,
-              }}>
-                <BulletDot />
-                {b}
-              </li>
-            ))}
-          </ul>
+            {currentLine}
+          </p>
 
-          <div style={{
-            display: "flex", gap: "6px", flexWrap: "wrap",
-            marginTop: "18px",
-          }}>
-            {PRIMARY_STACK.map((s, i) => (
-              <span key={i} className="tag">{s}</span>
-            ))}
-          </div>
-
-          <div className="cta-group" style={{ marginTop: "22px" }}>
-            <a href={emailUrl} className="btn btn-primary">
-              이메일로 연락하기
-            </a>
-            <a
-              href={resume.contact.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-secondary"
-            >
+          <div className="cta-group" style={{ marginTop: "28px" }}>
+            <a href={emailUrl} className="btn btn-primary">이메일로 연락하기</a>
+            <a href={resume.contact.github} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
               GitHub ↗
-            </a>
-            <a
-              href={`${import.meta.env.BASE_URL}resume.html`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-secondary"
-            >
-              경력기술서 (PDF) ↗
             </a>
           </div>
 
@@ -118,6 +63,30 @@ export default function Hero() {
             <div><strong>Phone</strong> &nbsp; {resume.contact.phone}</div>
             <div><strong>GitHub</strong> &nbsp; {resume.contact.github}</div>
           </div>
+        </div>
+
+        {/* 우측: (사진이 있으면) 프로필 + 팩트 카드 - 경력 · 역할 범위 · 대표 성과 */}
+        <div className="hero-side">
+          {resume.photo && (
+            <img
+              className="hero-photo"
+              src={`${import.meta.env.BASE_URL}${resume.photo.src}`}
+              alt={resume.photo.alt || resume.name}
+              width={112}
+              height={112}
+            />
+          )}
+          <dl className="fact-card" style={{ width: "100%" }}>
+            {resume.stats.map((s, i) => (
+              <div key={i} className="fact">
+                <dt>{s.label}</dt>
+                <dd>
+                  <strong>{s.value}</strong>
+                  <span>{s.sub}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </div>
     </section>

@@ -204,6 +204,7 @@ body {
   margin: 8pt 0 0;
   padding: 8pt 0 0;
   border-top: 1px dashed var(--rs-line);
+  scroll-margin-top: 16px;
 }
 
 .rs-project-head {
