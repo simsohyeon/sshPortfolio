@@ -75,7 +75,7 @@ export default function ResumePrint() {
           <button className="no-print" type="button" onClick={() => window.print()}>PDF로 저장</button>
         </div>
         <h1>{resume.name}<span>풀스택 개발자</span></h1>
-        <p className="rs-intro">Java/Spring 백엔드를 중심으로 화면 개발부터 서비스 운영까지 담당합니다.</p>
+        <p className="rs-intro">IT 서비스·자산관리와 의료정보시스템의 설계·개발·운영을 경험했습니다. Java/Spring 백엔드와 화면 개발을 함께 담당하며, 성능 개선과 AI 기반 개발 자동화를 수행합니다.</p>
         <div className="rs-contact">
           <a href={`mailto:${resume.contact.email}`}>{resume.contact.email}</a>
           <span>{resume.contact.phone}</span>
@@ -83,10 +83,7 @@ export default function ResumePrint() {
           <a href={resume.contact.github} target="_blank" rel="noreferrer">GitHub ↗</a>
         </div>
       </header>
-      <Section title="경력 요약">
-        <p className="rs-intro">IT 서비스·자산관리와 의료정보시스템의 설계·개발·운영 경험을 보유하고 있습니다. 도메인·API·DB 설계, 조회 성능 개선, React·Vue 및 C# 화면 개발을 수행했으며, AI를 활용해 반복 개발·테스트·문서 작성 업무를 자동화하고 있습니다.</p>
-      </Section>
-      <Section title="경력 상세">
+      <Section title="경력">
         {resume.career.map(company => (
           <section className="rs-company" key={company.company}>
             <header className="rs-company-head">

@@ -14,10 +14,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid #425dd3; outline-offs
 .rs-header h1 span { display: inline-block; margin-left: 16px; font-size: 13pt; font-weight: 500; letter-spacing: -.02em; }
 .rs-intro { margin-top: 12px; color: #444b57; }
 .rs-contact { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 16px; font-size: 9pt; color: #676c77; }
-.rs-section { margin-top: 44px; }
+.rs-section { margin-top: 36px; }
 .rs-section-title { display: flex; align-items: center; gap: 10px; font-size: 12pt; font-weight: 650; color: #385d87; line-height: 1.4; margin-bottom: 22px; letter-spacing: -.02em; break-after: avoid; }
 .rs-section-title::before { content: ""; width: 3px; height: 16px; flex-shrink: 0; background: #385d87; border-radius: 2px; }
 .rs-section-body { padding-left: 20px; }
+.rs-company { padding: 0; }
 .rs-company + .rs-company { margin-top: 36px; }
 .rs-company-head { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; padding-bottom: 14px; border-bottom: 1px solid #d9dde4; break-after: avoid; }
 .rs-company-head h3 { font-size: 14pt; color: #385d87; }
@@ -68,8 +69,9 @@ dd { color: #444b57; min-width: 0; }
   body { font-size: 10pt; line-height: 1.6; }
   .no-print { display: none !important; }
   .rs-page { max-width: none; min-height: 0; margin: 0; padding: 0; }
-  .rs-section { margin-top: 24px; }
+  .rs-section { margin-top: 24px; padding: 0; border: none; border-radius: 0; }
   .rs-project { padding: 16px 0; }
+  .rs-company { padding: 0; border: none; border-radius: 0; }
   .rs-toolbar { padding-bottom: 12px; }
   .rs-project-meta { break-inside: avoid; }
   .rs-case-detail > div { break-inside: avoid; }
