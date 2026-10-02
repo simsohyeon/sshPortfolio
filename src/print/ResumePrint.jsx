@@ -1,4 +1,4 @@
-﻿import resume from "../data/resume";
+import resume from "../data/resume";
 
 import careerCases from "./careerCases";
 
@@ -96,7 +96,7 @@ export default function ResumePrint() {
       </Section>
       <Section title="기술 역량">
         <dl className="rs-skill-list">
-          <div><dt>백엔드</dt><dd>Java · Spring Boot · Spring Cloud · JPA / QueryDSL · MyBatis · Spring Batch</dd></div>
+          <div><dt>백엔드</dt><dd>Java · Spring Boot · Spring Cloud · JPA · MyBatis · Spring Batch</dd></div>
           <div><dt>화면 개발</dt><dd>React · Vue · TypeScript · Webix · C# / .NET WinForm</dd></div>
           <div><dt>데이터·운영</dt><dd>PostgreSQL · MongoDB · Oracle · Tibero · Kafka · Redis · Docker · Kubernetes · Jenkins</dd></div>
           <div><dt>AI 활용</dt><dd>규칙 문서·Skills·Hooks 기반 개발 자동화 · 테스트 및 문서 자동화</dd></div>

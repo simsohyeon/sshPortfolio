@@ -11,7 +11,7 @@ const GROUPS = [
     title: "Application / Web",
     level: "실사용",
     description: "제품과 프로젝트에서 실제 기능 구현에 사용",
-    items: ["JPA / QueryDSL", "MyBatis", "Spring Batch", "React", "Vue", "TypeScript"],
+    items: ["JPA", "MyBatis", "Spring Batch", "React", "Vue", "TypeScript"],
   },
   {
     title: "Project Environment",

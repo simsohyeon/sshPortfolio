@@ -23,7 +23,7 @@ const resume = {
     { label: "대표 성과", value: "QA 결함 80% 감소", sub: "조회 응답 61% 개선 · 매뉴얼 작성 92% 단축" },
   ],
   skills: {
-    Backend: ["Java", "Spring Boot", "Spring Cloud (MSA)", "JPA / QueryDSL", "MyBatis", "Spring Batch", "Kafka", "Redis", "Node.js", "REST API"],
+    Backend: ["Java", "Spring Boot", "Spring Cloud (MSA)", "JPA", "MyBatis", "Spring Batch", "Kafka", "Redis", "Node.js", "REST API"],
     Database: ["PostgreSQL", "Oracle DB", "MySQL", "Tibero", "MongoDB"],
     Frontend: ["React.js", "Vue.js", "TypeScript", "HTML / CSS / SCSS", "C# / .NET WinForm"],
     "AI-assisted Development": [
@@ -50,7 +50,7 @@ const resume = {
       featured: true,
       oneLiner:
         "고객사마다 다른 자산 분류와 관리 항목을 관리자가 코드 없이 정의하는 IT 자산관리 신제품. 자산 원장 도메인 모델과 스키마, 외부 수집 동기화, 권한·테스트 체계를 담당해 기획부터 검수까지 진행 중이며, AI 기반 개발 하네스로 이 흐름을 자동화.",
-      stack: ["Vue", "TypeScript", "Java", "Spring Boot", "JPA / QueryDSL", "PostgreSQL", "AI 코딩 에이전트"],
+      stack: ["Vue", "TypeScript", "Java", "Spring Boot", "JPA", "PostgreSQL", "AI 코딩 에이전트"],
       links: [],
       // 웹 카드 기본 노출 - 한 줄 불릿. 케이스 전문은 접기와 경력기술서에서.
       highlights: [
