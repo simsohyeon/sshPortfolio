@@ -25,6 +25,9 @@ jobs:
           cache: npm
       - run: npm ci || npm install
       - run: npm run build
+        env:
+          # 저장소 Settings > Secrets and variables > Actions > Variables 에 CHAT_API_URL 을 등록하면 질문하기 위젯이 켜진다
+          VITE_CHAT_API_URL: ${{ vars.CHAT_API_URL }}
       - uses: actions/configure-pages@v5
         with:
           enablement: true

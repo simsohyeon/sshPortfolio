@@ -1,0 +1,11 @@
+name = "sshportfolio-chat"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# 허용할 프런트엔드 출처(쉼표 구분). 비우면 모든 출처 허용(개발용).
+[vars]
+ALLOWED_ORIGINS = "https://simsohyeon.github.io,http://localhost:5173"
+
+# ANTHROPIC_API_KEY 는 파일에 쓰지 말고 아래 명령으로 등록한다:
+#   npx wrangler secret put ANTHROPIC_API_KEY

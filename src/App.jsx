@@ -7,6 +7,8 @@ import PersonalProjects from "./components/PersonalProjects";
 import Skills from "./components/Skills";
 import ResumeInfo from "./components/ResumeInfo";
 import Footer from "./components/Footer";
+import AskMe from "./components/AskMe";
+import "./styles/askme.css";
 
 const SECTION_IDS = ["about", "experience", "projects", "skills", "resume"];
 
@@ -51,6 +53,7 @@ export default function App() {
       <Skills />
       <ResumeInfo />
       <Footer />
+      <AskMe />
     </div>
   );
 }

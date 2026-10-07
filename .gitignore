@@ -4,3 +4,7 @@ dist
 *.local
 .claude
 notes/
+api/node_modules
+api/.wrangler
+api/.wrangler-check
+api/.dev.vars
