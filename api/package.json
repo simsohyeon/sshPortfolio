@@ -8,10 +8,10 @@
     "deploy": "wrangler deploy",
     "check": "wrangler deploy --dry-run --outdir=.wrangler-check"
   },
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.131.0"
-  },
   "devDependencies": {
     "wrangler": "^4.148.0"
+  },
+  "dependencies": {
+    "@google/genai": "^2.27.0"
   }
 }
