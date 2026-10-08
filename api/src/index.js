@@ -146,7 +146,7 @@ async function handleChat(request, env, ctx) {
       } catch (err) {
         console.error("chat error", err);
         send({ error: errorMessage(err) });
-        logError = errorMessage(err);
+        logError = String(err?.message || err).slice(0, 200); // 로그엔 원인 그대로 (화면 문구 말고)
       } finally {
         controller.close();
         // 질문 로그: 어떤 질문이 들어오는지 보고 resume.js 를 보강하기 위한 용도. IP·UA 등 개인정보는 남기지 않는다
