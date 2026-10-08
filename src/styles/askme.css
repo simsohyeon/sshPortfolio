@@ -134,6 +134,18 @@
   font-size: 0.8rem;
   color: var(--color-danger);
 }
+.askme-retry {
+  margin-left: 8px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  cursor: pointer;
+  text-decoration: underline;
+}
+.askme-retry:hover { color: var(--color-accent-hover); }
 
 .askme-suggest {
   display: flex;

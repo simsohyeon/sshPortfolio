@@ -80,7 +80,7 @@ export default function AskMe() {
   useEffect(() => {
     if (busy) return;
     try {
-      const toSave = messages.filter(m => m !== WELCOME && (m.content || m.error));
+      const toSave = messages.slice(1).filter(m => m.content || m.error); // [0] 은 항상 환영 메시지
       if (toSave.length) sessionStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
       else sessionStorage.removeItem(STORAGE_KEY);
     } catch { /* 저장 불가 환경 */ }
@@ -101,12 +101,20 @@ export default function AskMe() {
     inputRef.current?.focus();
   }
 
-  async function send(text) {
+  // 실패한 답변의 "다시 시도": 마지막 질문을 실패한 턴 없이 다시 보낸다
+  function retry() {
+    const last = messages[messages.length - 1];
+    const q = messages[messages.length - 2];
+    if (!last?.error || q?.role !== "user") return;
+    send(q.content, messages.slice(0, -2));
+  }
+
+  async function send(text, base = messages) {
     const question = text.trim();
     if (!question || busy) return;
 
     // 환영 메시지는 서버로 보내지 않는다
-    const history = messages.filter(m => m !== WELCOME);
+    const history = base.slice(1); // [0] 은 환영 메시지
     const next = [...history, { role: "user", content: question }];
     setMessages([WELCOME, ...next, { role: "assistant", content: "" }]);
     setInput("");
@@ -222,7 +230,14 @@ export default function AskMe() {
                       {body || (busy && isLast
                         ? <span className="askme-dots" role="status" aria-label="답변 작성 중"><i /><i /><i /></span>
                         : null)}
-                      {m.error && <div className="askme-error">{m.error}</div>}
+                      {m.error && (
+                        <div className="askme-error">
+                          {m.error}
+                          {isLast && !busy && (
+                            <button type="button" className="askme-retry" onClick={retry}>다시 시도</button>
+                          )}
+                        </div>
+                      )}
                       {ids.length > 0 && (
                         <div className="askme-related">
                           {ids.map(id => (
