@@ -22,6 +22,8 @@ function jumpTo(id) {
   document.getElementById(`proj-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+const INITIAL = resume.name.slice(0, 1); // 아바타 글자
+
 const SUGGESTIONS = [
   "어떤 프로젝트를 맡았나요?",
   "AI를 개발에 어떻게 활용하나요?",
@@ -140,9 +142,12 @@ export default function AskMe() {
       {open && (
         <section className="askme-panel" role="dialog" aria-label="포트폴리오 질문하기">
           <header className="askme-head">
-            <div>
-              <strong>질문하기</strong>
-              <span>AI가 포트폴리오 내용을 바탕으로 답합니다</span>
+            <div className="askme-head-id">
+              <span className="askme-avatar" aria-hidden="true">{INITIAL}</span>
+              <div>
+                <strong>{resume.name} 님의 포트폴리오 도우미</strong>
+                <span className="askme-online">AI가 이력 내용을 바탕으로 답합니다</span>
+              </div>
             </div>
             <button type="button" className="askme-icon" onClick={() => setOpen(false)} aria-label="닫기">
               ×
@@ -154,8 +159,11 @@ export default function AskMe() {
               const { body, ids } = m.role === "assistant" ? splitRelated(plain(m.content)) : { body: m.content, ids: [] };
               return (
                 <div key={i} className={`askme-msg askme-${m.role}`}>
+                  {m.role === "assistant" && <span className="askme-avatar" aria-hidden="true">{INITIAL}</span>}
                   <div className="askme-bubble">
-                    {body || (busy && i === messages.length - 1 ? <span className="askme-dots" aria-label="답변 작성 중" /> : null)}
+                    {body || (busy && i === messages.length - 1
+                      ? <span className="askme-dots" role="status" aria-label="답변 작성 중"><i /><i /><i /></span>
+                      : null)}
                     {m.error && <div className="askme-error">{m.error}</div>}
                     {ids.length > 0 && (
                       <div className="askme-related">
@@ -197,6 +205,7 @@ export default function AskMe() {
               보내기
             </button>
           </form>
+          <div className="askme-hint">Enter 전송 · Shift+Enter 줄바꿈</div>
           <p className="askme-note">답변은 AI가 생성하며 정확하지 않을 수 있습니다. 중요한 내용은 이메일로 확인해 주세요.</p>
         </section>
       )}
