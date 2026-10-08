@@ -21,15 +21,17 @@ const PROJECT_NAMES = Object.fromEntries(
 // 답변 끝의 메타 줄을 떼어낸다: "관련: id1, id2" → 근거 프로젝트 칩, "다음: 질문1 | 질문2" → 이어서 물어볼 질문
 // 메타 줄은 보통 맨 끝 두 줄이지만, 스트리밍 중 머리말만 먼저 도착하거나("관련", "관련:") 서버 안내가 뒤에 붙는 경우도
 // 있어서 끝줄만 보지 않고 모든 줄에서 걸러낸다. 본문 중간에 "관련:" 로 시작하는 문장은 프롬프트상 나오지 않는다.
-const META_RE = /^(관련|다음)(?:\s*(?:프로젝트|질문))?\s*:?\s*(.*)$/;
+// 콜론이 있어야 메타 줄. 콜론 없이 머리말만 있는 줄("관련")은 스트리밍 중 조각이라 숨긴다. "다음과 같습니다" 같은 본문 줄은 남긴다.
+const META_RE = /^(관련|다음)(?:\s*(?:프로젝트|질문))?\s*(?::\s*(.*)|)$/;
 function splitMeta(text) {
   let ids = [];
   let nexts = [];
   const body = text.split("\n").filter(line => {
     const m = line.trim().match(META_RE);
     if (!m) return true;
-    if (m[1] === "관련") ids = m[2].split(",").map(x => x.trim()).filter(id => PROJECT_NAMES[id]);
-    else nexts = m[2].split("|").map(x => x.trim()).filter(Boolean).slice(0, 2);
+    const value = m[2] || "";
+    if (m[1] === "관련") ids = value.split(",").map(x => x.trim()).filter(id => PROJECT_NAMES[id]);
+    else nexts = value.split("|").map(x => x.trim()).filter(Boolean).slice(0, 2);
     return false;
   });
   return { body: body.join("\n").trim(), ids, nexts };
