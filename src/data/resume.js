@@ -68,6 +68,7 @@ const resume = {
       period: "2026.04 ~ 현재",
       type: "회사",
       role: "풀스택 · 자산 원장 도메인 설계",
+      team: "개발 5명 · 자산관리 영역 풀스택 전담",
       status: "개발 진행 중",
       statusKind: "active",
       featured: true,
@@ -128,7 +129,7 @@ const resume = {
           problem:
             "화면·API·테스트를 혼자 맡는 신제품 초기, 반복 문서·보일러플레이트 작성에 잠식되는 시간",
           solution:
-            "규칙 문서·커스텀 Skills·Hooks 검증 게이트로 구성한 AI 개발 하네스",
+            "규칙 문서·커스텀 Skills·Hooks 검증 게이트로 구성한 AI 개발 하네스. 규칙 문서에는 API 규약·화면 패턴·DDL 금지·공통 컴포넌트 사용 규칙을 담고, Skills 로 매뉴얼 생성·업머지·다운머지·테스트 케이스(TC) 생성 같은 반복 작업을 자동화하며, Hooks 가 커밋 전 테스트·검증·영향도 체크·동기화를 강제합니다.",
           decision:
             "AI에게 매번 부탁하는 대신 규칙·절차·검증을 도구에 고정해야 속도와 품질을 함께 잡을 수 있다고 판단했습니다. 설계 판단과 최종 리뷰는 사람이 맡습니다.",
           results: [
@@ -148,6 +149,7 @@ const resume = {
       period: "2025.02 ~ 2026.03",
       type: "회사",
       role: "풀스택 · 도메인·권한 구조 설계 주도",
+      team: "개발 5명 · 공통 영역 풀스택 전담",
       status: "운영 중",
       statusKind: "live",
       featured: true,
@@ -229,6 +231,7 @@ const resume = {
       period: "2024.01 ~ 2025.02",
       type: "회사",
       role: "백엔드 · 운영 · 고객사 대응",
+      team: "개발 10명 · 프로젝트 전담 메인 개발자로 참여",
       status: "고객사 5곳 구축 완료",
       statusKind: "done",
       featured: false,
