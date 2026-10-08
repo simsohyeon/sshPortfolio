@@ -55,6 +55,9 @@ export default function Hero() {
             <a href={resume.contact.github} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
               GitHub ↗
             </a>
+            <a href={`${import.meta.env.BASE_URL}resume.html`} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
+              경력기술서 ↗
+            </a>
           </div>
 
           {/* 인쇄/PDF 저장 시에만 노출되는 연락처 영역 */}

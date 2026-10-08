@@ -4,6 +4,7 @@ export default function Footer() {
   const links = [
     { label: "이메일", href: `mailto:${resume.contact.email}?subject=${encodeURIComponent("채용 문의")}`, external: false },
     { label: "GitHub", href: resume.contact.github, external: true },
+    { label: "경력기술서", href: `${import.meta.env.BASE_URL}resume.html`, external: true },
   ];
 
   return (
