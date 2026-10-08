@@ -140,7 +140,7 @@ async function handleChat(request, env, ctx) {
       try {
         for await (const ev of await openGeminiStream(env, model, contents)) {
           if (ev.cut) {
-            // 스트림이 조각 중간에서 끊김. 이미 보낸 답은 살리고 로그에만 남긴다
+            // 스트림이 조각 중간에서 끊김. 이미 보낸 답은 살리고, 끊겼다는 안내(+다시 시도)를 붙인다
             finishReason = finishReason || "STREAM_CUT";
             break;
           }
@@ -156,7 +156,9 @@ async function handleChat(request, env, ctx) {
           if (ev.promptFeedback?.blockReason) finishReason = "SAFETY";
         }
 
-        if (finishReason === "SAFETY" || finishReason === "PROHIBITED_CONTENT" || finishReason === "RECITATION") {
+        if (finishReason === "STREAM_CUT") {
+          send({ error: "답변이 중간에 끊겼습니다." });
+        } else if (finishReason === "SAFETY" || finishReason === "PROHIBITED_CONTENT" || finishReason === "RECITATION") {
           send({ text: (sentAny ? "\n\n" : "") + "죄송합니다. 이 질문에는 답변드리기 어렵습니다. 포트폴리오 관련 질문을 해 주세요." });
         } else if (finishReason === "MAX_TOKENS") {
           send({ text: "\n\n(답변이 길어 여기서 줄였습니다. 더 구체적으로 물어봐 주세요.)" });
