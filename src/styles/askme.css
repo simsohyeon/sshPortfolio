@@ -72,15 +72,18 @@
 }
 .askme-head-actions { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
 .askme-icon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
   border: none;
+  border-radius: var(--radius-sm);
   background: transparent;
-  font-size: 1.3rem;
-  line-height: 1;
   color: var(--color-muted);
   cursor: pointer;
-  padding: 2px 6px;
+  padding: 0;
 }
-.askme-icon:hover { color: var(--color-text); }
+.askme-icon:hover { color: var(--color-text); background: rgba(15, 23, 42, 0.06); }
 
 .askme-list {
   flex: 1;

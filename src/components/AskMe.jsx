@@ -36,6 +36,20 @@ function jumpTo(id) {
 
 const INITIAL = resume.name.slice(0, 1); // 아바타 글자
 
+// 헤더 아이콘: 글리프마다 크기가 달라서 SVG 로 통일
+const ICON = {
+  reset: (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" />
+    </svg>
+  ),
+  close: (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  ),
+};
+
 const SUGGESTIONS = [
   "어떤 프로젝트를 맡았나요?",
   "AI를 개발에 어떻게 활용하나요?",
@@ -210,9 +224,9 @@ export default function AskMe() {
             </div>
             <div className="askme-head-actions">
               {messages.length > 1 && (
-                <button type="button" className="askme-icon" onClick={reset} aria-label="새 대화" title="새 대화">↺</button>
+                <button type="button" className="askme-icon" onClick={reset} aria-label="새 대화" title="새 대화">{ICON.reset}</button>
               )}
-              <button type="button" className="askme-icon" onClick={() => setOpen(false)} aria-label="닫기" title="닫기">×</button>
+              <button type="button" className="askme-icon" onClick={() => setOpen(false)} aria-label="닫기" title="닫기">{ICON.close}</button>
             </div>
           </header>
 
