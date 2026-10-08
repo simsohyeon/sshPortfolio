@@ -1,13 +1,14 @@
 // Cloudflare Worker - 포트폴리오 "질문하기" 챗봇 API (Gemini API)
 // POST /chat  { messages: [{ role: "user"|"assistant", content: string }, ...] }
 // 응답: text/event-stream  (data: {"text": "..."} / data: {"done": true} / data: {"error": "..."})
-import { GoogleGenAI, ApiError } from "@google/genai";
 import { buildSystemPrompt } from "./context.js";
+import { readSSE } from "./sse.js";
 
 const DEFAULT_MODEL = "gemini-flash-latest"; // wrangler.toml 의 GEMINI_MODEL 로 덮어쓸 수 있다
 const MAX_MESSAGES = 12; // 보내는 대화 길이 상한 (user+assistant 합계)
 const MAX_MESSAGE_CHARS = 1000; // 메시지 하나의 글자 수 상한
 const MAX_OUTPUT_TOKENS = 1024;
+const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta";
 
 // 시스템 프롬프트는 요청마다 같아야 하므로 모듈 로드 시 1회 생성
 const SYSTEM_PROMPT = buildSystemPrompt();
@@ -63,6 +64,13 @@ function sanitizeMessages(input) {
   return { contents };
 }
 
+class ApiError extends Error {
+  constructor(status, message) {
+    super(message);
+    this.status = status;
+  }
+}
+
 function errorMessage(err) {
   if (err instanceof ApiError) {
     if (err.status === 400 && /api key/i.test(err.message)) return "API 키가 올바르지 않습니다.";
@@ -71,6 +79,30 @@ function errorMessage(err) {
     return `API 오류 (${err.status})`;
   }
   return "잠시 후 다시 시도해 주세요.";
+}
+
+// Gemini REST 스트리밍 호출. SDK 대신 직접 호출해 마지막 조각까지 우리가 파싱한다 (sse.js 참고)
+async function openGeminiStream(env, model, contents) {
+  const res = await fetch(`${GEMINI_BASE}/models/${model}:streamGenerateContent?alt=sse`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+      contents,
+      generationConfig: {
+        maxOutputTokens: MAX_OUTPUT_TOKENS,
+        temperature: 0.3,
+        thinkingConfig: { thinkingBudget: 0 }, // thinking 토큰이 maxOutputTokens 를 소진해 41토큰 만에 잘리던 문제
+      },
+    }),
+  });
+  if (!res.ok) {
+    let msg = res.statusText;
+    try { msg = (await res.json()).error?.message || msg; } catch { /* 본문 없음 */ }
+    throw new ApiError(res.status, msg);
+  }
+  if (!res.body) throw new Error("Gemini 응답 본문이 비어 있습니다.");
+  return readSSE(res.body);
 }
 
 async function handleChat(request, env, ctx) {
@@ -92,7 +124,6 @@ async function handleChat(request, env, ctx) {
   const { contents, error } = sanitizeMessages(body.messages);
   if (error) return json({ error }, 400, cors);
 
-  const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
   const model = env.GEMINI_MODEL || DEFAULT_MODEL;
 
   const encoder = new TextEncoder();
@@ -104,27 +135,22 @@ async function handleChat(request, env, ctx) {
       let sentAny = false;
       let logError;
       try {
-        const stream = await ai.models.generateContentStream({
-          model,
-          contents,
-          config: {
-            systemInstruction: SYSTEM_PROMPT,
-            maxOutputTokens: MAX_OUTPUT_TOKENS,
-            temperature: 0.3,
-            thinkingConfig: { thinkingBudget: 0 }, // thinking 토큰이 maxOutputTokens 를 소진해 41토큰 만에 잘리던 문제
-          },
-        });
-
-        for await (const chunk of stream) {
-          const text = chunk.text;
+        for await (const ev of await openGeminiStream(env, model, contents)) {
+          if (ev.cut) {
+            // 스트림이 조각 중간에서 끊김. 이미 보낸 답은 살리고 로그에만 남긴다
+            finishReason = finishReason || "STREAM_CUT";
+            break;
+          }
+          if (ev.error) throw new ApiError(ev.error.code || 500, ev.error.message || "unknown");
+          const cand = ev.candidates?.[0];
+          const text = (cand?.content?.parts || []).map(p => p.text || "").join("");
           if (text) {
             sentAny = true;
             send({ text });
           }
-          const cand = chunk.candidates?.[0];
           if (cand?.finishReason) finishReason = cand.finishReason;
-          if (chunk.usageMetadata) usage = chunk.usageMetadata;
-          if (chunk.promptFeedback?.blockReason) finishReason = "SAFETY";
+          if (ev.usageMetadata) usage = ev.usageMetadata;
+          if (ev.promptFeedback?.blockReason) finishReason = "SAFETY";
         }
 
         if (finishReason === "SAFETY" || finishReason === "PROHIBITED_CONTENT" || finishReason === "RECITATION") {

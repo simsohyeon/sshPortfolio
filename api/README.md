@@ -1,7 +1,7 @@
 # 포트폴리오 질문하기 API (Cloudflare Worker + Gemini)
 
 포트폴리오 사이트의 "💬 질문하기" 위젯이 호출하는 백엔드입니다.
-`src/data/resume.js`를 시스템 프롬프트로 넣고 Gemini API에 질문을 전달해 답변을 스트리밍합니다.
+`src/data/resume.js`를 시스템 프롬프트로 넣고 Gemini REST API(`streamGenerateContent?alt=sse`)에 질문을 전달해 답변을 스트리밍합니다. 외부 런타임 의존성은 없습니다.
 API 키는 Worker 안에만 두므로 정적 사이트(GitHub Pages)에 노출되지 않습니다.
 
 ## 구성
@@ -10,6 +10,7 @@ API 키는 Worker 안에만 두므로 정적 사이트(GitHub Pages)에 노출�
 api/
 ├── src/index.js      Worker 진입점 - POST /chat (SSE), GET /health, CORS
 ├── src/context.js    resume.js → 시스템 프롬프트 변환 (전화번호 제외)
+├── src/sse.js        Gemini SSE 스트림 파서 (SDK 없이 REST 직접 호출, 끝에 남은 조각까지 처리)
 ├── wrangler.toml     Worker 설정 (허용 출처 ALLOWED_ORIGINS, 모델 GEMINI_MODEL)
 └── .dev.vars.example 로컬 개발용 키 파일 예시
 ```

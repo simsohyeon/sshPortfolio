@@ -10,8 +10,5 @@
   },
   "devDependencies": {
     "wrangler": "^4.148.0"
-  },
-  "dependencies": {
-    "@google/genai": "^2.27.0"
   }
 }
