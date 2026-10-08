@@ -160,6 +160,7 @@ const resume = {
       stack: ["React", "TypeScript", "Spring Boot", "Spring Cloud (MSA)", "Kafka", "Redis", "MongoDB", "Docker", "Kubernetes", "Jenkins"],
       // 챗봇 컨텍스트 전용 (웹 카드·경력기술서엔 노출 안 함): 기술을 어디에 썼는지. "X를 어디에 썼나요?" 질문용
       techNotes: [
+        "Kafka: 서비스 간 비동기 이벤트 전달. 조직·사용자 변경 이벤트를 받아 테넌트·사용자 정보를 동기화하고, 배치 스케줄 관리와 이메일·SMS 통보 요청을 Kafka로 전달",
         "Redis: 공통 인증 계층에서 로그인·권한 정보 저장, 동시 로그인 제한과 로그인 타임아웃 검사",
         "서버 메모리 캐시: ITG 카펠라 컴포넌트 캐시",
         "localStorage: 클라이언트 설정·사용자 정보 저장",
