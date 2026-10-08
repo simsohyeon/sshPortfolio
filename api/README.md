@@ -52,6 +52,18 @@ npm run deploy                           # https://sshportfolio-chat.<계정>.wo
 `CHAT_API_URL` = 위 Worker 주소를 등록합니다. 다음 push부터 사이트에 질문하기 위젯이 켜집니다.
 변수를 비워두면 위젯은 렌더되지 않고 사이트는 기존과 똑같이 동작합니다.
 
+## 질문 로그 (KV)
+
+어떤 질문이 들어오는지 보고 `resume.js` 를 보강하기 위해 질문·토큰수·소요시간만 KV(`CHAT_LOG`)에 90일 보관합니다. IP·UA 는 남기지 않습니다.
+
+```bash
+npx wrangler kv namespace create CHAT_LOG   # 출력된 id 를 wrangler.toml 의 kv_namespaces.id 에 적는다
+npx wrangler kv key list --binding CHAT_LOG            # 배포본 로그 키 목록 (--local 붙이면 로컬)
+npx wrangler kv key get  --binding CHAT_LOG <key>      # 항목 하나 보기
+```
+
+로그가 필요 없으면 `wrangler.toml` 의 `[[kv_namespaces]]` 블록을 지우면 됩니다.
+
 ## 동작 확인
 
 ```bash

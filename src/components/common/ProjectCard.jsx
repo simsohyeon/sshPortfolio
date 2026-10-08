@@ -76,7 +76,7 @@ export default function ProjectCard({ proj, kind = "company" }) {
   const bulletLabel = kind === "company" ? "핵심 성과" : "담당 역할";
 
   return (
-    <article className="card">
+    <article className="card" id={proj.id ? `proj-${proj.id}` : undefined} style={{ scrollMarginTop: "80px" }}>
       <div className={hasPanel ? "project-grid" : undefined}>
         <div className="card-text">
           <div style={{

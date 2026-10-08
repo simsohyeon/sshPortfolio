@@ -181,3 +181,22 @@
     height: min(70vh, calc(100vh - 90px));
   }
 }
+
+/* 답변 근거 프로젝트 칩 - 클릭하면 해당 카드로 스크롤 */
+.askme-related {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.askme-related .tag {
+  cursor: pointer;
+  font-size: 0.74rem;
+  padding: 4px 9px;
+  background: #fff;
+}
+.askme-related .tag:hover {
+  border-color: var(--color-accent-border);
+  color: var(--color-accent);
+  background: var(--color-accent-soft);
+}

@@ -73,7 +73,8 @@ function errorMessage(err) {
   return "잠시 후 다시 시도해 주세요.";
 }
 
-async function handleChat(request, env) {
+async function handleChat(request, env, ctx) {
+  const startedAt = Date.now();
   const origin = request.headers.get("Origin") || "";
   const cors = corsHeaders(origin, env);
 
@@ -98,6 +99,10 @@ async function handleChat(request, env) {
   const sse = new ReadableStream({
     async start(controller) {
       const send = obj => controller.enqueue(encoder.encode(`data: ${JSON.stringify(obj)}\n\n`));
+      let finishReason;
+      let usage;
+      let sentAny = false;
+      let logError;
       try {
         const stream = await ai.models.generateContentStream({
           model,
@@ -110,9 +115,6 @@ async function handleChat(request, env) {
           },
         });
 
-        let finishReason;
-        let usage;
-        let sentAny = false;
         for await (const chunk of stream) {
           const text = chunk.text;
           if (text) {
@@ -144,8 +146,24 @@ async function handleChat(request, env) {
       } catch (err) {
         console.error("chat error", err);
         send({ error: errorMessage(err) });
+        logError = errorMessage(err);
       } finally {
         controller.close();
+        // 질문 로그: 어떤 질문이 들어오는지 보고 resume.js 를 보강하기 위한 용도. IP·UA 등 개인정보는 남기지 않는다
+        if (env.CHAT_LOG) {
+          const last = contents[contents.length - 1]?.parts?.[0]?.text || "";
+          const entry = {
+            ts: new Date(startedAt).toISOString(),
+            q: last.slice(0, 300),
+            turns: contents.length,
+            ms: Date.now() - startedAt,
+            tokens: { input: usage?.promptTokenCount ?? 0, output: usage?.candidatesTokenCount ?? 0 },
+            finish: finishReason || null,
+            error: logError || null,
+          };
+          const key = `${entry.ts}-${Math.random().toString(36).slice(2, 8)}`;
+          ctx.waitUntil(env.CHAT_LOG.put(key, JSON.stringify(entry), { expirationTtl: 60 * 60 * 24 * 90 }).catch(e => console.error("log error", e)));
+        }
       }
     },
   });
@@ -160,7 +178,7 @@ async function handleChat(request, env) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const origin = request.headers.get("Origin") || "";
 
@@ -171,7 +189,7 @@ export default {
       return json({ ok: true, model: env.GEMINI_MODEL || DEFAULT_MODEL }, 200, corsHeaders(origin, env));
     }
     if (url.pathname === "/chat" && request.method === "POST") {
-      return handleChat(request, env);
+      return handleChat(request, env, ctx);
     }
     return json({ error: "Not found" }, 404, corsHeaders(origin, env));
   },

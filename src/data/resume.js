@@ -332,6 +332,7 @@ const resume = {
   // ───────────────────────────────────────────────
   sideProjects: [
     {
+      id: "staymaru",
       name: "쉼마루 (StayMaru) - 경북 전통문화 여행 일정 추천",
       period: "2026.05 ~ 2026.09",
       featured: true,
@@ -354,6 +355,7 @@ const resume = {
       ],
     },
     {
+      id: "ansim-corona",
       name: "안심코로나 - 실시간 위치 기록 안드로이드 앱",
       period: "2021.03 ~ 2021.12",
       context: "가톨릭관동대 캡스톤디자인 졸업작품 - 2021 LINC+ 캡스톤디자인 경진대회 우수상",

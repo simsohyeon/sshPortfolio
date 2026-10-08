@@ -8,6 +8,20 @@ const API_URL = (import.meta.env.VITE_CHAT_API_URL || "").replace(/\/$/, "");
 // 모델이 규칙을 어기고 마크다운을 보내도 기호만 걷어낸다 (렌더러 없음)
 const plain = t => t.replace(/\*\*|__|`/g, "").replace(/^#{1,6}\s+/gm, "").replace(/^\s*[*•]\s+/gm, "- ");
 
+// 답변 마지막 줄 "관련: id1, id2" 를 떼어내 근거 프로젝트 칩으로 바꾼다
+const PROJECT_NAMES = Object.fromEntries(
+  [...resume.projects, ...(resume.sideProjects || [])].map(p => [p.id, p.name.split(" - ")[0].replace(/\s*\(.*\)$/, "")])
+);
+function splitRelated(text) {
+  const m = text.match(/\n?\s*관련\s*:\s*([\w-]+(?:\s*,\s*[\w-]+)*)\s*$/);
+  if (!m) return { body: text, ids: [] };
+  const ids = m[1].split(",").map(x => x.trim()).filter(id => PROJECT_NAMES[id]);
+  return { body: text.slice(0, m.index).trimEnd(), ids };
+}
+function jumpTo(id) {
+  document.getElementById(`proj-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 const SUGGESTIONS = [
   "어떤 프로젝트를 맡았나요?",
   "AI를 개발에 어떻게 활용하나요?",
@@ -136,14 +150,26 @@ export default function AskMe() {
           </header>
 
           <div className="askme-list" ref={listRef}>
-            {messages.map((m, i) => (
-              <div key={i} className={`askme-msg askme-${m.role}`}>
-                <div className="askme-bubble">
-                  {plain(m.content) || (busy && i === messages.length - 1 ? <span className="askme-dots" aria-label="답변 작성 중" /> : null)}
-                  {m.error && <div className="askme-error">{m.error}</div>}
+            {messages.map((m, i) => {
+              const { body, ids } = m.role === "assistant" ? splitRelated(plain(m.content)) : { body: m.content, ids: [] };
+              return (
+                <div key={i} className={`askme-msg askme-${m.role}`}>
+                  <div className="askme-bubble">
+                    {body || (busy && i === messages.length - 1 ? <span className="askme-dots" aria-label="답변 작성 중" /> : null)}
+                    {m.error && <div className="askme-error">{m.error}</div>}
+                    {ids.length > 0 && (
+                      <div className="askme-related">
+                        {ids.map(id => (
+                          <button key={id} type="button" className="tag" onClick={() => jumpTo(id)}>
+                            {PROJECT_NAMES[id]} ↗
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
             {showSuggestions && (
               <div className="askme-suggest">
                 {SUGGESTIONS.map(s => (
