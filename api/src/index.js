@@ -81,13 +81,32 @@ function errorMessage(err) {
   return "잠시 후 다시 시도해 주세요.";
 }
 
-// Gemini REST 스트리밍 호출. SDK 대신 직접 호출해 마지막 조각까지 우리가 파싱한다 (sse.js 참고)
+// Gemini 호출은 이 Durable Object 안에서 한다. Worker 는 방문자 근처(한국이면 홍콩 HKG)에서 실행되는데
+// Gemini API 가 홍콩을 지원하지 않아 "User location is not supported" 400 이 났다.
+// DO 는 처음 만들 때 locationHint 로 리전을 고정할 수 있어서, 미국 서부에서 호출하도록 한다.
+export class GeminiProxy {
+  constructor(state, env) {
+    this.env = env;
+  }
+  async fetch(request) {
+    const model = request.headers.get("x-model");
+    const res = await fetch(`${GEMINI_BASE}/models/${model}:streamGenerateContent?alt=sse`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-goog-api-key": this.env.GEMINI_API_KEY },
+      body: request.body,
+    });
+    return new Response(res.body, { status: res.status, headers: { "Content-Type": res.headers.get("Content-Type") || "text/plain" } });
+  }
+}
+
+// Gemini REST 스트리밍 호출(DO 경유). SDK 대신 직접 호출해 마지막 조각까지 우리가 파싱한다 (sse.js 참고)
 // thinking 은 최소로: 생각 토큰이 maxOutputTokens 를 소진해 답이 41토큰 만에 잘리던 문제.
 // 모델이 thinkingConfig 를 거부하면(400, "-latest" 별칭이 바뀌었을 때) 그 옵션 없이 한 번 더 시도한다.
 async function openGeminiStream(env, model, contents) {
-  const call = thinkingConfig => fetch(`${GEMINI_BASE}/models/${model}:streamGenerateContent?alt=sse`, {
+  const proxy = env.GEMINI_PROXY.get(env.GEMINI_PROXY.idFromName("us"), { locationHint: "wnam" });
+  const call = thinkingConfig => proxy.fetch("https://gemini-proxy/", {
     method: "POST",
-    headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
+    headers: { "Content-Type": "application/json", "x-model": model },
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
       contents,
@@ -217,7 +236,7 @@ export default {
       return new Response(null, { status: 204, headers: corsHeaders(origin, env) });
     }
     if (url.pathname === "/health") {
-      return json({ ok: true, model: env.GEMINI_MODEL || DEFAULT_MODEL }, 200, corsHeaders(origin, env));
+      return json({ ok: true, model: env.GEMINI_MODEL || DEFAULT_MODEL, colo: request.cf?.colo }, 200, corsHeaders(origin, env));
     }
     if (url.pathname === "/chat" && request.method === "POST") {
       return handleChat(request, env, ctx);

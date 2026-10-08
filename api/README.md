@@ -11,6 +11,7 @@ api/
 ├── src/index.js      Worker 진입점 - POST /chat (SSE), GET /health, CORS
 ├── src/context.js    resume.js → 시스템 프롬프트 변환 (전화번호 제외)
 ├── src/sse.js        Gemini SSE 스트림 파서 (SDK 없이 REST 직접 호출, 끝에 남은 조각까지 처리)
+│                     index.js 의 GeminiProxy(Durable Object, 미국 서부 고정)가 실제 Gemini 호출을 담당 - 한국 방문자는 Worker 가 홍콩(HKG)에서 실행되는데 Gemini 가 홍콩을 지원하지 않아서
 ├── wrangler.toml     Worker 설정 (허용 출처 ALLOWED_ORIGINS, 모델 GEMINI_MODEL)
 └── .dev.vars.example 로컬 개발용 키 파일 예시
 ```
@@ -80,6 +81,10 @@ curl -N -X POST https://sshportfolio-chat.<계정>.workers.dev/chat \
 - 무료 티어는 분당·일일 요청 수 제한이 있고 모델마다 다릅니다. 한도를 넘으면 429가 오고 위젯에는 "잠시 후 다시 시도" 안내가 뜹니다.
 - 한도는 모델마다 다르고 자주 바뀝니다. 실제 수치는 https://aistudio.google.com/rate-limit 에서 내 프로젝트 기준으로 확인합니다. 한도를 넘으면 429가 오고 위젯엔 "요청이 많아 잠시 쉬어가는 중" 안내가 뜹니다. 질문 로그(KV)의 `error` 에 어떤 한도(분당/일일)인지 원문이 남습니다. 현재 모델 ID와 한도는 https://ai.google.dev/gemini-api/docs/models 와 https://ai.google.dev/gemini-api/docs/rate-limits 에서 확인합니다.
 - 무료 티어는 입력 내용이 Google 모델 개선에 쓰일 수 있습니다. 이 챗봇은 공개된 이력 정보만 다루므로 문제는 없지만, 알고 쓰는 게 좋습니다.
+
+## 지역 메모
+
+- Gemini API 는 홍콩 등 일부 지역에서 호출을 거부합니다("User location is not supported"). Cloudflare 는 방문자와 가까운 데이터센터에서 Worker 를 실행하므로 한국 방문자의 요청이 HKG 에서 처리되면 Gemini 가 400 을 냅니다. 그래서 Gemini 호출만 `locationHint: "wnam"` 으로 만든 Durable Object(GeminiProxy) 안에서 합니다. `/health` 응답의 `colo` 로 Worker 실행 위치를 볼 수 있습니다.
 
 ## 보안 메모
 
