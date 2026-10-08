@@ -26,8 +26,8 @@
 .askme-fab:hover { background: var(--color-accent-hover); transform: translateY(-1px); }
 
 .askme-panel {
-  width: min(380px, calc(100vw - 32px));
-  height: min(560px, calc(100vh - 100px));
+  width: min(460px, calc(100vw - 32px));
+  height: min(760px, calc(100vh - 100px));
   display: flex;
   flex-direction: column;
   background: var(--color-surface);

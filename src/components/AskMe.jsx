@@ -5,6 +5,9 @@ import resume from "../data/resume";
 // VITE_CHAT_API_URL 이 비어 있으면 아무것도 렌더하지 않는다 (API 없이도 사이트는 그대로 동작).
 const API_URL = (import.meta.env.VITE_CHAT_API_URL || "").replace(/\/$/, "");
 
+// 모델이 규칙을 어기고 마크다운을 보내도 기호만 걷어낸다 (렌더러 없음)
+const plain = t => t.replace(/\*\*|__|`/g, "").replace(/^#{1,6}\s+/gm, "").replace(/^\s*[*•]\s+/gm, "- ");
+
 const SUGGESTIONS = [
   "어떤 프로젝트를 맡았나요?",
   "AI를 개발에 어떻게 활용하나요?",
@@ -136,7 +139,7 @@ export default function AskMe() {
             {messages.map((m, i) => (
               <div key={i} className={`askme-msg askme-${m.role}`}>
                 <div className="askme-bubble">
-                  {m.content || (busy && i === messages.length - 1 ? <span className="askme-dots" aria-label="답변 작성 중" /> : null)}
+                  {plain(m.content) || (busy && i === messages.length - 1 ? <span className="askme-dots" aria-label="답변 작성 중" /> : null)}
                   {m.error && <div className="askme-error">{m.error}</div>}
                 </div>
               </div>

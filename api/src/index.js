@@ -106,6 +106,7 @@ async function handleChat(request, env) {
             systemInstruction: SYSTEM_PROMPT,
             maxOutputTokens: MAX_OUTPUT_TOKENS,
             temperature: 0.3,
+            thinkingConfig: { thinkingBudget: 0 }, // thinking 토큰이 maxOutputTokens 를 소진해 41토큰 만에 잘리던 문제
           },
         });
 
