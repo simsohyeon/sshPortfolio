@@ -36,6 +36,7 @@ function renderProject(p) {
   ];
   if (p.team) lines.push(`- 팀·기여: ${p.team}`); // 예: "개발 4명 · 백엔드·화면 단독 담당" (resume.js 에 채우면 자동 반영)
   if (p.clients?.length) lines.push(`- 고객사: ${p.clients.join(", ")}`);
+  if (p.techNotes?.length) lines.push(`- 기술 활용 메모:\n${list(p.techNotes, "  ")}`);
   if (p.links?.length) lines.push(`- 링크: ${links(p.links)}`);
   if (p.highlights?.length) lines.push(`- 주요 성과:\n${list(p.highlights, "  ")}`);
   if (p.takeaways?.length) lines.push(`- 배운 점:\n${list(p.takeaways, "  ")}`);
