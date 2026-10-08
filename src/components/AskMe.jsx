@@ -4,19 +4,31 @@ import resume from "../data/resume";
 // 포트폴리오 "질문하기" 위젯.
 // VITE_CHAT_API_URL 이 비어 있으면 아무것도 렌더하지 않는다 (API 없이도 사이트는 그대로 동작).
 const API_URL = (import.meta.env.VITE_CHAT_API_URL || "").replace(/\/$/, "");
+const STORAGE_KEY = "askme:messages"; // 새로고침해도 대화 유지 (탭 닫으면 사라짐)
 
 // 모델이 규칙을 어기고 마크다운을 보내도 기호만 걷어낸다 (렌더러 없음)
 const plain = t => t.replace(/\*\*|__|`/g, "").replace(/^#{1,6}\s+/gm, "").replace(/^\s*[*•]\s+/gm, "- ");
 
-// 답변 마지막 줄 "관련: id1, id2" 를 떼어내 근거 프로젝트 칩으로 바꾼다
 const PROJECT_NAMES = Object.fromEntries(
   [...resume.projects, ...(resume.sideProjects || [])].map(p => [p.id, p.name.split(" - ")[0].replace(/\s*\(.*\)$/, "")])
 );
-function splitRelated(text) {
-  const m = text.match(/\n?\s*관련\s*:\s*([\w-]+(?:\s*,\s*[\w-]+)*)\s*$/);
-  if (!m) return { body: text, ids: [] };
-  const ids = m[1].split(",").map(x => x.trim()).filter(id => PROJECT_NAMES[id]);
-  return { body: text.slice(0, m.index).trimEnd(), ids };
+
+// 답변 끝의 메타 줄을 떼어낸다: "관련: id1, id2" → 근거 프로젝트 칩, "다음: 질문1 | 질문2" → 이어서 물어볼 질문
+function splitMeta(text) {
+  const lines = text.trimEnd().split("\n");
+  let ids = [];
+  let nexts = [];
+  while (lines.length) {
+    const last = lines[lines.length - 1].trim();
+    const rel = last.match(/^관련\s*:\s*(.+)$/);
+    const nxt = last.match(/^다음\s*:\s*(.+)$/);
+    if (rel) ids = rel[1].split(",").map(x => x.trim()).filter(id => PROJECT_NAMES[id]);
+    else if (nxt) nexts = nxt[1].split("|").map(x => x.trim()).filter(Boolean).slice(0, 2);
+    else if (last === "") { /* 메타 줄 앞의 빈 줄 */ }
+    else break;
+    lines.pop();
+  }
+  return { body: lines.join("\n").trimEnd(), ids, nexts };
 }
 function jumpTo(id) {
   document.getElementById(`proj-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -36,9 +48,34 @@ const WELCOME = {
   content: `안녕하세요. ${resume.name} 님의 포트폴리오 도우미입니다. 경력·프로젝트·기술에 대해 물어보세요.`,
 };
 
+function loadMessages() {
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "[]");
+    return Array.isArray(saved) && saved.length ? [WELCOME, ...saved] : [WELCOME];
+  } catch {
+    return [WELCOME];
+  }
+}
+
+function CopyButton({ text }) {
+  const [done, setDone] = useState(false);
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(text);
+      setDone(true);
+      setTimeout(() => setDone(false), 1500);
+    } catch { /* 클립보드 권한 없음 - 조용히 무시 */ }
+  }
+  return (
+    <button type="button" className="askme-copy" onClick={copy} aria-label="답변 복사">
+      {done ? "복사됨" : "복사"}
+    </button>
+  );
+}
+
 export default function AskMe() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState([WELCOME]);
+  const [messages, setMessages] = useState(loadMessages);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const listRef = useRef(null);
@@ -53,11 +90,32 @@ export default function AskMe() {
   useEffect(() => {
     const el = listRef.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [messages, open]);
+  }, [messages, open, busy]);
+
+  // 대화 저장 (환영 메시지 제외). 답변 생성 중엔 완성본만 남기도록 busy 가 풀릴 때 저장
+  useEffect(() => {
+    if (busy) return;
+    try {
+      const toSave = messages.filter(m => m !== WELCOME && (m.content || m.error));
+      if (toSave.length) sessionStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+      else sessionStorage.removeItem(STORAGE_KEY);
+    } catch { /* 저장 불가 환경 */ }
+  }, [messages, busy]);
 
   useEffect(() => () => abortRef.current?.abort(), []);
 
   if (!API_URL) return null;
+
+  function stop() {
+    abortRef.current?.abort();
+  }
+
+  function reset() {
+    stop();
+    setMessages([WELCOME]);
+    setInput("");
+    inputRef.current?.focus();
+  }
 
   async function send(text) {
     const question = text.trim();
@@ -119,7 +177,15 @@ export default function AskMe() {
         }
       }
     } catch (err) {
-      if (err.name !== "AbortError") {
+      if (err.name === "AbortError") {
+        // 중지: 지금까지 받은 내용은 그대로 두고, 아무것도 못 받았으면 안내만
+        setMessages(prev => {
+          const last = prev[prev.length - 1];
+          return last?.role === "assistant" && !last.content
+            ? [...prev.slice(0, -1), { ...last, content: "(중지됨)" }]
+            : prev;
+        });
+      } else {
         appendToLast({ error: "네트워크 오류가 발생했습니다. 잠시 후 다시 시도해 주세요." });
       }
     } finally {
@@ -135,6 +201,7 @@ export default function AskMe() {
     }
   }
 
+  const lastIndex = messages.length - 1;
   const showSuggestions = messages.length === 1 && !busy;
 
   return (
@@ -149,28 +216,44 @@ export default function AskMe() {
                 <span className="askme-online">AI가 이력 내용을 바탕으로 답합니다</span>
               </div>
             </div>
-            <button type="button" className="askme-icon" onClick={() => setOpen(false)} aria-label="닫기">
-              ×
-            </button>
+            <div className="askme-head-actions">
+              {messages.length > 1 && (
+                <button type="button" className="askme-icon" onClick={reset} aria-label="새 대화" title="새 대화">↺</button>
+              )}
+              <button type="button" className="askme-icon" onClick={() => setOpen(false)} aria-label="닫기" title="닫기">×</button>
+            </div>
           </header>
 
           <div className="askme-list" ref={listRef}>
             {messages.map((m, i) => {
-              const { body, ids } = m.role === "assistant" ? splitRelated(plain(m.content)) : { body: m.content, ids: [] };
+              const isAssistant = m.role === "assistant";
+              const { body, ids, nexts } = isAssistant ? splitMeta(plain(m.content)) : { body: m.content, ids: [], nexts: [] };
+              const isLast = i === lastIndex;
+              const showNexts = isAssistant && isLast && !busy && nexts.length > 0;
               return (
                 <div key={i} className={`askme-msg askme-${m.role}`}>
-                  {m.role === "assistant" && <span className="askme-avatar" aria-hidden="true">{INITIAL}</span>}
-                  <div className="askme-bubble">
-                    {body || (busy && i === messages.length - 1
-                      ? <span className="askme-dots" role="status" aria-label="답변 작성 중"><i /><i /><i /></span>
-                      : null)}
-                    {m.error && <div className="askme-error">{m.error}</div>}
-                    {ids.length > 0 && (
-                      <div className="askme-related">
-                        {ids.map(id => (
-                          <button key={id} type="button" className="tag" onClick={() => jumpTo(id)}>
-                            {PROJECT_NAMES[id]} ↗
-                          </button>
+                  {isAssistant && <span className="askme-avatar" aria-hidden="true">{INITIAL}</span>}
+                  <div className="askme-col">
+                    <div className="askme-bubble">
+                      {body || (busy && isLast
+                        ? <span className="askme-dots" role="status" aria-label="답변 작성 중"><i /><i /><i /></span>
+                        : null)}
+                      {m.error && <div className="askme-error">{m.error}</div>}
+                      {ids.length > 0 && (
+                        <div className="askme-related">
+                          {ids.map(id => (
+                            <button key={id} type="button" className="tag" onClick={() => jumpTo(id)}>
+                              {PROJECT_NAMES[id]} ↗
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      {isAssistant && body && m !== WELCOME && !(busy && isLast) && <CopyButton text={body} />}
+                    </div>
+                    {showNexts && (
+                      <div className="askme-suggest">
+                        {nexts.map(q => (
+                          <button key={q} type="button" className="tag" onClick={() => send(q)}>{q}</button>
                         ))}
                       </div>
                     )}
@@ -201,12 +284,12 @@ export default function AskMe() {
               maxLength={1000}
               disabled={busy}
             />
-            <button type="submit" className="btn btn-primary" disabled={busy || !input.trim()}>
-              보내기
-            </button>
+            {busy ? (
+              <button type="button" className="btn" onClick={stop}>중지</button>
+            ) : (
+              <button type="submit" className="btn btn-primary" disabled={!input.trim()}>보내기</button>
+            )}
           </form>
-          <div className="askme-hint">Enter 전송 · Shift+Enter 줄바꿈</div>
-          <p className="askme-note">답변은 AI가 생성하며 정확하지 않을 수 있습니다. 중요한 내용은 이메일로 확인해 주세요.</p>
         </section>
       )}
 
