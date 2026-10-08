@@ -137,13 +137,13 @@ async function readError(res) {
 // thinking 은 최소로: 생각 토큰이 maxOutputTokens 를 소진해 답이 41토큰 만에 잘리던 문제.
 // 모델이 thinkingConfig 를 거부하면("-latest" 별칭이 바뀌었을 때, 400 본문에 thinking 언급) 옵션 없이 상한을 넉넉히 해서 한 번 더 시도.
 // 5xx(모델 과부하 등)는 1초 뒤 한 번 재시도한다.
-async function openGeminiStream(env, model, contents, ip) {
+async function openGeminiStream(env, model, contents, ip, extraSystem = "") {
   const proxy = env.GEMINI_PROXY.get(env.GEMINI_PROXY.idFromName("us"), { locationHint: "wnam" });
   const call = (thinkingConfig, maxOutputTokens) => proxy.fetch("https://gemini-proxy/", {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-model": model, "x-client-ip": ip },
     body: JSON.stringify({
-      systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+      systemInstruction: { parts: [{ text: SYSTEM_PROMPT + extraSystem }] },
       contents,
       generationConfig: { maxOutputTokens, temperature: 0.3, ...(thinkingConfig && { thinkingConfig }) },
     }),
@@ -191,9 +191,15 @@ async function handleChat(request, env, ctx) {
 
   const model = env.GEMINI_MODEL || DEFAULT_MODEL;
   const question = contents[contents.length - 1]?.parts?.[0]?.text || "";
-  if (question && !/[가-힣]/.test(question)) {
-    // 한글이 없는 질문은 그 언어로 답하라는 힌트를 질문에 붙인다. 로그(entry.q)에는 원문만 남긴다
-    contents[contents.length - 1].parts[0].text += "\n\n(Answer in the language of this question. Keep the '관련:' and '다음:' labels in Korean.)";
+  // 한글이 없는 질문: 그 언어로 답하라는 지시를 시스템 프롬프트 끝과 질문 앞에 모두 붙인다
+  // (규칙 한 줄이나 질문 뒤 괄호 힌트만으로는 flash-lite 가 한국어 자료에 끌려 한국어로 답함). 로그(entry.q)에는 원문만 남긴다
+  const foreign = Boolean(question) && !/[가-힣]/.test(question);
+  const extraSystem = foreign
+    ? "\n\n[이번 질문의 언어]\n방문자가 한국어가 아닌 언어로 질문했습니다. 답변 본문은 반드시 질문과 같은 언어로 씁니다(한국어로 쓰지 않습니다). \"관련:\"과 \"다음:\" 머리말만 한국어로 둡니다."
+    : "";
+  if (foreign) {
+    contents[contents.length - 1].parts[0].text =
+      "Answer in the same language as the question below (do NOT answer in Korean). Keep only the '관련:' and '다음:' labels in Korean.\n\n" + question;
   }
   const entry = extra => ({
     ts: new Date(startedAt).toISOString(),
@@ -206,7 +212,7 @@ async function handleChat(request, env, ctx) {
   // 스트림을 열기 전에 실패하면(요청 제한, 키 오류, Gemini 한도·장애) 일반 HTTP 오류로 돌려준다
   let events;
   try {
-    events = await openGeminiStream(env, model, contents, request.headers.get("CF-Connecting-IP") || "unknown");
+    events = await openGeminiStream(env, model, contents, request.headers.get("CF-Connecting-IP") || "unknown", extraSystem);
   } catch (err) {
     const limited = err instanceof ApiError && err.status === 429 && err.message === RATE_LIMITED;
     if (!limited) {
