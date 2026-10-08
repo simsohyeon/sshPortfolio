@@ -26,8 +26,9 @@
 .askme-fab:hover { background: var(--color-accent-hover); transform: translateY(-1px); }
 
 .askme-panel {
-  width: min(460px, calc(100vw - 32px));
-  height: min(760px, calc(100vh - 100px));
+  /* 화면 크기에 비례 (폭 32%, 높이 78%), 최소·최대만 고정. 위쪽 100px 은 항상 남긴다 */
+  width: min(clamp(380px, 32vw, 620px), calc(100vw - 32px));
+  height: min(clamp(420px, 78vh, 920px), calc(100vh - 100px));
   display: flex;
   flex-direction: column;
   background: var(--color-surface);
@@ -221,7 +222,7 @@
   .askme-root { right: 12px; bottom: 12px; }
   .askme-panel {
     width: calc(100vw - 24px);
-    height: min(70vh, calc(100vh - 90px));
+    height: calc(100vh - 90px);
   }
 }
 
