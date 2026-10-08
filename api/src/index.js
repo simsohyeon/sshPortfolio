@@ -1,14 +1,15 @@
 // Cloudflare Worker - 포트폴리오 "질문하기" 챗봇 API (Gemini API)
 // POST /chat  { messages: [{ role: "user"|"assistant", content: string }, ...] }
-// 응답: text/event-stream  (data: {"text": "..."} / data: {"done": true} / data: {"error": "..."})
+// 응답: text/event-stream  (data: {"text": "..."} / data: {"notice": "..."} / data: {"done": true} / data: {"error": "..."})
 //       스트림을 열기 전에 실패하면 JSON { error } 를 HTTP 상태코드와 함께 돌려준다 (429, 4xx, 5xx)
 import { buildSystemPrompt } from "./context.js";
 import { readSSE } from "./sse.js";
 
 const DEFAULT_MODEL = "gemini-flash-lite-latest"; // wrangler.toml 의 GEMINI_MODEL 로 덮어쓸 수 있다
 const MAX_MESSAGES = 12; // 보내는 대화 길이 상한 (user+assistant 합계)
-const MAX_MESSAGE_CHARS = 1000; // 메시지 하나의 글자 수 상한
+const MAX_MESSAGE_CHARS = 1000; // 방문자 메시지 하나의 글자 수 상한 (assistant 답변은 서버가 만든 것이라 검사하지 않는다)
 const MAX_OUTPUT_TOKENS = 1024;
+const MAX_OUTPUT_TOKENS_WITH_THINKING = 4096; // thinkingConfig 를 못 쓰는 모델은 생각 토큰이 상한을 먹으므로 넉넉히
 const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta";
 const RATE_LIMITED = "rate limited"; // 우리 요청 제한에 걸린 429 (Gemini 의 한도 429 와 구분해 로그를 남기지 않는다)
 
@@ -46,12 +47,18 @@ function sanitizeMessages(input) {
     if (!m || (m.role !== "user" && m.role !== "assistant")) return { error: "role이 올바르지 않습니다." };
     if (typeof m.content !== "string") return { error: "content는 문자열이어야 합니다." };
     const content = m.content.trim();
-    if (!content) continue;
-    if (content.length > MAX_MESSAGE_CHARS) return { error: `메시지는 ${MAX_MESSAGE_CHARS}자 이내로 입력해 주세요.` };
-    // 같은 role이 연속되면 합친다
+    if (!content) continue; // 실패한 턴의 빈 assistant 등
+    if (m.role === "user" && content.length > MAX_MESSAGE_CHARS) {
+      return { error: `메시지는 ${MAX_MESSAGE_CHARS}자 이내로 입력해 주세요.` };
+    }
     const last = messages[messages.length - 1];
-    if (last && last.role === m.role) last.content += "\n" + content;
-    else messages.push({ role: m.role, content });
+    if (last && last.role === m.role) {
+      // 같은 role 연속: user 는 앞 질문이 실패했다는 뜻이므로 최신 것으로 교체, assistant 는 이어 붙인다
+      if (m.role === "user") last.content = content;
+      else last.content += "\n" + content;
+    } else {
+      messages.push({ role: m.role, content });
+    }
   }
   // 첫 메시지는 user여야 한다
   while (messages.length && messages[0].role !== "user") messages.shift();
@@ -78,6 +85,7 @@ function errorMessage(err) {
     if (err.status === 400 && /api key/i.test(err.message)) return "API 키가 올바르지 않습니다.";
     if (err.status === 401 || err.status === 403) return "API 키가 올바르지 않거나 권한이 없습니다.";
     if (err.status === 429) return "요청이 많아 잠시 쉬어가는 중입니다. 잠시 후 다시 시도해 주세요.";
+    if (err.status >= 500) return "답변 모델이 잠시 바쁩니다. 몇 초 뒤 다시 시도해 주세요.";
     return `API 오류 (${err.status})`;
   }
   return "잠시 후 다시 시도해 주세요.";
@@ -119,30 +127,41 @@ export class GeminiProxy {
   }
 }
 
+async function readError(res) {
+  let msg = res.statusText;
+  try { msg = (await res.json()).error?.message || msg; } catch { /* 본문 없음 */ }
+  return msg;
+}
+
 // Gemini REST 스트리밍 호출(DO 경유). SDK 대신 직접 호출해 마지막 조각까지 우리가 파싱한다 (sse.js 참고)
 // thinking 은 최소로: 생각 토큰이 maxOutputTokens 를 소진해 답이 41토큰 만에 잘리던 문제.
-// 모델이 thinkingConfig 를 거부하면(400, "-latest" 별칭이 바뀌었을 때) 그 옵션 없이 한 번 더 시도한다.
+// 모델이 thinkingConfig 를 거부하면("-latest" 별칭이 바뀌었을 때, 400 본문에 thinking 언급) 옵션 없이 상한을 넉넉히 해서 한 번 더 시도.
+// 5xx(모델 과부하 등)는 1초 뒤 한 번 재시도한다.
 async function openGeminiStream(env, model, contents, ip) {
   const proxy = env.GEMINI_PROXY.get(env.GEMINI_PROXY.idFromName("us"), { locationHint: "wnam" });
-  const call = thinkingConfig => proxy.fetch("https://gemini-proxy/", {
+  const call = (thinkingConfig, maxOutputTokens) => proxy.fetch("https://gemini-proxy/", {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-model": model, "x-client-ip": ip },
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
       contents,
-      generationConfig: { maxOutputTokens: MAX_OUTPUT_TOKENS, temperature: 0.3, ...(thinkingConfig && { thinkingConfig }) },
+      generationConfig: { maxOutputTokens, temperature: 0.3, ...(thinkingConfig && { thinkingConfig }) },
     }),
   });
-  let res = await call({ thinkingLevel: "minimal" });
+  let res = await call({ thinkingLevel: "minimal" }, MAX_OUTPUT_TOKENS);
   if (res.status === 400) {
+    const msg = await readError(res);
+    if (!/thinking/i.test(msg)) throw new ApiError(400, msg);
     console.warn("thinkingConfig rejected by", model, "- retrying without it");
-    res = await call(null);
+    res = await call(null, MAX_OUTPUT_TOKENS_WITH_THINKING);
   }
-  if (!res.ok) {
-    let msg = res.statusText;
-    try { msg = (await res.json()).error?.message || msg; } catch { /* 본문 없음 */ }
-    throw new ApiError(res.status, msg);
+  if (res.status >= 500) {
+    const msg = await readError(res);
+    console.warn("gemini", res.status, msg, "- retrying once");
+    await new Promise(r => setTimeout(r, 1000));
+    res = await call({ thinkingLevel: "minimal" }, MAX_OUTPUT_TOKENS);
   }
+  if (!res.ok) throw new ApiError(res.status, await readError(res));
   if (!res.body) throw new Error("Gemini 응답 본문이 비어 있습니다.");
   return readSSE(res.body);
 }
@@ -163,7 +182,7 @@ async function handleChat(request, env, ctx) {
     return json({ error: "JSON 본문이 필요합니다." }, 400, cors);
   }
 
-  const { contents, error } = sanitizeMessages(body.messages);
+  const { contents, error } = sanitizeMessages(body?.messages);
   if (error) return json({ error }, 400, cors);
 
   const model = env.GEMINI_MODEL || DEFAULT_MODEL;
@@ -216,12 +235,14 @@ async function handleChat(request, env, ctx) {
           if (ev.promptFeedback?.blockReason) finishReason = "SAFETY";
         }
 
+        // 서버 안내문은 text 와 섞지 않고 notice 로 보낸다 - 본문 끝의 "관련:/다음:" 메타 줄 파싱을 깨지 않도록
         if (finishReason === "STREAM_CUT") {
           send({ error: "답변이 중간에 끊겼습니다." });
         } else if (finishReason === "SAFETY" || finishReason === "PROHIBITED_CONTENT" || finishReason === "RECITATION") {
-          send({ text: (sentAny ? "\n\n" : "") + "죄송합니다. 이 질문에는 답변드리기 어렵습니다. 포트폴리오 관련 질문을 해 주세요." });
+          const msg = "죄송합니다. 이 질문에는 답변드리기 어렵습니다. 포트폴리오 관련 질문을 해 주세요.";
+          send(sentAny ? { notice: msg } : { text: msg });
         } else if (finishReason === "MAX_TOKENS") {
-          send({ text: "\n\n(답변이 길어 여기서 줄였습니다. 더 구체적으로 물어봐 주세요.)" });
+          send({ notice: "답변이 길어 여기서 줄였습니다. 더 구체적으로 물어봐 주세요." });
         } else if (!sentAny) {
           send({ text: "답변을 만들지 못했습니다. 질문을 조금 바꿔서 다시 시도해 주세요." });
         }
