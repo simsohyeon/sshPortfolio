@@ -19,6 +19,19 @@ class_name = "GeminiProxy"
 tag = "v1"
 new_sqlite_classes = ["GeminiProxy"]
 
+# 요청 제한 (Workers Rate Limiting 바인딩, 무료). 넘으면 Gemini 를 호출하지 않고 429.
+# RL_IP: 방문자 IP당 60초에 10회. RL_GLOBAL: 전체 합계 60초에 40회 (IP 를 바꿔가며 때려도 Gemini 한도를 지킨다).
+# 카운터는 데이터센터별로 따로 돌아서 실제 허용량은 1~3배가 될 수 있다(대략적인 방어).
+[[ratelimits]]
+name = "RL_IP"
+namespace_id = "1001"
+simple = { limit = 10, period = 60 }
+
+[[ratelimits]]
+name = "RL_GLOBAL"
+namespace_id = "1002"
+simple = { limit = 40, period = 60 }
+
 [vars]
 # 허용할 프런트엔드 출처(쉼표 구분). 비우면 모든 출처 허용(개발용).
 ALLOWED_ORIGINS = "https://simsohyeon.github.io,http://localhost:5173"

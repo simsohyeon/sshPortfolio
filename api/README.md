@@ -86,7 +86,15 @@ curl -N -X POST https://sshportfolio-chat.<계정>.workers.dev/chat \
 
 - Gemini API 는 홍콩 등 일부 지역에서 호출을 거부합니다("User location is not supported"). Cloudflare 는 방문자와 가까운 데이터센터에서 Worker 를 실행하므로 한국 방문자의 요청이 HKG 에서 처리되면 Gemini 가 400 을 냅니다. 그래서 Gemini 호출만 `locationHint: "wnam"` 으로 만든 Durable Object(GeminiProxy) 안에서 합니다. `/health` 응답의 `colo` 로 Worker 실행 위치를 볼 수 있습니다.
 
+## 요청 제한
+
+Workers Rate Limiting 바인딩(무료)으로 Worker 안에서 막습니다. workers.dev 주소에는 대시보드의 WAF Rate Limiting 규칙을 걸 수 없기 때문입니다.
+
+- 방문자 IP당 60초에 10회, 전체 합계 60초에 40회 (`wrangler.toml` 의 `[[ratelimits]]`)
+- 넘으면 Gemini 를 호출하지 않고 429 → 위젯에 "요청이 많아 잠시 쉬어가는 중" + 다시 시도
+- Rate Limiting 바인딩은 데이터센터별로 따로 세기 때문에, 카운트는 한 곳에서만 도는 GeminiProxy(Durable Object) 안에서 합니다. 그래서 설정값 그대로 적용됩니다.
+
 ## 보안 메모
 
 - `ALLOWED_ORIGINS`에 적힌 출처만 허용합니다. 다른 도메인에서 호출하면 브라우저가 차단합니다.
-- 다만 curl 등 브라우저 밖에서는 CORS가 막지 못하므로, 무료 한도를 남이 소진하는 게 걱정되면 Cloudflare 대시보드에서 **Rate Limiting 규칙**(예: IP당 분당 5회)을 추가하세요.
+- curl 등 브라우저 밖에서는 CORS가 막지 못합니다. 그래서 위의 요청 제한을 둡니다.
