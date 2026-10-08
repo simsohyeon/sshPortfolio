@@ -46,14 +46,16 @@
   border-bottom: 1px solid var(--color-border);
   background: var(--color-bg-alt);
 }
-.askme-head-id { display: flex; align-items: center; gap: 10px; }
-.askme-head strong {
+.askme-head-id { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.askme-head-text { min-width: 0; }
+.askme-head-text strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.askme-head-text strong {
   display: block;
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--color-text-strong);
 }
-.askme-head span {
+.askme-head-text span {
   display: block;
   font-size: 0.74rem;
   color: var(--color-muted);

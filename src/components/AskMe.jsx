@@ -144,7 +144,7 @@ export default function AskMe() {
           <header className="askme-head">
             <div className="askme-head-id">
               <span className="askme-avatar" aria-hidden="true">{INITIAL}</span>
-              <div>
+              <div className="askme-head-text">
                 <strong>{resume.name} 님의 포트폴리오 도우미</strong>
                 <span className="askme-online">AI가 이력 내용을 바탕으로 답합니다</span>
               </div>
