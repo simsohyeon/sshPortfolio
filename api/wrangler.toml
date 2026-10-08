@@ -13,7 +13,7 @@ id = "REPLACE_WITH_KV_NAMESPACE_ID"
 # 허용할 프런트엔드 출처(쉼표 구분). 비우면 모든 출처 허용(개발용).
 ALLOWED_ORIGINS = "https://simsohyeon.github.io,http://localhost:5173"
 # 사용할 Gemini 모델. 무료 티어 한도가 부족하면 flash-lite 계열로 바꾼다.
-GEMINI_MODEL = "gemini-flash-latest"
+GEMINI_MODEL = "gemini-flash-lite-latest"
 
 # GEMINI_API_KEY 는 파일에 쓰지 말고 아래 명령으로 등록한다:
 #   npx wrangler secret put GEMINI_API_KEY

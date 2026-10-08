@@ -4,7 +4,7 @@
 import { buildSystemPrompt } from "./context.js";
 import { readSSE } from "./sse.js";
 
-const DEFAULT_MODEL = "gemini-flash-latest"; // wrangler.toml 의 GEMINI_MODEL 로 덮어쓸 수 있다
+const DEFAULT_MODEL = "gemini-flash-lite-latest"; // wrangler.toml 의 GEMINI_MODEL 로 덮어쓸 수 있다
 const MAX_MESSAGES = 12; // 보내는 대화 길이 상한 (user+assistant 합계)
 const MAX_MESSAGE_CHARS = 1000; // 메시지 하나의 글자 수 상한
 const MAX_OUTPUT_TOKENS = 1024;
@@ -82,20 +82,23 @@ function errorMessage(err) {
 }
 
 // Gemini REST 스트리밍 호출. SDK 대신 직접 호출해 마지막 조각까지 우리가 파싱한다 (sse.js 참고)
+// thinking 은 최소로: 생각 토큰이 maxOutputTokens 를 소진해 답이 41토큰 만에 잘리던 문제.
+// 모델이 thinkingConfig 를 거부하면(400, "-latest" 별칭이 바뀌었을 때) 그 옵션 없이 한 번 더 시도한다.
 async function openGeminiStream(env, model, contents) {
-  const res = await fetch(`${GEMINI_BASE}/models/${model}:streamGenerateContent?alt=sse`, {
+  const call = thinkingConfig => fetch(`${GEMINI_BASE}/models/${model}:streamGenerateContent?alt=sse`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-goog-api-key": env.GEMINI_API_KEY },
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
       contents,
-      generationConfig: {
-        maxOutputTokens: MAX_OUTPUT_TOKENS,
-        temperature: 0.3,
-        thinkingConfig: { thinkingBudget: 0 }, // thinking 토큰이 maxOutputTokens 를 소진해 41토큰 만에 잘리던 문제
-      },
+      generationConfig: { maxOutputTokens: MAX_OUTPUT_TOKENS, temperature: 0.3, ...(thinkingConfig && { thinkingConfig }) },
     }),
   });
+  let res = await call({ thinkingLevel: "minimal" });
+  if (res.status === 400) {
+    console.warn("thinkingConfig rejected by", model, "- retrying without it");
+    res = await call(null);
+  }
   if (!res.ok) {
     let msg = res.statusText;
     try { msg = (await res.json()).error?.message || msg; } catch { /* 본문 없음 */ }
@@ -172,7 +175,7 @@ async function handleChat(request, env, ctx) {
       } catch (err) {
         console.error("chat error", err);
         send({ error: errorMessage(err) });
-        logError = String(err?.message || err).slice(0, 200); // 로그엔 원인 그대로 (화면 문구 말고)
+        logError = String(err?.message || err).slice(0, 400); // 로그엔 원인 그대로 (화면 문구 말고). 429 는 한도 종류가 뒤쪽에 나온다
       } finally {
         controller.close();
         // 질문 로그: 어떤 질문이 들어오는지 보고 resume.js 를 보강하기 위한 용도. IP·UA 등 개인정보는 남기지 않는다

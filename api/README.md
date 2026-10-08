@@ -15,7 +15,7 @@ api/
 └── .dev.vars.example 로컬 개발용 키 파일 예시
 ```
 
-- 모델: `gemini-flash-latest` (wrangler.toml의 `GEMINI_MODEL`로 변경 가능)
+- 모델: `gemini-flash-lite-latest` (wrangler.toml의 `GEMINI_MODEL`로 변경 가능). `gemini-flash-latest` 는 2026-10 기준 gemini-3.8-flash 로 풀리는데 무료 티어 일일 한도가 **20건** 뿐이라 Lite 계열을 기본으로 둔다
 - 대화는 최근 12개 메시지, 메시지당 1,000자, 답변 1,024 토큰으로 제한합니다
 - 안전 필터에 걸리거나 답변이 비면 안내 문구로 대체합니다
 
@@ -78,7 +78,7 @@ curl -N -X POST https://sshportfolio-chat.<계정>.workers.dev/chat \
 ## 무료 티어 메모
 
 - 무료 티어는 분당·일일 요청 수 제한이 있고 모델마다 다릅니다. 한도를 넘으면 429가 오고 위젯에는 "잠시 후 다시 시도" 안내가 뜹니다.
-- 포트폴리오 방문자 트래픽에는 Flash 계열이면 충분하고, 일일 한도가 부족하면 `GEMINI_MODEL`을 Flash-Lite 계열로 바꾸면 한도가 더 넉넉합니다. 현재 모델 ID와 한도는 https://ai.google.dev/gemini-api/docs/models 와 https://ai.google.dev/gemini-api/docs/rate-limits 에서 확인합니다.
+- 한도는 모델마다 다르고 자주 바뀝니다. 실제 수치는 https://aistudio.google.com/rate-limit 에서 내 프로젝트 기준으로 확인합니다. 한도를 넘으면 429가 오고 위젯엔 "요청이 많아 잠시 쉬어가는 중" 안내가 뜹니다. 질문 로그(KV)의 `error` 에 어떤 한도(분당/일일)인지 원문이 남습니다. 현재 모델 ID와 한도는 https://ai.google.dev/gemini-api/docs/models 와 https://ai.google.dev/gemini-api/docs/rate-limits 에서 확인합니다.
 - 무료 티어는 입력 내용이 Google 모델 개선에 쓰일 수 있습니다. 이 챗봇은 공개된 이력 정보만 다루므로 문제는 없지만, 알고 쓰는 게 좋습니다.
 
 ## 보안 메모
