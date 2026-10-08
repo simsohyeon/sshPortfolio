@@ -57,22 +57,6 @@ function loadMessages() {
   }
 }
 
-function CopyButton({ text }) {
-  const [done, setDone] = useState(false);
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(text);
-      setDone(true);
-      setTimeout(() => setDone(false), 1500);
-    } catch { /* 클립보드 권한 없음 - 조용히 무시 */ }
-  }
-  return (
-    <button type="button" className="askme-copy" onClick={copy} aria-label="답변 복사">
-      {done ? "복사됨" : "복사"}
-    </button>
-  );
-}
-
 export default function AskMe() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState(loadMessages);
@@ -248,7 +232,6 @@ export default function AskMe() {
                           ))}
                         </div>
                       )}
-                      {isAssistant && body && m !== WELCOME && !(busy && isLast) && <CopyButton text={body} />}
                     </div>
                     {showNexts && (
                       <div className="askme-suggest">
