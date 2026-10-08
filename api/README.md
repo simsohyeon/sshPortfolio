@@ -56,6 +56,16 @@ npm run deploy                           # https://sshportfolio-chat.<계정>.wo
 `CHAT_API_URL` = 위 Worker 주소를 등록합니다. 다음 push부터 사이트에 질문하기 위젯이 켜집니다.
 변수를 비워두면 위젯은 렌더되지 않고 사이트는 기존과 똑같이 동작합니다.
 
+## 질문 로그 리뷰
+
+```bash
+npm run logs          # 최근 7일 리포트 (stdout + logs/latest.md)
+npm run logs -- 30    # 최근 30일
+```
+
+리포트에는 "자료에 없어서 못 답한 질문"(답변에 "포트폴리오에 없"이 들어간 건), 오류, 많이 묻는 질문이 정리됩니다.
+못 답한 질문 중 공개해도 되는 사실은 `src/data/resume.js` 에 채우고 Worker 를 재배포하면 다음부터 답합니다.
+
 ## 질문 로그 (KV)
 
 어떤 질문이 들어오는지 보고 `resume.js` 를 보강하기 위해 질문·토큰수·소요시간만 KV(`CHAT_LOG`)에 90일 보관합니다. IP·UA 는 남기지 않습니다.

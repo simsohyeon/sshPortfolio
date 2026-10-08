@@ -230,6 +230,7 @@ async function handleChat(request, env, ctx) {
       let usage;
       let sentAny = false;
       let logError;
+      let answer = ""; // 로그용 답변 앞부분 (자료 보강 검토에 쓴다)
       try {
         for await (const ev of events) {
           if (ev.cut) {
@@ -243,6 +244,7 @@ async function handleChat(request, env, ctx) {
           if (text) {
             sentAny = true;
             send({ text });
+            if (answer.length < 400) answer += text;
           }
           if (cand?.finishReason) finishReason = cand.finishReason;
           if (ev.usageMetadata) usage = ev.usageMetadata;
@@ -280,6 +282,8 @@ async function handleChat(request, env, ctx) {
           tokens: { input: usage?.promptTokenCount ?? 0, output: usage?.candidatesTokenCount ?? 0 },
           finish: finishReason || null,
           error: logError || null,
+          a: answer.slice(0, 300),
+          miss: /포트폴리오에 없/.test(answer), // 자료에 없어서 못 답한 질문 - 로그 리뷰에서 보강 후보
         }));
       }
     },

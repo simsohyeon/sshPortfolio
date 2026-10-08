@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "check": "wrangler deploy --dry-run --outdir=.wrangler-check"
+    "check": "wrangler deploy --dry-run --outdir=.wrangler-check",
+    "logs": "node scripts/review-logs.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.148.0"
