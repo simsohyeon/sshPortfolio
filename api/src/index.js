@@ -148,18 +148,22 @@ async function openGeminiStream(env, model, contents, ip) {
       generationConfig: { maxOutputTokens, temperature: 0.3, ...(thinkingConfig && { thinkingConfig }) },
     }),
   });
-  let res = await call({ thinkingLevel: "minimal" }, MAX_OUTPUT_TOKENS);
+  let cfg = { thinkingLevel: "minimal" };
+  let max = MAX_OUTPUT_TOKENS;
+  let res = await call(cfg, max);
   if (res.status === 400) {
     const msg = await readError(res);
     if (!/thinking/i.test(msg)) throw new ApiError(400, msg);
     console.warn("thinkingConfig rejected by", model, "- retrying without it");
-    res = await call(null, MAX_OUTPUT_TOKENS_WITH_THINKING);
+    cfg = null;
+    max = MAX_OUTPUT_TOKENS_WITH_THINKING;
+    res = await call(cfg, max);
   }
   if (res.status >= 500) {
     const msg = await readError(res);
     console.warn("gemini", res.status, msg, "- retrying once");
     await new Promise(r => setTimeout(r, 1000));
-    res = await call({ thinkingLevel: "minimal" }, MAX_OUTPUT_TOKENS);
+    res = await call(cfg, max); // 직전에 통한(또는 폴백한) 설정 그대로
   }
   if (!res.ok) throw new ApiError(res.status, await readError(res));
   if (!res.body) throw new Error("Gemini 응답 본문이 비어 있습니다.");
@@ -187,6 +191,10 @@ async function handleChat(request, env, ctx) {
 
   const model = env.GEMINI_MODEL || DEFAULT_MODEL;
   const question = contents[contents.length - 1]?.parts?.[0]?.text || "";
+  if (question && !/[가-힣]/.test(question)) {
+    // 한글이 없는 질문은 그 언어로 답하라는 힌트를 질문에 붙인다. 로그(entry.q)에는 원문만 남긴다
+    contents[contents.length - 1].parts[0].text += "\n\n(Answer in the language of this question. Keep the '관련:' and '다음:' labels in Korean.)";
+  }
   const entry = extra => ({
     ts: new Date(startedAt).toISOString(),
     q: question.slice(0, 300),
@@ -242,7 +250,8 @@ async function handleChat(request, env, ctx) {
           const msg = "죄송합니다. 이 질문에는 답변드리기 어렵습니다. 포트폴리오 관련 질문을 해 주세요.";
           send(sentAny ? { notice: msg } : { text: msg });
         } else if (finishReason === "MAX_TOKENS") {
-          send({ notice: "답변이 길어 여기서 줄였습니다. 더 구체적으로 물어봐 주세요." });
+          const msg = "답변이 길어 여기서 줄였습니다. 더 구체적으로 물어봐 주세요.";
+          send(sentAny ? { notice: msg } : { text: msg });
         } else if (!sentAny) {
           send({ text: "답변을 만들지 못했습니다. 질문을 조금 바꿔서 다시 시도해 주세요." });
         }

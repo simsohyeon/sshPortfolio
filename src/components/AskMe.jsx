@@ -104,6 +104,7 @@ export default function AskMe() {
 
   useEffect(() => {
     if (!open) return;
+    stickRef.current = true; // 다시 열면 최신 메시지가 보이게
     inputRef.current?.focus();
   }, [open]);
 
@@ -114,7 +115,7 @@ export default function AskMe() {
 
   // 답변이 끝나면(입력창 disabled 해제) 포커스를 되돌린다 - disabled 로 바뀌면 브라우저가 포커스를 body 로 떨어뜨림
   useEffect(() => {
-    if (open && !busy) inputRef.current?.focus();
+    if (open && !busy && window.matchMedia?.("(hover: hover)").matches) inputRef.current?.focus();
   }, [busy, open]);
 
   // 대화 저장 (환영 메시지 제외). 답변 생성 중엔 완성본만 남기도록 busy 가 풀릴 때 저장
@@ -247,7 +248,7 @@ export default function AskMe() {
           className="askme-panel"
           role="dialog"
           aria-label="포트폴리오 질문하기"
-          onKeyDown={e => { if (e.key === "Escape") setOpen(false); }}
+          onKeyDown={e => { if (e.key === "Escape" && !e.nativeEvent.isComposing) setOpen(false); }}
         >
           <header className="askme-head">
             <div className="askme-head-title">{ICON.spark}포트폴리오 도우미</div>
@@ -286,7 +287,7 @@ export default function AskMe() {
               const isAssistant = m.role === "assistant";
               const { body, ids, nexts } = isAssistant ? splitMeta(plain(m.content)) : { body: m.content, ids: [], nexts: [] };
               const isLast = i === lastIndex;
-              const showNexts = isAssistant && isLast && !busy && nexts.length > 0;
+              const showNexts = isAssistant && isLast && !busy && !m.notice && nexts.length > 0;
               return (
                 <div key={i} className={`askme-msg askme-${m.role}`}>
                   {isAssistant && <span className="askme-avatar" aria-hidden="true">{INITIAL}</span>}

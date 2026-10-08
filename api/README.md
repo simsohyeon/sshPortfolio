@@ -43,6 +43,8 @@ npm run dev
 
 ## 배포
 
+> `src/data/resume.js` 를 고치면 **Worker 도 다시 배포**해야 챗봇이 새 내용을 봅니다 (`cd api && npm run deploy`). 사이트(Pages)는 push 로 자동 배포되지만 Worker 는 아닙니다.
+
 ```bash
 cd api
 npx wrangler login                       # 최초 1회, 브라우저 로그인
