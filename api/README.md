@@ -43,12 +43,31 @@ npm run dev
 
 ## 배포
 
-> `src/data/resume.js` 를 고치면 **Worker 도 다시 배포**해야 챗봇이 새 내용을 봅니다 (`cd api && npm run deploy`). 사이트(Pages)는 push 로 자동 배포되지만 Worker 는 아닙니다.
+main 에 push 할 때 `api/**` 또는 `src/data/resume.js` 가 바뀌면 GitHub Actions(`.github/workflows/deploy-worker.yml`)가 Worker 를 자동 배포합니다.
+사이트(Pages)와 Worker 가 같은 push 에서 함께 배포되므로 `resume.js` 만 고쳐도 챗봇이 새 내용을 봅니다.
+배포 뒤 `/health` 를 호출해 200 이 아니면 워크플로가 실패합니다. 수동으로 돌리려면 Actions 탭에서 **Deploy Cloudflare Worker → Run workflow**.
+
+### 최초 1회 설정 (Cloudflare API 토큰)
+
+1. Cloudflare 대시보드 → 오른쪽 위 프로필 → **My Profile → API Tokens → Create Token**
+   (https://dash.cloudflare.com/profile/api-tokens)
+2. **Edit Cloudflare Workers** 템플릿의 **Use template** → Account Resources 에서 내 계정 선택 → **Continue to summary → Create Token**
+3. 표시된 토큰을 복사해 GitHub 저장소 **Settings → Secrets and variables → Actions → Secrets → New repository secret** 에
+   이름 `CLOUDFLARE_API_TOKEN` 으로 등록합니다. 터미널에서는:
+
+   ```bash
+   gh secret set CLOUDFLARE_API_TOKEN
+   ```
+
+토큰은 한 번만 보이니 바로 등록합니다. 계정 ID(`accountId`)는 워크플로에 적혀 있습니다.
+토큰이 없으면 워크플로는 wrangler 단계에서 실패하고, 사이트(Pages) 배포에는 영향이 없습니다.
+
+### 수동 배포
 
 ```bash
 cd api
 npx wrangler login                       # 최초 1회, 브라우저 로그인
-npx wrangler secret put GEMINI_API_KEY   # 키 입력 (파일에 저장되지 않음)
+npx wrangler secret put GEMINI_API_KEY   # 키 입력 (파일에 저장되지 않음, Cloudflare 에 보관)
 npm run deploy                           # https://sshportfolio-chat.<계정>.workers.dev
 ```
 
