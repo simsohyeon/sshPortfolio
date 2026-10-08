@@ -7,28 +7,32 @@ const API_URL = (import.meta.env.VITE_CHAT_API_URL || "").replace(/\/$/, "");
 const STORAGE_KEY = "askme:messages"; // 새로고침해도 대화 유지 (탭 닫으면 사라짐)
 
 // 모델이 규칙을 어기고 마크다운을 보내도 기호만 걷어낸다 (렌더러 없음)
-const plain = t => t.replace(/\*\*|__|`/g, "").replace(/^#{1,6}\s+/gm, "").replace(/^\s*[*•]\s+/gm, "- ");
+const plain = t => t
+  .replace(/\*\*|__|`/g, "")
+  .replace(/^#{1,6}\s+/gm, "")
+  .replace(/^\s*[*•]\s+/gm, "- ")
+  .replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g, "$1 $2") // [텍스트](주소) → 텍스트 주소
+  .replace(/\s*\[id:\s*[\w-]+\]/g, ""); // 자료의 [id: x] 표기를 본문에 베껴 쓴 경우
 
 const PROJECT_NAMES = Object.fromEntries(
   [...resume.projects, ...(resume.sideProjects || [])].map(p => [p.id, p.name.split(" - ")[0].replace(/\s*\(.*\)$/, "")])
 );
 
 // 답변 끝의 메타 줄을 떼어낸다: "관련: id1, id2" → 근거 프로젝트 칩, "다음: 질문1 | 질문2" → 이어서 물어볼 질문
+// 메타 줄은 보통 맨 끝 두 줄이지만, 스트리밍 중 머리말만 먼저 도착하거나("관련", "관련:") 서버 안내가 뒤에 붙는 경우도
+// 있어서 끝줄만 보지 않고 모든 줄에서 걸러낸다. 본문 중간에 "관련:" 로 시작하는 문장은 프롬프트상 나오지 않는다.
+const META_RE = /^(관련|다음)(?:\s*(?:프로젝트|질문))?\s*:?\s*(.*)$/;
 function splitMeta(text) {
-  const lines = text.trimEnd().split("\n");
   let ids = [];
   let nexts = [];
-  while (lines.length) {
-    const last = lines[lines.length - 1].trim();
-    const rel = last.match(/^관련\s*:\s*(.+)$/);
-    const nxt = last.match(/^다음\s*:\s*(.+)$/);
-    if (rel) ids = rel[1].split(",").map(x => x.trim()).filter(id => PROJECT_NAMES[id]);
-    else if (nxt) nexts = nxt[1].split("|").map(x => x.trim()).filter(Boolean).slice(0, 2);
-    else if (last === "") { /* 메타 줄 앞의 빈 줄 */ }
-    else break;
-    lines.pop();
-  }
-  return { body: lines.join("\n").trimEnd(), ids, nexts };
+  const body = text.split("\n").filter(line => {
+    const m = line.trim().match(META_RE);
+    if (!m) return true;
+    if (m[1] === "관련") ids = m[2].split(",").map(x => x.trim()).filter(id => PROJECT_NAMES[id]);
+    else nexts = m[2].split("|").map(x => x.trim()).filter(Boolean).slice(0, 2);
+    return false;
+  });
+  return { body: body.join("\n").trim(), ids, nexts };
 }
 function jumpTo(id) {
   document.getElementById(`proj-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -46,6 +50,21 @@ const ICON = {
   close: (
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
       <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  ),
+  spark: (
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" /><path d="M19 17l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z" />
+    </svg>
+  ),
+  send: (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
+  ),
+  stop: (
+    <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
+      <rect x="5" y="5" width="14" height="14" rx="2" />
     </svg>
   ),
 };
@@ -79,6 +98,7 @@ export default function AskMe() {
   const listRef = useRef(null);
   const inputRef = useRef(null);
   const abortRef = useRef(null);
+  const stickRef = useRef(true); // 목록이 바닥 근처일 때만 새 내용을 따라 스크롤 (위로 올려 읽는 중엔 끌어내리지 않음)
 
   useEffect(() => {
     if (!open) return;
@@ -87,8 +107,13 @@ export default function AskMe() {
 
   useEffect(() => {
     const el = listRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
+    if (el && stickRef.current) el.scrollTop = el.scrollHeight;
   }, [messages, open, busy]);
+
+  // 답변이 끝나면(입력창 disabled 해제) 포커스를 되돌린다 - disabled 로 바뀌면 브라우저가 포커스를 body 로 떨어뜨림
+  useEffect(() => {
+    if (open && !busy) inputRef.current?.focus();
+  }, [busy, open]);
 
   // 대화 저장 (환영 메시지 제외). 답변 생성 중엔 완성본만 남기도록 busy 가 풀릴 때 저장
   useEffect(() => {
@@ -130,6 +155,7 @@ export default function AskMe() {
     // 환영 메시지는 서버로 보내지 않는다
     const history = base.slice(1); // [0] 은 환영 메시지
     const next = [...history, { role: "user", content: question }];
+    stickRef.current = true;
     setMessages([WELCOME, ...next, { role: "assistant", content: "" }]);
     setInput("");
     setBusy(true);
@@ -142,6 +168,7 @@ export default function AskMe() {
         const copy = prev.slice();
         const last = { ...copy[copy.length - 1] };
         if (patch.text !== undefined) last.content += patch.text;
+        if (patch.notice) last.notice = patch.notice;
         if (patch.error) last.error = patch.error;
         copy[copy.length - 1] = last;
         return copy;
@@ -179,6 +206,7 @@ export default function AskMe() {
           let payload;
           try { payload = JSON.parse(line.slice(6)); } catch { continue; }
           if (payload.text) appendToLast({ text: payload.text });
+          if (payload.notice) appendToLast({ notice: payload.notice });
           if (payload.error) appendToLast({ error: payload.error });
         }
       }
@@ -213,15 +241,14 @@ export default function AskMe() {
   return (
     <div className="no-print askme-root">
       {open && (
-        <section className="askme-panel" role="dialog" aria-label="포트폴리오 질문하기">
+        <section
+          className="askme-panel"
+          role="dialog"
+          aria-label="포트폴리오 질문하기"
+          onKeyDown={e => { if (e.key === "Escape") setOpen(false); }}
+        >
           <header className="askme-head">
-            <div className="askme-head-id">
-              <span className="askme-avatar" aria-hidden="true">{INITIAL}</span>
-              <div className="askme-head-text">
-                <strong>{resume.name} 님의 포트폴리오 도우미</strong>
-                <span className="askme-online">AI가 이력 내용을 바탕으로 답합니다</span>
-              </div>
-            </div>
+            <div className="askme-head-title">{ICON.spark}포트폴리오 도우미</div>
             <div className="askme-head-actions">
               {messages.length > 1 && (
                 <button type="button" className="askme-icon" onClick={reset} aria-label="새 대화" title="새 대화">{ICON.reset}</button>
@@ -230,8 +257,30 @@ export default function AskMe() {
             </div>
           </header>
 
-          <div className="askme-list" ref={listRef}>
+          <div
+            className="askme-list"
+            ref={listRef}
+            aria-live="polite"
+            aria-busy={busy}
+            onScroll={e => {
+              const el = e.currentTarget;
+              stickRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+            }}
+          >
+            {showSuggestions && (
+              <div className="askme-empty">
+                <span className="askme-avatar" aria-hidden="true">{INITIAL}</span>
+                <h3>무엇이 궁금하세요?</h3>
+                <p>{resume.name} 님의 경력·프로젝트·기술에 대해 답해드려요</p>
+                <div className="askme-cards">
+                  {SUGGESTIONS.map(s => (
+                    <button key={s} type="button" onClick={() => send(s)}>{s}</button>
+                  ))}
+                </div>
+              </div>
+            )}
             {messages.map((m, i) => {
+              if (i === 0) return null; // 환영 메시지는 첫 화면 인사로 대체
               const isAssistant = m.role === "assistant";
               const { body, ids, nexts } = isAssistant ? splitMeta(plain(m.content)) : { body: m.content, ids: [], nexts: [] };
               const isLast = i === lastIndex;
@@ -244,8 +293,9 @@ export default function AskMe() {
                       {body || (busy && isLast
                         ? <span className="askme-dots" role="status" aria-label="답변 작성 중"><i /><i /><i /></span>
                         : null)}
+                      {m.notice && <div className="askme-notice">{m.notice}</div>}
                       {m.error && (
-                        <div className="askme-error">
+                        <div className="askme-error" role="alert">
                           {m.error}
                           {isLast && !busy && (
                             <button type="button" className="askme-retry" onClick={retry}>다시 시도</button>
@@ -265,7 +315,7 @@ export default function AskMe() {
                     {showNexts && (
                       <div className="askme-suggest">
                         {nexts.map(q => (
-                          <button key={q} type="button" className="tag" onClick={() => send(q)}>{q}</button>
+                          <button key={q} type="button" onClick={() => send(q)}>{q}</button>
                         ))}
                       </div>
                     )}
@@ -273,47 +323,40 @@ export default function AskMe() {
                 </div>
               );
             })}
-            {showSuggestions && (
-              <div className="askme-suggest">
-                {SUGGESTIONS.map(s => (
-                  <button key={s} type="button" className="tag" onClick={() => send(s)}>{s}</button>
-                ))}
-              </div>
-            )}
           </div>
 
           <form
             className="askme-form"
             onSubmit={e => { e.preventDefault(); send(input); }}
           >
-            <textarea
-              ref={inputRef}
-              rows={1}
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={onKeyDown}
-              placeholder="예: Kafka를 어디에 썼나요?"
-              maxLength={1000}
-              disabled={busy}
-            />
-            {busy ? (
-              <button type="button" className="btn" onClick={stop}>중지</button>
-            ) : (
-              <button type="submit" className="btn btn-primary" disabled={!input.trim()}>보내기</button>
-            )}
+            <div className="askme-input">
+              <textarea
+                ref={inputRef}
+                rows={1}
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={onKeyDown}
+                placeholder="무엇이든 물어보세요"
+                aria-label="질문 입력"
+                maxLength={1000}
+                disabled={busy}
+              />
+              {busy ? (
+                <button type="button" className="askme-send" onClick={stop} aria-label="중지" title="중지">{ICON.stop}</button>
+              ) : (
+                <button type="submit" className="askme-send" disabled={!input.trim()} aria-label="보내기" title="보내기">{ICON.send}</button>
+              )}
+            </div>
+            <small>AI 답변은 이력 내용을 바탕으로 하며 부정확할 수 있어요</small>
           </form>
         </section>
       )}
 
-      <button
-        type="button"
-        className="askme-fab"
-        onClick={() => setOpen(o => !o)}
-        aria-expanded={open}
-        aria-label={open ? "질문 창 닫기" : "포트폴리오에 대해 질문하기"}
-      >
-        {open ? "닫기" : "💬 질문하기"}
-      </button>
+      {!open && (
+        <button type="button" className="askme-fab" onClick={() => setOpen(true)} aria-label="포트폴리오에 대해 질문하기">
+          💬 질문하기
+        </button>
+      )}
     </div>
   );
 }
