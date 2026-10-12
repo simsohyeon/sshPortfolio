@@ -32,7 +32,7 @@ const resume = {
     { label: "대표 성과", value: "팀 QA 결함 80% 감소", sub: "조회 응답 61% 개선 · 매뉴얼 작성 92% 단축" },
   ],
   skills: {
-    Frontend: ["React.js", "Vue.js", "TypeScript", "HTML / CSS / SCSS"],
+    Frontend: ["React.js", "Vue.js", "JavaScript", "TypeScript", "HTML / CSS / SCSS"],
     Backend: ["Java", "Spring Boot", "Spring Cloud (MSA)", "JPA / QueryDSL", "MyBatis", "Spring Batch", "Kafka", "Redis", "Node.js", "REST API"],
     Database: ["PostgreSQL", "Oracle DB", "MySQL", "Tibero", "MongoDB"],
     "AI / LLM": [
@@ -80,9 +80,9 @@ const resume = {
       statusKind: "active",
       featured: true,
       summary:
-        "고객사마다 다른 자산 분류와 관리 항목을 관리자가 코드 없이 정의하는 IT 자산관리 신제품 - 자산 원장 도메인·스키마와 외부 수집 동기화를 담당하고, AI 개발 하네스로 설계부터 테스트까지 자동화.",
+        "IT 운영·자산관리 신제품 - 그중 고객사마다 다른 자산 분류와 관리 항목을 관리자가 코드 없이 정의하는 자산관리 영역의 자산 원장 도메인·스키마와 외부 수집 동기화를 담당하고, AI 개발 하네스로 설계부터 테스트까지 자동화.",
       oneLiner:
-        "고객사마다 다른 자산 분류와 관리 항목을 관리자가 코드 없이 정의하는 IT 자산관리 신제품. 자산 원장 도메인 모델과 스키마, 외부 수집 동기화, 권한·테스트 체계를 담당해 기획부터 검수까지 진행 중이며, AI 기반 개발 하네스로 이 흐름을 자동화.",
+        "IT 운영·자산관리 신제품. 그중 고객사마다 다른 자산 분류와 관리 항목을 관리자가 코드 없이 정의하는 자산관리 영역을 맡아, 자산 원장 도메인 모델과 스키마, 외부 수집 동기화, 권한·테스트 체계를 담당해 기획부터 검수까지 진행 중이며, AI 기반 개발 하네스로 이 흐름을 자동화.",
       stack: ["Vue", "TypeScript", "Java", "Spring Boot", "JPA / QueryDSL", "PostgreSQL", "AI 코딩 에이전트"],
       links: [],
       // 웹 카드 기본 노출 - 한 줄 불릿. 케이스 전문은 접기와 경력기술서에서.
@@ -258,6 +258,10 @@ const resume = {
       oneLiner:
         "공공기관·민간기업 고객사 5곳에 적용된 IT 서비스·자산관리 솔루션의 Java·Spring 백엔드 개발, Oracle/Tibero 쿼리 튜닝, Webix 화면 성능 개선과 운영 안정화를 담당. 고객사 현장 패치와 사용자 교육까지 직접 수행.",
       stack: ["Java", "Spring", "Oracle", "Tibero", "Webix"],
+      // 챗봇 컨텍스트 전용 (웹 카드·경력기술서엔 노출 안 함): Oracle 쿼리 튜닝을 어떻게 했는지
+      techNotes: [
+        "Oracle 쿼리 튜닝: 느린 SQL 은 실행계획으로 테이블 접근 방식·조인 순서·인덱스 사용 여부를 확인하고, 조회 조건과 데이터 분포를 보고 복합 인덱스 컬럼 순서를 조정. 인덱스 컬럼에 함수가 걸린 조건은 가능한 경우 범위 조건으로 변경. 변경 후 같은 조회 조건에서 결과가 같은지 확인하고 실행계획과 수행 시간을 비교해 검증",
+      ],
       clients: ["지방자치단체·중앙행정기관", "형사사법 분야 공공 시스템", "리조트·교통 결제 분야 대기업"],
       links: [],
       highlights: [
