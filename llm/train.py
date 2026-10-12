@@ -39,7 +39,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import code_version, load_config, load_context, load_jsonl, repo_path, sha256_file, write_json  # noqa: E402
 from modeling import (  # noqa: E402
     chat_template_kwargs, encode_chat, gpu_info, lib_versions, linear_module_names, load_model, load_tokenizer,
-    require_gpu, resolve_revision,
+    no_math_attention, require_gpu, resolve_revision,
 )
 
 SPLITS = ("train", "validation", "test")
@@ -254,6 +254,7 @@ def main(argv=None) -> int:
         "gpu": gpu,
         "config": {k: v for k, v in cfg.items() if not k.startswith("_")},
         "max_length": stats["max_length"],
+        "attention": "sdpa-repeat-kv" if gpu.get("available") and not gpu.get("bf16") else "default",
     }
     write_json(info_path, run_info)
 
@@ -321,7 +322,17 @@ def main(argv=None) -> int:
         torch.cuda.reset_peak_memory_stats()
     t0 = time.time()
     try:
-        trainer.train(resume_from_checkpoint=True if resume else None)
+        with no_math_attention(gpu):
+            trainer.train(resume_from_checkpoint=True if resume else None)
+    except RuntimeError as e:
+        if "No available kernel" not in str(e):
+            raise
+        run_info.update(status="attention_kernel_unavailable", failed_at=now(), error=str(e)[:2000])
+        write_json(info_path, run_info)
+        raise SystemExit(
+            "메모리 절약 어텐션 커널을 쓸 수 없어 학습을 멈췄습니다 (그대로 두면 약 9천 토큰 문맥에서 OOM). "
+            "위 오류 메시지 전체를 공유해 주세요."
+        )
     except torch.cuda.OutOfMemoryError:
         run_info.update(status="oom", failed_at=now(), memory_summary=torch.cuda.memory_summary(abbreviated=True))
         write_json(info_path, run_info)
@@ -331,7 +342,8 @@ def main(argv=None) -> int:
             "1) 위 메모리 사용량 확인 2) batch·max_length 확인 3) 문맥 길이 검토 4) 더 작은 모델 검토"
         )
     elapsed = time.time() - t0
-    eval_metrics = trainer.evaluate() if len(eval_ds) else {}
+    with no_math_attention(gpu):
+        eval_metrics = trainer.evaluate() if len(eval_ds) else {}
 
     adapter_dir = run_dir / "adapter"
     trainer.save_model(str(adapter_dir))

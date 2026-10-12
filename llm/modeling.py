@@ -107,9 +107,38 @@ def load_tokenizer(cfg: dict, revision: str):
     return tok
 
 
+def configure_attention(gpu: dict) -> str:
+    """Flash 어텐션이 없는 GPU(T4 등, compute capability < 8.0)에서 어텐션이 메모리를 아끼는 커널을 쓰게 한다.
+
+    transformers 는 마스크가 없을 때 GQA(키·값 헤드 공유, Qwen3 가 사용)를 SDPA 의 enable_gqa 로 계산한다.
+    이 옵션은 Flash 커널에서만 효율적으로 돌고, Flash 가 없는 T4 에서는 어텐션 점수 전체(길이²)를 메모리에 올리는
+    math 커널로 넘어가 약 9천 토큰 문맥에서 OOM 이 났다. 그래서 이런 GPU 에서는 키·값을 미리 펼쳐(repeat_kv)
+    메모리 절약 커널(efficient attention)이 쓰이게 한다. 계산 결과는 같다.
+    """
+    if not gpu.get("available") or gpu.get("bf16"):
+        return "default"
+    from transformers.integrations import sdpa_attention
+    sdpa_attention.use_gqa_in_sdpa = lambda *args, **kwargs: False
+    return "sdpa-repeat-kv"
+
+
+def no_math_attention(gpu: dict):
+    """학습 중 math 어텐션 커널을 막는다. 막힌 상태에서 쓸 커널이 없으면 조용히 OOM 이 나는 대신
+    'No available kernel' 오류로 원인이 드러난다. GPU 가 없으면 아무것도 하지 않는다."""
+    import contextlib
+    if not gpu.get("available"):
+        return contextlib.nullcontext()
+    from torch.nn.attention import SDPBackend, sdpa_kernel
+    return sdpa_kernel([SDPBackend.EFFICIENT_ATTENTION, SDPBackend.FLASH_ATTENTION, SDPBackend.CUDNN_ATTENTION])
+
+
 def load_model(cfg: dict, revision: str, gpu: dict):
     import torch
     from transformers import AutoModelForCausalLM, BitsAndBytesConfig
+
+    attention = configure_attention(gpu)
+    if attention != "default":
+        print(f"어텐션: {attention} (Flash 어텐션이 없는 GPU - 메모리 절약 커널 사용)")
 
     q = cfg["quantization"]
     use_cuda = gpu.get("available", False)
