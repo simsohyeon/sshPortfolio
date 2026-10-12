@@ -222,6 +222,16 @@ const resume = {
           ],
         },
         {
+          title: "요청 등록 채번 쿼리 성능 개선",
+          problem:
+            "요청을 등록할 때마다 인덱스 없이 대용량 테이블 전체를 조회하는 채번 쿼리로 인한 등록 지연",
+          solution:
+            "핵심 테이블 인덱스 추가와 채번 쿼리 최적화 (전체 조회 → 인덱스 조회)",
+          results: [
+            "요청 등록 시 채번 처리 시간이 9.6초에서 1.8초대로 줄었습니다.",
+          ],
+        },
+        {
           title: "운영 안정성 기여",
           problem: "",
           solution: "",
@@ -300,7 +310,7 @@ const resume = {
         "대형 종합병원 차세대 의료정보시스템의 공통 프레임워크·공통 API 개발과 외부 의료 API 연동 배치 설계, 업무 화면 개발을 담당.",
       oneLiner:
         "대형 종합병원 차세대 의료정보시스템의 Java·Spring 공통 프레임워크·공통 API 개발, 외부 의료 API 연동 배치 설계, EMR 업무 화면(C#/.NET) 개발 담당. 환자·진료 데이터를 다루는 의료 도메인 경험.",
-      stack: ["Java", "Spring", "Spring Batch", "JSch", "C# / .NET WinForm"],
+      stack: ["Java", "Spring Boot", "Spring Batch", "JSch", "C# / .NET WinForm"],
       links: [],
       highlights: [
         "외부 의료 API 연동을 배치·파일 교환 구조로 설계해 상대 시스템 장애와 분리",
