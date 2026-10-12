@@ -308,6 +308,15 @@ def main(argv=None) -> int:
         model=model, args=sft_args, train_dataset=train_ds, eval_dataset=eval_ds,
         processing_class=tokenizer, peft_config=lora,
     )
+    if use_fp16:
+        # TRL 은 4-bit 모델의 LoRA 가중치를 bf16 으로 바꾸는데, fp16 GradScaler 는 bf16 기울기를 unscale 하지 못한다
+        # ("_amp_foreach_non_finite_check_and_unscale_cuda" not implemented for 'BFloat16'). bf16 이 없는 GPU(T4)에서는
+        # 학습 대상 파라미터만 fp32 로 둔다 (fp16 혼합 정밀도 학습의 표준 방식, LoRA 라 메모리 부담이 작다).
+        for prm in trainer.model.parameters():
+            if prm.requires_grad and prm.dtype != torch.float32:
+                prm.data = prm.data.float()
+    trainable_dtypes = sorted({str(prm.dtype) for prm in trainer.model.parameters() if prm.requires_grad})
+    print(f"학습 파라미터 dtype: {trainable_dtypes} · 혼합 정밀도: {'bf16' if use_bf16 else 'fp16' if use_fp16 else '없음(CPU)'}")
     lc = label_check(trainer, tokenizer, splits["train"], stats)
     print(f"라벨 검사(실제 배치): {lc['checked']}건, 실패 {lc['failures'] or '없음'}")
     if lc["failures"]:
@@ -360,6 +369,7 @@ def main(argv=None) -> int:
         nan_loss=any(isinstance(x, float) and math.isnan(x) for x in losses),
         eval_metrics=eval_metrics,
         trainable_params=trainable,
+        trainable_dtypes=trainable_dtypes,
         dataset_tokens=lc["dataset_tokens"],
         peak_vram_gib=round(torch.cuda.max_memory_allocated() / 1024**3, 2) if gpu.get("available") else None,
         peak_vram_reserved_gib=round(torch.cuda.max_memory_reserved() / 1024**3, 2) if gpu.get("available") else None,
