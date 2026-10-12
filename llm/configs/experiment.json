@@ -1,0 +1,84 @@
+{
+  "experiment_name": "qwen3-1.7b-qlora-v1",
+  "seed": 42,
+  "model": {
+    "id": "Qwen/Qwen3-1.7B",
+    "revision": null,
+    "revision_note": "null 이면 학습 시작 시 Hugging Face 의 현재 커밋 SHA 를 조회해 고정하고 run_info.json 에 남긴다. 재현하려면 그 SHA 를 여기에 적는다.",
+    "license_expected": "apache-2.0",
+    "trust_remote_code": false,
+    "chat_template_kwargs": { "enable_thinking": false }
+  },
+  "data": {
+    "curated": "llm/data/curated.jsonl",
+    "context": "llm/data/generated/context.json",
+    "processed_dir": "llm/data/processed",
+    "min_reviewed": 30,
+    "split_ratios": { "train": 0.7, "validation": 0.15, "test": 0.15 },
+    "categories": [
+      "project_overview",
+      "project_role",
+      "profile_fact",
+      "skill_level",
+      "tech_usage",
+      "problem_solving",
+      "unknown_info",
+      "partial_answer",
+      "off_topic",
+      "manipulation",
+      "format_followup",
+      "foreign_language"
+    ],
+    "unconfirmed_fields": [
+      "projects[*].role",
+      "projects[*].status",
+      "projects[*].summary",
+      "projects[*].cases[*].decision",
+      "projects[*].cases[*].retrospective",
+      "sideProjects[*].contributions"
+    ],
+    "unconfirmed_note": "src/data/resume.js 주석에서 🔴 [확인필요] 초안으로 표시한 필드. 출처로 쓰면 경고를 내고, 사람이 사실 확인 후 reviewed 로 바꾼다."
+  },
+  "quantization": {
+    "load_in_4bit": true,
+    "bnb_4bit_quant_type": "nf4",
+    "bnb_4bit_use_double_quant": true
+  },
+  "lora": {
+    "r": 8,
+    "alpha": 16,
+    "dropout": 0.05,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+    "target_modules_note": "Qwen3 의 Linear 모듈 이름. train.py 가 실제 모델에서 존재 여부를 확인하고 없으면 중단한다."
+  },
+  "training": {
+    "max_length_cap": 12288,
+    "max_length_note": "실제 최대 토큰 길이 + 여유분으로 max_length 를 정한다. cap 을 넘는 샘플이 있으면 자르지 않고 중단한다.",
+    "per_device_train_batch_size": 1,
+    "per_device_eval_batch_size": 1,
+    "gradient_accumulation_steps": 8,
+    "learning_rate": 0.0001,
+    "num_train_epochs": 2,
+    "lr_scheduler_type": "cosine",
+    "warmup_steps": 0.1,
+    "weight_decay": 0.0,
+    "max_grad_norm": 1.0,
+    "optim": "paged_adamw_8bit",
+    "gradient_checkpointing": true,
+    "logging_steps": 1,
+    "eval_strategy": "epoch",
+    "save_strategy": "steps",
+    "save_steps": 5,
+    "save_total_limit": 2,
+    "smoke_max_steps": 5
+  },
+  "generation": {
+    "do_sample": false,
+    "max_new_tokens": 512,
+    "repetition_penalty": 1.0,
+    "note": "학습 전후 비교는 결정적 생성(greedy). Qwen3 모델 카드는 비사고 모드에 temperature 0.7 / top_p 0.8 샘플링을 권장하므로, 반복이 심하면 repetition_penalty 를 두 모델에 똑같이 올린다."
+  },
+  "output": {
+    "colab_drive_root": "/content/drive/MyDrive/sshportfolio-llm"
+  }
+}

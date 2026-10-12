@@ -9,3 +9,16 @@ api/.wrangler
 api/.wrangler-check
 api/.dev.vars
 api/logs
+# LLM 파인튜닝 실험 (llm/README.md) - 생성물·결과·모델 파일은 Git 에 넣지 않는다
+llm/data/generated/
+llm/data/processed/
+llm/dist/
+llm/runs/
+llm/VERSION.json
+__pycache__/
+.ipynb_checkpoints/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.gguf

@@ -1,0 +1,13 @@
+# Colab GPU 런타임용. torch 는 Colab 에 설치된 버전을 그대로 쓴다 (다시 설치하면 CUDA 와 어긋날 수 있음).
+#
+# 버전 확인 근거 (2026-10-12):
+#   - PyPI 최신 릴리스이며, 이 조합으로 CPU 환경(torch 2.14.1, Python 3.13)에서 설치·import 와
+#     작은 Qwen3 구조 모델의 데이터 처리·마스킹·LoRA 학습 흐름(손실 계산은 CPU 대체 구현)·저장·재개·추론을 확인했다.
+#   - Colab GPU(T4 등)·bitsandbytes 4-bit 조합은 아직 실행하지 않았다(미검증). 노트북 1~3번 셀이 실제 버전과 GPU 를 출력한다.
+#   - 요구 조건: trl 1.15 는 Python 3.11+, bitsandbytes 0.50.2 는 torch>=2.4,<3, transformers/datasets 는 huggingface-hub>=1.31,<3
+transformers==5.19.0
+peft==0.21.2
+trl==1.15.0
+accelerate==1.15.0
+bitsandbytes==0.50.2
+datasets==5.1.0
