@@ -116,7 +116,8 @@ GPU 런타임을 다시 고르고 1→5번 셀을 실행한 뒤, 끊긴 단계�
 - **길이**: 실제 토크나이저로 잰 최대 길이 + 여유분으로 `max_length` 를 정합니다. `max_length_cap`(기본 12288)을 넘는 샘플이 있으면 자르지 않고 멈춥니다. 정답이 잘린 샘플은 학습에 들어가지 않습니다.
 - **배치**: batch 1 × gradient accumulation 8, gradient checkpointing, `paged_adamw_8bit`.
 - **정밀도**: GPU가 bf16을 지원하면(compute capability 8.0+) bf16, 아니면(T4) fp16. TRL은 4-bit 모델의 LoRA 가중치를 bf16으로 바꿉니다.
-- **보수적 시작값**: lr 1e-4, 2 epoch, cosine, warmup 10%. validation loss(epoch마다)로 조정합니다. train loss만 계속 내려가고 validation loss가 오르면 과적합이므로 epoch·lr을 줄입니다.
+- **학습량**: v1(lr 1e-4, 2 epoch, accum 8 → 최적화 10스텝)은 과소 학습이었습니다 ([`reports/v1-qwen3-1.7b.md`](reports/v1-qwen3-1.7b.md)). 현재 설정(v2)은 lr 2e-4, 6 epoch, accum 4, cosine, warmup 10%이고, epoch마다 validation loss를 재서 가장 낮은 epoch의 가중치를 최종 어댑터로 씁니다(`load_best_model_at_end`). train loss만 계속 내려가고 validation loss가 오르면 과적합이므로 epoch·lr을 줄입니다.
+- **T4 대응**: Flash 어텐션이 없는 GPU에서는 GQA 키·값을 펼쳐 메모리 절약 어텐션 커널을 쓰고(학습 중 math 커널 금지), fp16 학습에서는 LoRA 가중치를 fp32로 둡니다. fp16 기울기 overflow로 건너뛴 스텝 수는 `run_info.json` 의 `skipped_steps_grad_norm_nonfinite` 에 남습니다.
 - **기록**: seed, 모델 ID·revision, 데이터 해시(curated·context·분할 파일), 코드 버전, 라이브러리 버전, 설정 전체, GPU 이름·VRAM, 학습 시간, peak VRAM(allocated/reserved), loss 기록 → `run_info.json`, `log_history.json`.
 - **모델 병합**은 하지 않습니다(1차 범위 밖).
 

@@ -21,7 +21,7 @@
   ../model.json   실험 전체가 쓰는 기반 모델 ID·커밋 SHA (처음 실행 때 고정)
   run_info.json   모델 ID·revision·seed·데이터 해시·코드 버전·라이브러리·GPU·설정·시간·peak VRAM
   token_stats.json, mask_check.json, log_history.json
-  checkpoints/    재개용 체크포인트 (save_total_limit 개만 유지)
+  checkpoints/    재개용 체크포인트 (save_total_limit 개만 유지, load_best_model_at_end 면 검증 손실 최저 epoch 도 유지)
   adapter/        LoRA 어댑터 + 토크나이저 (기반 모델 없이 단독 실행 불가 - README 참고)
 """
 from __future__ import annotations
@@ -292,8 +292,12 @@ def main(argv=None) -> int:
         logging_steps=t["logging_steps"],
         eval_strategy="no" if args.smoke else t["eval_strategy"],
         save_strategy=t["save_strategy"],
-        save_steps=t["save_steps"],
+        save_steps=t.get("save_steps", 500),
         save_total_limit=t["save_total_limit"],
+        # 검증 손실이 가장 낮은 epoch 의 가중치를 최종 어댑터로 (smoke 는 검증을 안 하므로 제외)
+        load_best_model_at_end=bool(t.get("load_best_model_at_end")) and not args.smoke,
+        metric_for_best_model="eval_loss",
+        greater_is_better=False,
         bf16=use_bf16,
         fp16=use_fp16,
         report_to="none",
@@ -366,6 +370,13 @@ def main(argv=None) -> int:
         global_step=trainer.state.global_step,
         epochs=trainer.state.epoch,
         final_train_loss=losses[-1] if losses else None,
+        eval_loss_by_epoch={str(x.get("epoch")): x["eval_loss"] for x in trainer.state.log_history if "eval_loss" in x},
+        best_checkpoint=trainer.state.best_model_checkpoint,
+        best_eval_loss=trainer.state.best_metric,
+        skipped_steps_grad_norm_nonfinite=sum(
+            1 for x in trainer.state.log_history
+            if isinstance(x.get("grad_norm"), float) and not math.isfinite(x["grad_norm"])
+        ),
         nan_loss=any(isinstance(x, float) and math.isnan(x) for x in losses),
         eval_metrics=eval_metrics,
         trainable_params=trainable,
