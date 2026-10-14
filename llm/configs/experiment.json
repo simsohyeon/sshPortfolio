@@ -1,10 +1,10 @@
 {
-  "experiment_name": "qwen3-1.7b-qlora-v2",
-  "experiment_note": "v1(lr 1e-4, 2 epoch, accum 8 → 최적화 10스텝)은 과소 학습으로 학습 전과 거의 같고 형식·사실 개선 없음 (llm/reports/v1-qwen3-1.7b.md). v2 는 학습량을 늘리고 검증 손실 최저 epoch 을 고르며, 생성 반복을 억제한다.",
+  "experiment_name": "qwen3-4b-qlora-v3",
+  "experiment_note": "v3: v2 와 데이터·학습·생성 설정을 똑같이 두고 기반 모델만 Qwen3-1.7B → Qwen3-4B 로 바꾼다. v2 에서 형식·행동은 개선됐지만 사실 오류(없는 링크, 사실 섞기)가 남아, 모델 크기가 원인인지 확인한다 (llm/reports/v2-qwen3-1.7b.md). v2 설정은 configs/v2-qwen3-1.7b.json 에 보관.",
   "seed": 42,
   "model": {
-    "id": "Qwen/Qwen3-1.7B",
-    "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "id": "Qwen/Qwen3-4B",
+    "revision": null,
     "revision_note": "null 이면 학습 시작 시 Hugging Face 의 현재 커밋 SHA 를 조회해 고정하고 run_info.json 에 남긴다. 재현하려면 그 SHA 를 여기에 적는다.",
     "license_expected": "apache-2.0",
     "trust_remote_code": false,

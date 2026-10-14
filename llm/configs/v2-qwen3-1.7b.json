@@ -1,0 +1,99 @@
+{
+  "experiment_name": "qwen3-1.7b-qlora-v2",
+  "experiment_note": "v1(lr 1e-4, 2 epoch, accum 8 → 최적화 10스텝)은 과소 학습으로 학습 전과 거의 같고 형식·사실 개선 없음 (llm/reports/v1-qwen3-1.7b.md). v2 는 학습량을 늘리고 검증 손실 최저 epoch 을 고르며, 생성 반복을 억제한다.",
+  "seed": 42,
+  "model": {
+    "id": "Qwen/Qwen3-1.7B",
+    "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+    "revision_note": "null 이면 학습 시작 시 Hugging Face 의 현재 커밋 SHA 를 조회해 고정하고 run_info.json 에 남긴다. 재현하려면 그 SHA 를 여기에 적는다.",
+    "license_expected": "apache-2.0",
+    "trust_remote_code": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    }
+  },
+  "data": {
+    "curated": "llm/data/curated.jsonl",
+    "context": "llm/data/generated/context.json",
+    "processed_dir": "llm/data/processed",
+    "min_reviewed": 30,
+    "split_ratios": {
+      "train": 0.7,
+      "validation": 0.15,
+      "test": 0.15
+    },
+    "categories": [
+      "project_overview",
+      "project_role",
+      "profile_fact",
+      "skill_level",
+      "tech_usage",
+      "problem_solving",
+      "unknown_info",
+      "partial_answer",
+      "off_topic",
+      "manipulation",
+      "format_followup",
+      "foreign_language"
+    ],
+    "unconfirmed_fields": [
+      "projects[*].role",
+      "projects[*].status",
+      "projects[*].summary",
+      "projects[*].cases[*].decision",
+      "projects[*].cases[*].retrospective",
+      "sideProjects[*].contributions"
+    ],
+    "unconfirmed_note": "src/data/resume.js 주석에서 🔴 [확인필요] 초안으로 표시한 필드. 출처로 쓰면 경고를 내고, 사람이 사실 확인 후 reviewed 로 바꾼다."
+  },
+  "quantization": {
+    "load_in_4bit": true,
+    "bnb_4bit_quant_type": "nf4",
+    "bnb_4bit_use_double_quant": true
+  },
+  "lora": {
+    "r": 8,
+    "alpha": 16,
+    "dropout": 0.05,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ],
+    "target_modules_note": "Qwen3 의 Linear 모듈 이름. train.py 가 실제 모델에서 존재 여부를 확인하고 없으면 중단한다."
+  },
+  "training": {
+    "max_length_cap": 12288,
+    "max_length_note": "실제 최대 토큰 길이 + 여유분으로 max_length 를 정한다. cap 을 넘는 샘플이 있으면 자르지 않고 중단한다.",
+    "per_device_train_batch_size": 1,
+    "per_device_eval_batch_size": 1,
+    "gradient_accumulation_steps": 4,
+    "learning_rate": 0.0002,
+    "num_train_epochs": 6,
+    "lr_scheduler_type": "cosine",
+    "warmup_steps": 0.1,
+    "weight_decay": 0.0,
+    "max_grad_norm": 1.0,
+    "optim": "paged_adamw_8bit",
+    "gradient_checkpointing": true,
+    "logging_steps": 1,
+    "eval_strategy": "epoch",
+    "save_strategy": "epoch",
+    "save_total_limit": 2,
+    "smoke_max_steps": 5,
+    "load_best_model_at_end": true
+  },
+  "generation": {
+    "do_sample": false,
+    "max_new_tokens": 512,
+    "repetition_penalty": 1.1,
+    "note": "학습 전후 비교는 결정적 생성(greedy) + 반복 억제 1.1을 두 모델에 똑같이 적용. v1 은 repetition_penalty 1.0 에서 512 토큰까지 같은 구절을 반복한 답변이 나왔다."
+  },
+  "output": {
+    "colab_drive_root": "/content/drive/MyDrive/sshportfolio-llm"
+  }
+}
