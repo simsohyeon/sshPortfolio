@@ -21,7 +21,7 @@ const PROJECT_DETAIL = {
   },
   "gangneung-asan": {
     overview: "강릉아산병원 차세대 의료정보시스템(EMR) 구축 및 운영",
-    role: "Java/Spring 공통 프레임워크·API 개발, 외부 의료 API 연동 배치 구현, C# 업무 화면 개발 및 부서 간 시스템 연계",
+    role: "Java/Spring 기반 외부 의료 API 연동 배치 구현, C# 업무 화면 개발 및 부서 간 시스템 연계",
     tech: "Java / Spring / Spring Batch · C# / .NET WinForm",
   },
 };
@@ -91,6 +91,7 @@ export default function ResumePrint() {
               <div><h3>{company.company}</h3><p>{company.position} · 풀스택 개발</p></div>
               <span className="rs-period">{company.period}</span>
             </header>
+            {company.contribution && <p className="rs-overview">{company.contribution}</p>}
             {resume.projects.filter(project => project.org === company.company).map(project => <ProjectBlock key={project.id} project={project} />)}
           </section>
         ))}

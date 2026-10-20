@@ -27,6 +27,7 @@ function CompanyGroup({ company, projects }) {
         }}>{company.period}</span>
       </div>
 
+      {company.contribution && <p style={{ marginBottom: "16px", color: "var(--color-text-soft)" }}>{company.contribution}</p>}
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
         {projects.map(proj => <ProjectCard key={proj.id} proj={proj} kind="company" />)}
       </div>
@@ -48,17 +49,7 @@ export default function Experience() {
       <div className="container">
         <FadeIn>
           <p className="eyebrow">Experience</p>
-          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: "16px", flexWrap: "wrap" }}>
-            <h2 className="section-title">경력</h2>
-            <a
-              href={`${import.meta.env.BASE_URL}resume.html`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ fontFamily: "var(--font-sans)", fontSize: "0.9rem", fontWeight: 600, color: "var(--color-accent)", whiteSpace: "nowrap" }}
-            >
-              경력기술서 전체 보기 ↗
-            </a>
-          </div>
+          <h2 className="section-title">경력</h2>
         </FadeIn>
 
         <div className="section-content" style={{ display: "flex", flexDirection: "column", gap: "40px" }}>

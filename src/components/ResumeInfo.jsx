@@ -46,7 +46,7 @@ export default function ResumeInfo() {
               <PlainList items={certifications.map(c => ({ main: c.name, sub: `${c.org} · ${c.date}` }))} />
             </LabelRow>
             <LabelRow label="수상">
-              <PlainList items={awards.map(a => ({ main: a }))} />
+              <PlainList items={awards.map(a => ({ main: a.name, sub: a.date }))} />
             </LabelRow>
           </div>
         </FadeIn>
