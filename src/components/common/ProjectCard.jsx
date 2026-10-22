@@ -71,7 +71,7 @@ export default function ProjectCard({ proj, kind = "company" }) {
   const links = (proj.links || []).filter(l => l.url);
   // 회사 프로젝트는 성과 2개, 개인 프로젝트는 담당 역할 - 같은 자리, 같은 모양
   const bullets = kind === "company"
-    ? (proj.highlights || []).slice(0, VISIBLE_HIGHLIGHTS)
+    ? (proj.highlights || []).slice(0, proj.visibleHighlights ?? VISIBLE_HIGHLIGHTS)
     : (proj.contributions || []);
   const bulletLabel = kind === "company" ? "핵심 성과" : "담당 역할";
 

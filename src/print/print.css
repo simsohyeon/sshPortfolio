@@ -13,6 +13,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #425dd3; outline-offs
 .rs-header h1 { font-size: 27pt; line-height: 1.3; letter-spacing: -.04em; }
 .rs-header h1 span { display: inline-block; margin-left: 16px; font-size: 13pt; font-weight: 500; letter-spacing: -.02em; }
 .rs-intro { margin-top: 12px; color: #444b57; }
+.rs-intro p + p { margin-top: 10px; }
 .rs-contact { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 16px; font-size: 9pt; color: #676c77; }
 .rs-section { margin-top: 36px; }
 .rs-section-title { display: flex; align-items: center; gap: 10px; font-size: 12pt; font-weight: 650; color: #385d87; line-height: 1.4; margin-bottom: 22px; letter-spacing: -.02em; break-after: avoid; }
@@ -79,4 +80,11 @@ dd { color: #444b57; min-width: 0; }
   .rs-project-head + .rs-overview { break-after: avoid; }
   .rs-company-head { break-after: avoid; }
   .rs-certifications li, .rs-skill-list > div { break-inside: avoid; }
+}
+
+/* 이름·직무 오른쪽에 연락 링크 배치 */
+.rs-identity { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 10px 20px; }
+.rs-identity .rs-contact { margin-top: 0; gap: 6px 12px; }
+@media screen and (max-width: 640px) {
+  .rs-identity { flex-direction: column; align-items: flex-start; }
 }

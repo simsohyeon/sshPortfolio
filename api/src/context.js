@@ -19,7 +19,7 @@ function links(items) {
 function renderCase(c) {
   const lines = [`#### 사례: ${c.title}`];
   if (c.problem) lines.push(`- 문제: ${c.problem}`);
-  if (c.solution) lines.push(`- 접근: ${c.solution}`);
+  if (c.solution) lines.push(Array.isArray(c.solution) ? `- 접근:\n${list(c.solution, "  ")}` : `- 접근: ${c.solution}`);
   if (c.decision && !c.draft) lines.push(`- 판단 근거: ${c.decision}`);
   if (c.results?.length) lines.push(`- 결과:\n${list(c.results, "  ")}`);
   if (c.retrospective && !c.draft) lines.push(`- 회고: ${c.retrospective}`);
