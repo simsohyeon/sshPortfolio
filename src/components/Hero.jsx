@@ -28,16 +28,6 @@ export default function Hero() {
             <span style={{ color: "var(--color-accent)" }}>{resume.title}</span>
           </h1>
 
-          <p style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "clamp(0.98rem, 1.4vw, 1.08rem)",
-            fontWeight: 400,
-            color: "var(--color-text-soft)",
-            marginTop: "16px",
-            lineHeight: 1.7,
-          }}>
-            {resume.tagline}
-          </p>
 
           <p style={{
             fontFamily: "var(--font-sans)",
