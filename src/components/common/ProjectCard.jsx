@@ -51,22 +51,12 @@ function Panel({ proj, kind }) {
       />
     );
   }
-  // 이미지 자리 표시 - 로컬 개발 화면에서만. 배포 빌드에는 패널 없이 1열로 나간다
-  if (import.meta.env.DEV) {
-    return (
-      <div className="image-slot no-print" aria-hidden="true">
-        <span>이미지 자리</span>
-        <span>1200 × 630 · png / webp</span>
-        <span>resume.js image 필드에 연결</span>
-      </div>
-    );
-  }
   return null;
 }
 
 // 모든 프로젝트 공용 카드. kind: "company" | "personal"
 export default function ProjectCard({ proj, kind = "company" }) {
-  const hasPanel = kind === "personal" && Boolean(proj.image || import.meta.env.DEV);
+  const hasPanel = kind === "personal" && Boolean(proj.image);
   const meta = kind === "company" ? proj.role : proj.context;
   const links = (proj.links || []).filter(l => l.url);
   // 회사 프로젝트는 성과 2개, 개인 프로젝트는 담당 역할 - 같은 자리, 같은 모양

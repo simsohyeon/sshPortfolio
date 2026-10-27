@@ -196,6 +196,38 @@ const resume = {
   // 사이드 프로젝트 (개인)
   // ───────────────────────────────────────────────
   sideProjects: [
+{
+  "id": "timeboard",
+  "name": "타임보드 (Timeboard) - 직원별 예약 스케줄 보드",
+  "period": "2026.10 ~ 현재",
+  "featured": true,
+  "status": "실제 매장 사용 중",
+  "statusKind": "live",
+  "context": "강릉 소재 매장에서 실사용 중 · 개인 프로젝트",
+  "stack": [
+    "React 19",
+    "Vite",
+    "Supabase",
+    "PostgreSQL",
+    "Vercel",
+    "PWA"
+  ],
+  "links": [
+    { "label": "사이트", "url": "https://timeboard-five.vercel.app/" },
+    {
+      "label": "GitHub",
+      "url": "https://github.com/simsohyeon/Timeboard"
+    }
+  ],
+  "image": { "src": "images/timeboard-demo.png", "alt": "타임보드 직원별 예약 보드 — 가상 직원과 예약을 사용한 예시 화면", "width": 1280, "height": 720 },
+  "summary": "소규모 매장의 직원별 예약과 빈 시간을 한 화면에서 관리하는 예약 보드입니다. 실제 매장에서 사용하며 현장 요청을 반영해 개선하고 있습니다.",
+  "contributions": [
+    "직원별 예약·빈 시간을 시간축으로 표시하고, 빈 시간 선택으로 예약을 등록하는 보드 화면 설계·구현",
+    "예약 소요시간·금액 자동 반영, 직원별 근무·휴가 일정 관리 및 예약 가능 시간 조회 기능 개발",
+    "별도 애플리케이션 서버 없이 Supabase PostgreSQL에 연결하는 데이터 접근 구조 구성",
+    "Vercel 배포 및 모바일·태블릿 홈 화면 설치를 위한 PWA 구성"
+  ]
+},
     {
       id: "staymaru",
       name: "쉼마루 (StayMaru) - 경북 전통문화 여행 일정 추천",
