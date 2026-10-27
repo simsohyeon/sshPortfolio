@@ -111,14 +111,17 @@ export default function ProjectCard({ proj, kind = "company" }) {
             }}>{proj.summary}</p>
           )}
 
-          {proj.clients && proj.clients.length > 0 && (
-            <p style={{
-              fontFamily: "var(--font-sans)", fontSize: "0.82rem",
-              color: "var(--color-muted)", margin: "8px 0 0",
+
+          {proj.clients?.length > 0 && (
+            <div style={{
+              display: "flex", alignItems: "baseline", flexWrap: "wrap", gap: "6px 12px",
+              marginTop: "14px", fontFamily: "var(--font-sans)", lineHeight: 1.6,
             }}>
-              <span style={{ color: "var(--color-muted-2)" }}>적용 기관 · </span>
-              {proj.clients.join(" · ")}
-            </p>
+              <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--color-accent)" }}>적용 기관</span>
+              <strong style={{ fontSize: "0.94rem", fontWeight: 600, color: "var(--color-text-strong)" }}>
+                {proj.clients.join(" · ")}
+              </strong>
+            </div>
           )}
 
           {bullets.length > 0 && (
