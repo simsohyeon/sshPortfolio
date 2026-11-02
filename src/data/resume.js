@@ -112,15 +112,15 @@ const resume = {
       status: "운영 중",
       statusKind: "live",
       featured: true,
-      summary: "기업의 IT 자산과 서비스 요청 절차를 관리하는 플랫폼입니다. Polestar 10은 화면을 설정으로 구성하고 데이터 구조는 코드로 관리했다면, 후속 제품은 데이터 항목까지 관리자가 빌더로 정의합니다. 자산관리 영역을 전담하며 ITAM 빌더를 활용한 데이터 구조 설계, Spring Boot API·Vue 화면 개발과 외부 수집 연동을 맡고 있습니다. 담당한 자산관리 기능은 증권사·손해보험사 등 금융기관에 납품되어 운영 중입니다.",
+      summary: "관리자가 데이터 항목과 화면을 설정으로 정의하는 IT 서비스·자산관리 플랫폼입니다. 자산관리 영역의 데이터 구조 설계와 API·Vue 화면 개발, 외부 시스템 연동을 전담합니다.",
       oneLiner: "기업의 IT 자산과 서비스 요청 절차를 관리하는 플랫폼입니다. Polestar 10은 화면을 설정으로 구성하고 데이터 구조는 코드로 관리했다면, 후속 제품은 데이터 항목까지 관리자가 빌더로 정의합니다. 자산관리 영역을 전담하며 ITAM 빌더를 활용한 데이터 구조 설계, Spring Boot API·Vue 화면 개발과 외부 수집 연동을 맡고 있습니다. 담당한 자산관리 기능은 증권사·손해보험사 등 금융기관에 납품되어 운영 중입니다.",
-      stack: ["Vue", "TypeScript", "Java 21", "Spring Boot", "Hibernate", "PostgreSQL", "Claude Code"],
+      stack: ["Vue", "TypeScript", "Java 21", "Spring Boot", "PostgreSQL"],
       clients: ["증권사·손해보험사 등 금융기관"],
       links: [],
       // 웹 카드 기본 노출 - 한 줄 불릿. 케이스 전문은 접기와 경력기술서에서.
       highlights: [
-  "보안취약점 관리 기능 구현 — 외부 API 연동, 취약점 우선순위·조치기한 및 ITSM 조치·예외 관리",
-  "원장 신규 이관 2,000행 처리 시간 중앙값 190.24초 → 41.46초로 단축 (내부 검증, 전후 각 3회)"
+  "보안취약점 관리 기능 구현 - 외부 API 연동, 취약점 우선순위·조치기한 및 ITSM 조치·예외 관리",
+  "원장 신규 이관 처리 시간 약 78%, 입고 승인 처리 시간 약 71% 단축"
 ],
       cases: careerCases["next-product"],
     },
@@ -219,7 +219,7 @@ const resume = {
       "url": "https://github.com/simsohyeon/Timeboard"
     }
   ],
-  "image": { "src": "images/timeboard-demo.png", "alt": "타임보드 직원별 예약 보드 — 가상 직원과 예약을 사용한 예시 화면", "width": 1280, "height": 720 },
+  "image": { "src": "images/timeboard-demo.png", "alt": "타임보드 직원별 예약 보드 - 가상 직원과 예약을 사용한 예시 화면", "width": 1280, "height": 720 },
   "summary": "소규모 매장의 직원별 예약과 빈 시간을 한 화면에서 관리하는 예약 보드입니다. 실제 매장에서 사용하며 현장 요청을 반영해 개선하고 있습니다.",
   "contributions": [
     "직원별 예약·빈 시간을 시간축으로 표시하고, 빈 시간 선택으로 예약을 등록하는 보드 화면 설계·구현",
