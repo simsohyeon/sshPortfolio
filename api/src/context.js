@@ -22,6 +22,7 @@ function renderCase(c) {
   if (c.solution) lines.push(Array.isArray(c.solution) ? `- 접근:\n${list(c.solution, "  ")}` : `- 접근: ${c.solution}`);
   if (c.decision && !c.draft) lines.push(`- 판단 근거: ${c.decision}`);
   if (c.results?.length) lines.push(`- 결과:\n${list(c.results, "  ")}`);
+  if (c.resultNote) lines.push(`- 측정 기준: ${c.resultNote}`);
   if (c.retrospective && !c.draft) lines.push(`- 회고: ${c.retrospective}`);
   return lines.join("\n");
 }

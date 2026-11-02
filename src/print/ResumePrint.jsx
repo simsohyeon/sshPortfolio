@@ -5,25 +5,37 @@ import careerCases from "./careerCases";
 // 회사 경력만 담는 경력기술서. 포트폴리오 데이터는 그대로 유지합니다.
 const PROJECT_DETAIL = {
   "next-product": {
-    overview: "Polestar 10의 후속 노코드 IT 서비스·자산관리 플랫폼. 관리자가 빌더를 통해 데이터 항목과 화면을 정의하는 제품",
-    role: "자산관리 영역 풀스택 전담, ITAM 빌더로 데이터 구조 설계, Spring Boot API·Vue 화면 구현 및 외부 수집 연동",
-    tech: "Java / Spring Boot · Vue / TypeScript · PostgreSQL",
+    "overview": "Polestar 10의 후속 노코드 IT 서비스·자산관리 플랫폼. 담당한 자산관리 기능은 증권사·손해보험사 등 금융기관에 납품되어 운영 중",
+    "role": [
+      "자산관리 영역 풀스택 전담: ITAM 빌더 기반 데이터 구조 설계, Spring Boot API·Vue 화면 및 외부 수집 연동 개발",
+      "보안취약점 관리 기능 구현 및 일괄등록·원장 이관 처리 성능·정합성 개선"
+    ],
+    "tech": "Java 21 · Spring Boot · Hibernate · Vue · TypeScript · PostgreSQL"
   },
-  polestar10: {
-    overview: "화면을 JSON 설정으로 구성하는 IT 서비스·자산관리(ITSM/ITAM) 통합 웹 제품. 금융권·공공기관 고객사에 적용되어 운영 중",
-    role: "4개 모듈(서비스요청·자산·SLA·프로젝트)의 동적 화면·공통 컴포넌트 개발, 화면 설정·운영 설정 관리 및 포털·검색 기능 개발",
-    tech: "Spring Boot / Spring Cloud(MSA) · React / TypeScript · MongoDB",
+  "polestar10": {
+    "overview": "JSON 설정으로 화면을 구성하는 IT 서비스·자산관리 통합 웹 제품. 금융권·공공기관 고객사에 적용되어 운영 중",
+    "role": [
+      "4개 업무 모듈의 동적 화면·공통 컴포넌트 개발",
+      "운영 설정 관리 화면 및 포털·권한 기반 검색 기능 개발"
+    ],
+    "tech": "Spring Boot · React · TypeScript · MongoDB"
   },
   "solution-build": {
-    overview: "공공기관·민간기업 고객사 5곳의 IT 서비스·자산관리 솔루션 구축 및 운영",
-    role: "공공·민간 고객사 5곳의 솔루션 구축에서 프로젝트 전담 개발, Java/Spring 백엔드·Webix 화면 개발 및 Oracle/Tibero SQL 튜닝·조직별 대시보드 집계 쿼리 작성",
-    tech: "Java / Spring · Webix · Oracle / Tibero",
+    "overview": "고객사별 요구를 소스 수정과 현장 패치로 반영하는 구축형 IT 서비스·자산관리 솔루션",
+    "role": [
+      "공공·민간 고객사 5곳의 솔루션 구축 전담, Java/Spring 백엔드·Webix 화면 개발",
+      "Oracle/Tibero SQL 튜닝·조직별 대시보드 집계 쿼리 개발 및 현장 대응"
+    ],
+    "tech": "Java · Spring · Webix · Oracle · Tibero"
   },
   "gangneung-asan": {
-    overview: "대형 종합병원 차세대 EMR 구축에서 외부 의료 API 연동 배치와 업무 화면 개발 담당",
-    role: "Java/Spring 기반 외부 의료 API 연동 배치 설계·구현, C#/.NET 업무 화면 개발 및 접수·원무 등 타 부서 연계 화면·데이터 흐름 설계",
-    tech: "Java / Spring / MyBatis / Spring Batch · JSch · C# / .NET WinForm",
-  },
+    "overview": "대형 종합병원의 차세대 의료정보시스템 구축. 외부 의료 데이터 연동과 EMR 업무 화면 개발 담당",
+    "role": [
+      "외부 의료 API 연동 배치 설계·구현 및 JSch 기반 파일 전송",
+      "C#/.NET 업무 화면, 접수·원무 공통코드 관리 화면·공통 기능 개발"
+    ],
+    "tech": "Java · Spring · Spring Batch · MyBatis · JSch · C# / .NET WinForm"
+  }
 };
 
 function Section({ title, children }) {
@@ -51,6 +63,7 @@ function CaseBlock({ item, index }) {
 function ProjectBlock({ project }) {
   const detail = PROJECT_DETAIL[project.id];
   if (!detail) return null; // 경력기술서에 정리하지 않은 프로젝트는 건너뜀 (id 가 바뀌어도 페이지 전체가 깨지지 않게)
+  const cases = careerCases[project.id] || [];
   return (
     <article className="rs-project">
       <header className="rs-project-head">
@@ -59,10 +72,10 @@ function ProjectBlock({ project }) {
       </header>
       <p className="rs-overview">{detail.overview}</p>
       <dl className="rs-project-meta">
-        <div><dt>담당 범위</dt><dd><ul className="rs-role-list">{detail.role.split(", ").map(role => <li key={role}>{role}</li>)}</ul></dd></div>
+        <div><dt>담당 범위</dt><dd><ul className="rs-role-list">{detail.role.map(role => <li key={role}>{role}</li>)}</ul></dd></div>
         <div className="rs-tech"><dt>사용 기술</dt><dd>{detail.tech}</dd></div>
       </dl>
-      {(careerCases[project.id] || []).map((item, index) => <CaseBlock key={item.title} item={item} index={index} />)}
+      {cases.map((item, index) => <CaseBlock key={item.title} item={item} index={index} />)}
     </article>
   );
 }
@@ -99,7 +112,7 @@ export default function ResumePrint() {
       </Section>
       <Section title="기술 역량">
         <dl className="rs-skill-list">
-          <div><dt>백엔드</dt><dd>Java · Spring Boot · MyBatis · Spring Batch · JSch</dd></div>
+          <div><dt>백엔드</dt><dd>Java · Spring Boot · Hibernate · MyBatis · Spring Batch · JSch</dd></div>
           <div><dt>화면 개발</dt><dd>React · Vue · TypeScript · Webix · C# / .NET WinForm</dd></div>
           <div><dt>데이터베이스</dt><dd>PostgreSQL · MongoDB · Oracle · Tibero</dd></div>
           <div><dt>프로젝트 환경</dt><dd>Spring Cloud(MSA) · Docker · Jenkins</dd></div>
