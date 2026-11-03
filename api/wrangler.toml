@@ -40,3 +40,7 @@ GEMINI_MODEL = "gemini-flash-lite-latest"
 
 # GEMINI_API_KEY 는 파일에 쓰지 말고 아래 명령으로 등록한다:
 #   npx wrangler secret put GEMINI_API_KEY
+
+# (선택) 챗봇이 답변할 때마다 텔레그램 알림. 둘 다 등록해야 동작하고, 없으면 알림 없이 동작한다.
+#   npx wrangler secret put TELEGRAM_BOT_TOKEN   ← @BotFather 로 만든 봇의 토큰
+#   npx wrangler secret put TELEGRAM_CHAT_ID     ← 내 계정의 chat id (봇에게 메시지 1번 보낸 뒤 getUpdates 로 확인)

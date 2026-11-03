@@ -44,7 +44,9 @@ const count = (arr, f) => arr.reduce((m, x) => { const k = f(x); if (k != null) 
 const norm = q => (q || "").trim().toLowerCase().replace(/\s+/g, " ").replace(/[?？!.。]+$/g, "");
 const errors = entries.filter(e => e.error);
 const answered = entries.filter(e => !e.error);
-const misses = answered.filter(e => e.miss === true || (e.miss == null && /포트폴리오에 없/.test(e.a || "")));
+// index.js 의 miss 판정과 같이 맞춘다. 서버가 miss:false 로 남긴 과거 로그도 답변 텍스트로 다시 걸러낸다
+const MISS_RE = /포트폴리오에 없|자료에 없|경험(?:이|은) 없|이력(?:이|은) 없|답하기 어렵/;
+const misses = answered.filter(e => e.miss === true || MISS_RE.test(e.a || ""));
 const tokens = answered.reduce((s, e) => ({ input: s.input + (e.tokens?.input || 0), output: s.output + (e.tokens?.output || 0) }), { input: 0, output: 0 });
 const avgMs = answered.length ? Math.round(answered.reduce((s, e) => s + (e.ms || 0), 0) / answered.length) : 0;
 const byQuestion = Object.entries(count(entries, e => norm(e.q))).sort((a, b) => b[1] - a[1]);
@@ -75,7 +77,7 @@ lines.push("");
 
 lines.push(`## 전체 질문 (최근순, 최대 100)`);
 for (const e of entries.slice(-100).reverse()) {
-  const tag = e.error ? "오류" : (e.miss === true || /포트폴리오에 없/.test(e.a || "")) ? "자료없음" : "답변";
+  const tag = e.error ? "오류" : (e.miss === true || MISS_RE.test(e.a || "")) ? "자료없음" : "답변";
   lines.push(`- [${fmt(e.ts)}] (${tag}) ${e.q}`);
 }
 
