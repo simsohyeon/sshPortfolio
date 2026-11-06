@@ -1,7 +1,17 @@
+import { useState } from "react";
 import resume from "../data/resume";
 
 export default function Hero() {
   const emailUrl = `mailto:${resume.contact.email}?subject=${encodeURIComponent("채용 문의")}`;
+  // 기본 메일 앱이 없는 PC에서는 mailto 클릭이 무반응이라, 클릭 시 주소를 복사해 두고 복사됨을 표시.
+  // 클립보드까지 막힌 환경을 위해 주소는 버튼 아래에 항상 노출.
+  const [copied, setCopied] = useState(false);
+  const copyEmail = () => {
+    navigator.clipboard?.writeText(resume.contact.email).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }).catch(() => {});
+  };
   const current = resume.career[0];
   const currentLine = [current.company, current.position, current.period].filter(Boolean).join(" · ");
 
@@ -41,7 +51,9 @@ export default function Hero() {
           </p>
 
           <div className="cta-group" style={{ marginTop: "28px" }}>
-            <a href={emailUrl} className="btn btn-primary">이메일로 연락하기</a>
+            <a href={emailUrl} onClick={copyEmail} className="btn btn-primary">
+              {copied ? "주소 복사됨 ✓" : "이메일로 연락하기"}
+            </a>
             <a href={resume.contact.github} target="_blank" rel="noopener noreferrer" className="btn btn-secondary">
               GitHub ↗
             </a>
@@ -49,6 +61,16 @@ export default function Hero() {
               경력기술서 ↗
             </a>
           </div>
+
+          <p className="no-print" style={{
+            fontFamily: "var(--font-sans)",
+            fontSize: "0.82rem",
+            fontWeight: 500,
+            color: "var(--color-muted)",
+            marginTop: "12px",
+          }}>
+            {resume.contact.email}
+          </p>
 
           {/* 인쇄/PDF 저장 시에만 노출되는 연락처 영역 */}
           <div className="print-only print-contact">
