@@ -16,36 +16,38 @@ a:focus-visible, button:focus-visible { outline: 2px solid #425dd3; outline-offs
 .rs-intro p + p { margin-top: 10px; }
 .rs-contact { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 16px; font-size: 9pt; color: #676c77; }
 .rs-section { margin-top: 36px; }
-.rs-section-title { display: flex; align-items: center; gap: 10px; font-size: 12pt; font-weight: 650; color: #385d87; line-height: 1.4; margin-bottom: 22px; letter-spacing: -.02em; break-after: avoid; }
+.rs-section-title { display: flex; align-items: center; gap: 10px; font-size: 12pt; font-weight: 650; color: #20242c; line-height: 1.4; margin-bottom: 22px; letter-spacing: -.02em; break-after: avoid; }
 .rs-section-title::before { content: ""; width: 3px; height: 16px; flex-shrink: 0; background: #385d87; border-radius: 2px; }
 .rs-section-body { padding-left: 20px; }
 .rs-company { padding: 0; }
 .rs-company + .rs-company { margin-top: 36px; }
 .rs-company-head { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; padding-bottom: 14px; border-bottom: 1px solid #d9dde4; break-after: avoid; }
-.rs-company-head h3 { font-size: 14pt; color: #385d87; }
+.rs-company-head h3 { font-size: 14pt; color: #20242c; }
 .rs-company-head p { margin-top: 3px; color: #676c77; font-size: 10pt; }
 .rs-period { color: #676c77; font-size: 9pt; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .rs-project { padding: 26px 0; }
 .rs-project + .rs-project { margin-top: 12px; border-top: 1px solid #e6e8ec; }
 .rs-project-head { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; break-after: avoid; }
 .rs-project-head h4 { font-size: 12pt; font-weight: 650; letter-spacing: -.02em; }
-.rs-overview { margin-top: 8px; color: #444b57; break-after: avoid; }
+.rs-overview { margin-top: 8px; color: #2b313b; break-after: avoid; }
 .rs-project-meta { margin-top: 14px; }
 .rs-project-meta > div, .rs-skill-list > div { display: grid; grid-template-columns: 68px minmax(0, 1fr); gap: 12px; }
 dt { color: #676c77; font-size: 9pt; font-weight: 500; padding-top: 2px; }
-dd { color: #444b57; min-width: 0; }
+dd { color: #2b313b; min-width: 0; }
+dd strong, .rs-results strong { font-weight: 700; color: #20242c; }
 .rs-results-title { margin-top: 16px; margin-bottom: 6px; font-size: 10pt; font-weight: 650; break-after: avoid; }
 .rs-results { padding-left: 0; list-style: none; }
-.rs-results li { margin-top: 7px; break-inside: avoid; }
+.rs-results li { margin-top: 9px; break-inside: avoid; }
 .rs-tech dd { color: #676c77; font-size: 9pt; }
 .rs-project-meta > div + div { margin-top: 10px; }
 .rs-role-list { list-style: none; }
 .rs-role-list li + li { margin-top: 3px; }
 .rs-case { margin-top: 24px; }
+.rs-case + .rs-case { border-top: 1px solid #eceef1; padding-top: 20px; }
 .rs-case-title { display: flex; align-items: baseline; gap: 10px; font-size: 11pt; font-weight: 650; line-height: 1.6; break-after: avoid; }
 .rs-case-title span { flex-shrink: 0; width: 20px; font-size: 9pt; font-weight: 600; color: #385d87; font-variant-numeric: tabular-nums; }
-.rs-case-detail { margin-top: 10px; padding-left: 30px; }
-.rs-case-detail > div { display: grid; grid-template-columns: 68px minmax(0, 1fr); gap: 12px; margin-top: 10px; }
+.rs-case-detail { margin-top: 10px; padding-left: 20px; }
+.rs-case-detail > div { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 10px; margin-top: 10px; }
 .rs-case-detail .rs-results li:first-child { margin-top: 0; }
 .rs-outcome-label { color: #385d87; font-weight: 600; }
 .rs-skill-list > div { padding: 9px 0; grid-template-columns: 82px minmax(0, 1fr); }
@@ -90,3 +92,10 @@ dd { color: #444b57; min-width: 0; }
 }
 
 .rs-result-note { margin-top: 6px; font-size: 8.5pt; color: #676c77; }
+
+/* 헤더 핵심 요약 — 30초 스캔용 */
+.rs-headline { margin-top: 16px; padding: 14px 18px; background: #f4f6f9; border-radius: 8px; list-style: none; break-inside: avoid; }
+.rs-headline li { position: relative; padding-left: 14px; color: #30363f; }
+.rs-headline li strong { font-weight: 650; color: #385d87; margin-right: 8px; }
+.rs-headline li + li { margin-top: 5px; }
+.rs-headline li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 5px; height: 5px; border-radius: 50%; background: #385d87; }

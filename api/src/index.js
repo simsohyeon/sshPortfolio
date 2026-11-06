@@ -91,8 +91,30 @@ function errorMessage(err) {
   return "잠시 후 다시 시도해 주세요.";
 }
 
+// 답변 알림 (선택): TELEGRAM_BOT_TOKEN·TELEGRAM_CHAT_ID 시크릿을 둘 다 넣으면 질문·답변 요약을 텔레그램으로 보낸다.
+// 등록: npx wrangler secret put TELEGRAM_BOT_TOKEN / npx wrangler secret put TELEGRAM_CHAT_ID. 없으면 아무것도 안 한다.
+function notifyChat(env, ctx, entry) {
+  if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return;
+  const head = entry.error ? "[오류]" : entry.miss ? "[자료없음]" : "[답변]";
+  const text = [
+    `${head} 포트폴리오 챗봇`,
+    `Q: ${entry.q}`,
+    entry.a ? `A: ${entry.a.slice(0, 200)}` : null,
+    entry.error ? `E: ${entry.error.slice(0, 120)}` : null,
+  ].filter(Boolean).join("\n");
+  ctx.waitUntil(
+    fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text }),
+    }).then(r => { if (!r.ok) console.error("notify failed", r.status); })
+      .catch(e => console.error("notify error", e))
+  );
+}
+
 // 질문 로그: 어떤 질문이 들어오는지 보고 resume.js 를 보강하기 위한 용도. IP·UA 등 개인정보는 남기지 않는다
 function logChat(env, ctx, entry) {
+  notifyChat(env, ctx, entry);
   if (!env.CHAT_LOG) return;
   const key = `${entry.ts}-${Math.random().toString(36).slice(2, 8)}`;
   ctx.waitUntil(
@@ -191,6 +213,10 @@ async function handleChat(request, env, ctx) {
 
   const model = env.GEMINI_MODEL || DEFAULT_MODEL;
   const question = contents[contents.length - 1]?.parts?.[0]?.text || "";
+  // 인코딩이 깨진 질문(U+FFFD 포함, 예: Windows CMD curl 의 CP949 본문)은 Gemini 를 호출하지 않고 돌려보낸다
+  if (question.includes("�")) {
+    return json({ error: "메시지 인코딩이 올바르지 않습니다. UTF-8로 보내 주세요." }, 400, cors);
+  }
   // 한글이 없는 질문: 그 언어로 답하라는 지시를 시스템 프롬프트 끝과 질문 앞에 모두 붙인다
   // (규칙 한 줄이나 질문 뒤 괄호 힌트만으로는 flash-lite 가 한국어 자료에 끌려 한국어로 답함). 로그(entry.q)에는 원문만 남긴다
   const foreign = Boolean(question) && !/[가-힣]/.test(question);
@@ -283,7 +309,8 @@ async function handleChat(request, env, ctx) {
           finish: finishReason || null,
           error: logError || null,
           a: answer.slice(0, 300),
-          miss: /포트폴리오에 없/.test(answer), // 자료에 없어서 못 답한 질문 - 로그 리뷰에서 보강 후보
+          // 자료에 없어서 못 답한 질문 - 로그 리뷰에서 보강 후보. review-logs.mjs 의 MISS_RE 와 같이 맞춘다
+          miss: /포트폴리오에 없|자료에 없|경험(?:이|은) 없|이력(?:이|은) 없|답하기 어렵/.test(answer),
         }));
       }
     },
