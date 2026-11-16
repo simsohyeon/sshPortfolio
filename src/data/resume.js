@@ -59,6 +59,7 @@ const resume = {
   "Backend": [
     "Java",
     "Spring Boot",
+    "JPA",
     "MyBatis",
     "Spring Batch",
     "JSch",
@@ -108,13 +109,13 @@ const resume = {
       role: "자산관리 영역 풀스택 전담: 데이터 구조 설계, Spring Boot API·외부 수집 연동·Vue 화면 개발",
       team: "자산관리 영역 풀스택 전담",
       // 챗봇 컨텍스트 전용 (웹 카드·경력기술서엔 노출 안 함). "AI 하네스가 구체적으로 뭐예요?", "어떤 도구 쓰세요?" 질문용
-      techNotes: ["Claude Code와 규칙 문서·Hooks·Skills를 활용. 설계 판단과 최종 코드 리뷰는 직접 수행", "커밋 전 테스트·변경 영향 점검 절차 적용, 매뉴얼 생성·개발환경 설정 도구 개발"],
+      techNotes: ["Claude Code와 규칙 문서·Hooks·Skills를 활용. 설계 판단과 최종 코드 리뷰는 직접 수행", "커밋 전 테스트·변경 영향 점검 절차 적용, 매뉴얼 생성·개발환경 설정 도구 개발", "JPA는 사용자·메뉴·코드, 빌더 메타처럼 스키마가 고정된 테이블에 사용. 빌더가 컬럼을 동적으로 늘리는 자산 원장과 커스텀 쿼리·DDL은 JdbcTemplate으로 처리"],
       status: "운영 중",
       statusKind: "live",
       featured: true,
       summary: "관리자가 데이터 항목과 화면을 설정으로 정의하는 IT 서비스·자산관리 플랫폼입니다. 자산관리 영역을 풀스택으로 전담하며, 제품은 금융기관 3개사에 고객사별 분기 소스 없이 동일 소스로 납품되어 운영 중입니다.",
       oneLiner: "기업의 IT 자산과 서비스 요청 절차를 관리하는 플랫폼입니다. Polestar 10은 화면을 설정으로 구성하고 데이터 구조는 코드로 관리했다면, 후속 제품은 데이터 항목까지 관리자가 빌더로 정의합니다. 자산관리 영역을 전담하며 관리 항목 빌더를 활용한 데이터 구조 설계, Spring Boot API·Vue 화면 개발과 외부 수집 연동을 맡고 있습니다. 제품은 증권사·손해보험사 등 금융기관 3개사에 고객사별 분기 소스 없이 동일 소스로 납품되어 운영 중입니다.",
-      stack: ["Vue", "TypeScript", "Java 21", "Spring Boot", "PostgreSQL"],
+      stack: ["Vue", "TypeScript", "Java 21", "Spring Boot", "JPA", "PostgreSQL"],
       clients: ["증권사·손해보험사 등 금융기관"],
       links: [],
       // 웹 카드 기본 노출 - 한 줄 불릿. 케이스 전문은 접기와 경력기술서에서.

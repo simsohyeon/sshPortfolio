@@ -19,7 +19,7 @@ const PROJECT_DETAIL = {
       "보안취약점 관리 기능 구현: 외부 보안 솔루션 API로 자산·소프트웨어별 취약점을 수집하고, 우선순위·조치기한과 조치요청부터 예외·위험수용까지 상태를 한 화면에서 추적",
       "엑셀 일괄등록·원장 이관 처리 성능·정합성 개선"
     ],
-    "tech": "Java 21 · Spring Boot · Vue · TypeScript · PostgreSQL"
+    "tech": "Java 21 · Spring Boot · JPA · Vue · TypeScript · PostgreSQL"
   },
   "polestar10": {
     "overview": "JSON 메타데이터로 화면을 구성하는 업무 요청·결재와 자산 관리 통합 웹 제품. 금융권·공공기관 고객사에 적용되어 운영 중",
@@ -130,7 +130,7 @@ export default function ResumePrint() {
       </Section>
       <Section title="기술 역량">
         <dl className="rs-skill-list">
-          <div><dt>백엔드</dt><dd>Java · Spring Boot · MyBatis · Spring Batch · JSch</dd></div>
+          <div><dt>백엔드</dt><dd>Java · Spring Boot · JPA · MyBatis · Spring Batch · JSch</dd></div>
           <div><dt>화면 개발</dt><dd>React · Vue · TypeScript · Webix · C# / .NET WinForm</dd></div>
           <div><dt>데이터베이스</dt><dd>PostgreSQL · MongoDB · Oracle · Tibero</dd></div>
           <div><dt>AI 개발 도구</dt><dd>Claude Code · Hooks/Skills. 커밋 전 테스트·영향도 점검 절차를 운영하고, 매뉴얼 생성·개발환경 설정 도구를 만들어 팀 표준화</dd></div>
