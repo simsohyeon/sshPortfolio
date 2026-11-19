@@ -1,8 +1,8 @@
 import FadeIn from "./common/FadeIn";
-import ProjectCard from "./common/ProjectCard";
 import resume from "../data/resume";
 
-function CompanyGroup({ company, projects }) {
+// 회사 경력은 타임라인 요약만 보여준다. 상세 사례는 경력기술서(인쇄본) 담당.
+function CompanyTimeline({ company, projects }) {
   return (
     <div className="company-group">
       <div className="company-head">
@@ -27,10 +27,32 @@ function CompanyGroup({ company, projects }) {
         }}>{company.period}</span>
       </div>
 
-      {company.contribution && <p style={{ marginBottom: "16px", color: "var(--color-text-soft)" }}>{company.contribution}</p>}
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        {projects.map(proj => <ProjectCard key={proj.id} proj={proj} kind="company" />)}
-      </div>
+      <ul style={{
+        listStyle: "none", padding: 0, margin: 0,
+        display: "flex", flexDirection: "column", gap: "14px",
+      }}>
+        {projects.map(p => (
+          <li key={p.id} style={{
+            display: "flex", justifyContent: "space-between",
+            gap: "12px", alignItems: "baseline",
+          }}>
+            <div style={{ minWidth: 0 }}>
+              <span style={{
+                fontFamily: "var(--font-sans)", fontSize: "0.94rem", fontWeight: 500,
+                color: "var(--color-text)",
+              }}>{p.name}</span>
+              <span style={{
+                display: "block", fontSize: "0.84rem", color: "var(--color-text-soft)",
+                marginTop: "3px", lineHeight: 1.6,
+              }}>{p.role}</span>
+            </div>
+            <span style={{
+              fontFamily: "var(--font-mono)", fontSize: "0.72rem",
+              color: "var(--color-muted)", whiteSpace: "nowrap",
+            }}>{p.period}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -41,11 +63,9 @@ export default function Experience() {
     company: c,
     projects: resume.projects.filter(p => p.org === c.company),
   }));
-  const grouped = new Set(groups.flatMap(g => g.projects.map(p => p.id)));
-  const orphans = resume.projects.filter(p => !grouped.has(p.id));
 
   return (
-    <section id="experience" className="section" style={{ background: "var(--color-bg-alt)" }}>
+    <section id="experience" className="section" style={{ background: "var(--color-bg)" }}>
       <div className="container">
         <FadeIn>
           <p className="eyebrow">Experience</p>
@@ -55,16 +75,9 @@ export default function Experience() {
         <div className="section-content" style={{ display: "flex", flexDirection: "column", gap: "40px" }}>
           {groups.map((g, i) => (
             <FadeIn key={g.company.company} delay={i * 0.05}>
-              <CompanyGroup company={g.company} projects={g.projects} />
+              <CompanyTimeline company={g.company} projects={g.projects} />
             </FadeIn>
           ))}
-          {orphans.length > 0 && (
-            <FadeIn>
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                {orphans.map(proj => <ProjectCard key={proj.id} proj={proj} kind="company" />)}
-              </div>
-            </FadeIn>
-          )}
         </div>
       </div>
     </section>

@@ -10,7 +10,7 @@ import Footer from "./components/Footer";
 import AskMe from "./components/AskMe";
 import "./styles/askme.css";
 
-const SECTION_IDS = ["about", "experience", "projects", "skills", "resume"];
+const SECTION_IDS = ["about", "projects", "experience", "skills", "resume"];
 
 export default function App() {
   const [activeNav, setActiveNav] = useState("");
@@ -48,8 +48,8 @@ export default function App() {
       <Nav active={activeNav} />
       <Hero />
       <About />
-      <Experience />
       <PersonalProjects />
+      <Experience />
       <Skills />
       <ResumeInfo />
       <Footer />

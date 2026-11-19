@@ -7,7 +7,7 @@ export default function PersonalProjects() {
   if (projects.length === 0) return null;
 
   return (
-    <section id="projects" className="section" style={{ background: "var(--color-bg)" }}>
+    <section id="projects" className="section" style={{ background: "var(--color-bg-alt)" }}>
       <div className="container">
         <FadeIn>
           <p className="eyebrow">Projects</p>
